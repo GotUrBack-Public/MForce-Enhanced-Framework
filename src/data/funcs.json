@@ -1,1 +1,32 @@
-
+{
+  "functions": [
+    {
+      "id": "frc386",
+      "entry": "lar386.sh",
+      "name": "Network Information",
+      "category": "net",
+      "enabled": true
+    },
+    {
+      "id": "frc742",
+      "entry": "qtx742.sh",
+      "name": "Connection Test",
+      "category": "net",
+      "enabled": true
+    },
+    {
+      "id": "sys193",
+      "entry": "vkn193.sh",
+      "name": "System Information",
+      "category": "sys",
+      "enabled": true
+    },
+    {
+      "id": "osn521",
+      "entry": "rpx521.sh",
+      "name": "OSINT Search",
+      "category": "osint",
+      "enabled": true
+    }
+  ]
+}
