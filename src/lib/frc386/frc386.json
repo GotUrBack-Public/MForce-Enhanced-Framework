@@ -1,1 +1,10 @@
-
+{
+  "id": "frc386",
+  "name": "Network Information",
+  "version": "1.0.0",
+  "type": "function",
+  "category": "net",
+  "entry": "lar386.sh",
+  "enabled": true,
+  "library": "frc386"
+}
