@@ -1,1 +1,34 @@
-
+{
+  "categories": [
+    {
+      "id": "net",
+      "name": "Network",
+      "enabled": true
+    },
+    {
+      "id": "sys",
+      "name": "System",
+      "enabled": true
+    },
+    {
+      "id": "osint",
+      "name": "OSINT",
+      "enabled": true
+    },
+    {
+      "id": "util",
+      "name": "Utilities",
+      "enabled": true
+    },
+    {
+      "id": "file",
+      "name": "Files",
+      "enabled": true
+    },
+    {
+      "id": "cfg",
+      "name": "Settings",
+      "enabled": true
+    }
+  ]
+}
