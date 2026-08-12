@@ -1,1 +1,6 @@
+Network Information
 
+Displays basic network interface information and the current hostname.
+
+Usage:
+  lar386.sh
