@@ -15,7 +15,7 @@
   <a href="https://github.com/USERNAME/MForce-Enhanced/network/members">
     <img src="https://img.shields.io/github/forks/USERNAME/MForce-Enhanced?style=for-the-badge" alt="Forks">
   </a>
-  <a href="https://github.com/USERNAME/MForce-Enhanced/graphs/contributors">
+  <a href="https://github.com/GotUrBack04/MForce-Enhanced/graphs/contributors">
     <img src="https://img.shields.io/github/contributors/USERNAME/MForce-Enhanced?style=for-the-badge" alt="Contributors">
   </a>
 </p>
