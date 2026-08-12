@@ -3,59 +3,55 @@
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 
 VERSION="v0.01.0"
-TITLE="MForce Enhanced Framework"
 
-clear
+hide_cursor() {
+    printf '\033[?25l'
+}
 
-printf '\033[?25l'
-trap 'printf "\033[?25h"; exit' EXIT INT TERM
+show_cursor() {
+    printf '\033[?25h'
+}
 
-printf '\033[1;36m'
-printf '╔══════════════════════════════════════════════════════╗\n'
-printf '║                                                      ║\n'
-printf '║             MFORCE ENHANCED FRAMEWORK               ║\n'
-printf '║                                                      ║\n'
-printf '║                    %s                         ║\n' "$VERSION"
-printf '║                                                      ║\n'
-printf '╚══════════════════════════════════════════════════════╝\n'
-printf '\033[0m'
+cleanup() {
+    show_cursor
+    stty echo icanon 2>/dev/null
+    clear
+    exit 0
+}
 
-printf '\n'
-printf '\033[1;37mInitializing framework...\033[0m\n'
-printf '\n'
+main() {
+    hide_cursor
 
-sleep 1
+    clear
 
-printf '\033[1;32m[✓]\033[0m Framework loaded\n'
-printf '\033[1;32m[✓]\033[0m Version: %s\n' "$VERSION"
-printf '\033[1;32m[✓]\033[0m Root: %s\n' "$ROOT_DIR"
+    printf '\033[1;36m'
+    printf '╔══════════════════════════════════════════════════════╗\n'
+    printf '║                                                      ║\n'
+    printf '║             MFORCE ENHANCED FRAMEWORK               ║\n'
+    printf '║                                                      ║\n'
+    printf '║                    %s                         ║\n' "$VERSION"
+    printf '║                                                      ║\n'
+    printf '╚══════════════════════════════════════════════════════╝\n'
+    printf '\033[0m'
 
-sleep 1
+    printf '\n'
+    printf '  \033[1;37mInitializing framework...\033[0m\n'
+    printf '\n'
 
-clear
+    sleep 0.5
 
-printf '\033[1;36m'
-printf '╔══════════════════════════════════════════════════════╗\n'
-printf '║                 MFORCE ENHANCED                      ║\n'
-printf '╚══════════════════════════════════════════════════════╝\n'
-printf '\033[0m'
+    printf '  \033[1;32m[✓]\033[0m Framework loaded\n'
+    printf '  \033[1;32m[✓]\033[0m Version: %s\n' "$VERSION"
+    printf '  \033[1;32m[✓]\033[0m Runtime: Termux\n'
 
-printf '\n'
-printf '  Welcome to MForce Enhanced Framework\n'
-printf '\n'
-printf '  Version  : %s\n' "$VERSION"
-printf '  Platform : Termux\n'
-printf '\n'
-printf '\033[90m  Press ENTER to continue...\033[0m\n'
+    sleep 0.8
 
-while true; do
-    IFS= read -rsn1 key
+    stty echo icanon 2>/dev/null
+    show_cursor
 
-    if [[ -z "$key" ]]; then
-        break
-    fi
-done
+    exec "$ROOT_DIR/src/auth/lgn.sh"
+}
 
-printf '\033[?25h'
+trap cleanup INT TERM
 
-exec "$ROOT_DIR/src/ui/cs.sh"
+main
