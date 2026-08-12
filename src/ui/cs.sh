@@ -3,8 +3,6 @@
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 DATA_FILE="$ROOT_DIR/src/data/cats.json"
 
-VERSION="v0.01.0"
-
 CATEGORIES=()
 CATEGORY_IDS=()
 SELECTED=0
@@ -23,8 +21,6 @@ cleanup() {
     clear
     exit 0
 }
-
-trap cleanup INT TERM
 
 load_categories() {
     if [[ ! -f "$DATA_FILE" ]]; then
@@ -142,7 +138,6 @@ main() {
         draw_menu
 
         case "$(read_key)" in
-
             UP)
                 ((SELECTED--))
 
@@ -163,24 +158,17 @@ main() {
                 SELECTED_ID="${CATEGORY_IDS[$SELECTED]}"
                 SELECTED_NAME="${CATEGORIES[$SELECTED]}"
 
-                clear
+                stty echo icanon 2>/dev/null
+                show_cursor
 
-                printf '\033[1;36mSelected category\033[0m\n\n'
-                printf '  Name: %s\n' "$SELECTED_NAME"
-                printf '  ID:   %s\n\n' "$SELECTED_ID"
-
-                printf '\033[90mPress ENTER to return...\033[0m\n'
-
-                while true; do
-                    IFS= read -rsn1 key
-                    [[ -z "$key" ]] && break
-                done
+                exec "$ROOT_DIR/src/ui/fs.sh" \
+                    "$SELECTED_ID" \
+                    "$SELECTED_NAME"
                 ;;
 
             QUIT)
                 cleanup
                 ;;
-
         esac
     done
 }
