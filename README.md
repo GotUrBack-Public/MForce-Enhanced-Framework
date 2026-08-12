@@ -26,7 +26,7 @@
 
 **MForce Enhanced Framework** is a modular framework built specifically for **Termux**.
 
-A complete rebuild of the original MForce architecture focused on modularity, a dedicated terminal UI, separated functions and libraries, JSON-based configuration and reusable resources.
+A complete rebuild of the original MForce architecture [({| https://github.com/MidnightCoding1/mForce |})] focused on modularity, a dedicated terminal UI, separated functions and libraries, JSON-based configuration and reusable resources.
 
 ## Features
 
