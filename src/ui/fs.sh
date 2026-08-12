@@ -6,8 +6,6 @@ DATA_FILE="$ROOT_DIR/src/data/funcs.json"
 CATEGORY_ID="${1:-}"
 CATEGORY_NAME="${2:-Category}"
 
-VERSION="v0.01.0"
-
 FUNCTIONS=()
 FUNCTION_IDS=()
 FUNCTION_ENTRIES=()
@@ -28,13 +26,13 @@ cleanup() {
     exit 0
 }
 
-trap cleanup INT TERM
-
 load_functions() {
-
     if [[ -z "$CATEGORY_ID" ]]; then
         clear
         printf '\033[1;31m[ERROR]\033[0m No category selected.\n'
+        printf '\n'
+        printf 'Press ENTER to exit...\n'
+        read -r
         exit 1
     fi
 
@@ -137,21 +135,18 @@ read_key() {
 }
 
 main() {
-
     load_functions
 
     hide_cursor
     stty -echo -icanon min 1 time 0 2>/dev/null
 
     while true; do
-
         clear
 
         draw_header
         draw_menu
 
         case "$(read_key)" in
-
             UP)
                 if (( ${#FUNCTIONS[@]} > 0 )); then
                     ((SELECTED--))
@@ -173,33 +168,29 @@ main() {
                 ;;
 
             ENTER)
-
                 if (( ${#FUNCTIONS[@]} > 0 )); then
-
                     FUNCTION_ID="${FUNCTION_IDS[$SELECTED]}"
                     FUNCTION_ENTRY="${FUNCTION_ENTRIES[$SELECTED]}"
                     FUNCTION_NAME="${FUNCTIONS[$SELECTED]}"
 
-                    clear
+                    stty echo icanon 2>/dev/null
+                    show_cursor
 
-                    printf '\033[1;36mFunction selected\033[0m\n\n'
-                    printf '  Name:  %s\n' "$FUNCTION_NAME"
-                    printf '  ID:    %s\n' "$FUNCTION_ID"
-                    printf '  Entry: %s\n\n' "$FUNCTION_ENTRY"
-
-                    printf '\033[90mPress ENTER to return...\033[0m\n'
-
-                    while true; do
-                        IFS= read -rsn1 key
-                        [[ -z "$key" ]] && break
-                    done
+                    exec "$ROOT_DIR/src/ui/fp.sh" \
+                        "$CATEGORY_ID" \
+                        "$CATEGORY_NAME" \
+                        "$FUNCTION_ID" \
+                        "$FUNCTION_ENTRY" \
+                        "$FUNCTION_NAME"
                 fi
                 ;;
 
             QUIT)
-                cleanup
-                ;;
+                stty echo icanon 2>/dev/null
+                show_cursor
 
+                exec "$ROOT_DIR/src/ui/cs.sh"
+                ;;
         esac
     done
 }
