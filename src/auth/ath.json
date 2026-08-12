@@ -1,1 +1,7 @@
-
+{
+  "enabled": true,
+  "max_attempts": 3,
+  "code_length": 6,
+  "case_sensitive": false,
+  "delay_on_failure": 2
+}
