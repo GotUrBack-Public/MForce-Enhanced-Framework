@@ -1,1 +1,12 @@
-
+{
+  "id": "frc386",
+  "resources": {
+    "config": "frc386.conf",
+    "help": "frc386.help",
+    "metadata": "frc386.json"
+  },
+  "runtime": {
+    "shell": "bash",
+    "platform": "termux"
+  }
+}
