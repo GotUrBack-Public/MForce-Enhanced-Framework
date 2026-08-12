@@ -9,14 +9,14 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/USERNAME/MForce-Enhanced/stargazers">
-    <img src="https://img.shields.io/github/stars/USERNAME/MForce-Enhanced?style=for-the-badge" alt="Stars">
+  <a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/stargazers">
+    <img src="https://img.shields.io/github/stars/GotUrBack-Public/MForce-Enhanced-Framework?style=for-the-badge" alt="Stars">
   </a>
-  <a href="https://github.com/USERNAME/MForce-Enhanced/network/members">
+  <a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/network/members">
     <img src="https://img.shields.io/github/forks/USERNAME/MForce-Enhanced?style=for-the-badge" alt="Forks">
   </a>
-  <a href="https://github.com/GotUrBack04/MForce-Enhanced/graphs/contributors">
-    <img src="https://img.shields.io/github/contributors/USERNAME/MForce-Enhanced?style=for-the-badge" alt="Contributors">
+  <a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/graphs/contributors">
+    <img src="https://img.shields.io/github/contributors/GotUrBack-Public/MForce-Enhanced-Framework?style=for-the-badge" alt="Contributors">
   </a>
 </p>
 
