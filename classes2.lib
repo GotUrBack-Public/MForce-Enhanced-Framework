@@ -1,1 +1,73 @@
+#!/data/data/com.termux/files/usr/bin/bash
 
+mf_clear() {
+    clear
+}
+
+mf_cursor_hide() {
+    printf '\033[?25l'
+}
+
+mf_cursor_show() {
+    printf '\033[?25h'
+}
+
+mf_cursor_home() {
+    printf '\033[H'
+}
+
+mf_screen_clear() {
+    printf '\033[2J\033[H'
+}
+
+mf_terminal_size() {
+    printf '%s %s\n' "$(tput lines 2>/dev/null || printf '0')" "$(tput cols 2>/dev/null || printf '0')"
+}
+
+mf_box_top() {
+    local width="${1:-54}"
+    printf '╔'
+    printf '═%.0s' $(seq 1 "$width")
+    printf '╗\n'
+}
+
+mf_box_bottom() {
+    local width="${1:-54}"
+    printf '╚'
+    printf '═%.0s' $(seq 1 "$width")
+    printf '╝\n'
+}
+
+mf_box_line() {
+    local text="${1:-}"
+    local width="${2:-54}"
+    printf '║ %-*s ║\n' "$((width - 2))" "$text"
+}
+
+mf_center() {
+    local text="$1"
+    local width="${2:-54}"
+    local length=${#text}
+    local padding=$(( (width - length) / 2 ))
+
+    (( padding < 0 )) && padding=0
+
+    printf '%*s%s\n' "$padding" '' "$text"
+}
+
+mf_menu_item() {
+    local selected="$1"
+    local text="$2"
+
+    if [[ "$selected" == "true" ]]; then
+        printf '  ❯ %s\n' "$text"
+    else
+        printf '    %s\n' "$text"
+    fi
+}
+
+mf_separator() {
+    local width="${1:-54}"
+    printf '─%.0s' $(seq 1 "$width")
+    printf '\n'
+}
