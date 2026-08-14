@@ -12,21 +12,7 @@ source "$COLOR_DIR/mnu.sh"
 CATEGORIES=()
 CATEGORY_IDS=()
 SELECTED=0
-
-hide_cursor() {
-    printf '\033[?25l'
-}
-
-show_cursor() {
-    printf '\033[?25h'
-}
-
-cleanup() {
-    show_cursor
-    stty echo icanon 2>/dev/null
-    clear
-    exit 0
-}
+MENU_ITEMS=()
 
 load_categories() {
     if [[ ! -f "$DATA_FILE" ]]; then
@@ -65,14 +51,22 @@ load_categories() {
         ' "$DATA_FILE"
     )
 
-    if [[ ${#CATEGORIES[@]} -eq 0 ]]; then
-        clear
-        printf '%s[WARNING]%s No categories available.\n' "$STATUS_WARNING" "$CLR_RESET"
-        printf '\n'
-        printf '%sPress ENTER to exit...%s\n' "$UI_MUTED" "$CLR_RESET"
-        read -r
-        exit 0
-    fi
+    MENU_ITEMS=("${CATEGORIES[@]}" "Category Info" "About")
+}
+
+hide_cursor() {
+    printf '\033[?25l'
+}
+
+show_cursor() {
+    printf '\033[?25h'
+}
+
+cleanup() {
+    show_cursor
+    stty echo icanon 2>/dev/null
+    clear
+    exit 0
 }
 
 draw_header() {
@@ -80,21 +74,32 @@ draw_header() {
     printf '╔══════════════════════════════════════════════════════╗\n'
     printf '║%s                 MFORCE ENHANCED%s                      ║\n' "$UI_TITLE" "$UI_BORDER"
     printf '╠══════════════════════════════════════════════════════╣\n'
-    printf '║%s                 CATEGORY SELECT%s                      ║\n' "$UI_TEXT" "$UI_BORDER"
+    printf '║%s                  MAIN MENU%s                           ║\n' "$UI_TEXT" "$UI_BORDER"
     printf '╚══════════════════════════════════════════════════════╝\n'
     printf '%s' "$CLR_RESET"
 }
 
 draw_menu() {
     local i
+    local total=${#MENU_ITEMS[@]}
 
     printf '\n'
 
-    for i in "${!CATEGORIES[@]}"; do
+    for i in "${!MENU_ITEMS[@]}"; do
         if [[ "$i" -eq "$SELECTED" ]]; then
-            printf '  %s❯ %s%s\n' "$MENU_SELECTED" "${CATEGORIES[$i]}" "$CLR_RESET"
+            printf '  %s❯ %s%s\n' \
+                "$MENU_SELECTED" \
+                "${MENU_ITEMS[$i]}" \
+                "$CLR_RESET"
         else
-            printf '    %s%s%s\n' "$MENU_NORMAL" "${CATEGORIES[$i]}" "$CLR_RESET"
+            printf '    %s%s%s\n' \
+                "$MENU_NORMAL" \
+                "${MENU_ITEMS[$i]}" \
+                "$CLR_RESET"
+        fi
+
+        if [[ "$i" -eq $((${#CATEGORIES[@]} - 1)) ]]; then
+            printf '\n'
         fi
     done
 
@@ -132,6 +137,24 @@ read_key() {
     esac
 }
 
+open_category() {
+    local index="$SELECTED"
+
+    stty echo icanon 2>/dev/null
+    show_cursor
+
+    exec "$ROOT_DIR/src/ui/cp.sh" \
+        "${CATEGORY_IDS[$index]}" \
+        "${CATEGORIES[$index]}"
+}
+
+open_about() {
+    stty echo icanon 2>/dev/null
+    show_cursor
+
+    exec "$ROOT_DIR/src/ui/ap.sh"
+}
+
 main() {
     load_categories
 
@@ -140,7 +163,6 @@ main() {
 
     while true; do
         clear
-
         draw_header
         draw_menu
 
@@ -149,28 +171,28 @@ main() {
                 ((SELECTED--))
 
                 if (( SELECTED < 0 )); then
-                    SELECTED=$((${#CATEGORIES[@]} - 1))
+                    SELECTED=$((${#MENU_ITEMS[@]} - 1))
                 fi
                 ;;
 
             DOWN)
                 ((SELECTED++))
 
-                if (( SELECTED >= ${#CATEGORIES[@]} )); then
+                if (( SELECTED >= ${#MENU_ITEMS[@]} )); then
                     SELECTED=0
                 fi
                 ;;
 
             ENTER)
-                SELECTED_ID="${CATEGORY_IDS[$SELECTED]}"
-                SELECTED_NAME="${CATEGORIES[$SELECTED]}"
-
-                stty echo icanon 2>/dev/null
-                show_cursor
-
-                exec "$ROOT_DIR/src/ui/fs.sh" \
-                    "$SELECTED_ID" \
-                    "$SELECTED_NAME"
+                if (( SELECTED < ${#CATEGORIES[@]} )); then
+                    open_category
+                elif (( SELECTED == ${#CATEGORIES[@]} )); then
+                    if (( ${#CATEGORIES[@]} > 0 )); then
+                        open_category
+                    fi
+                else
+                    open_about
+                fi
                 ;;
 
             QUIT)
