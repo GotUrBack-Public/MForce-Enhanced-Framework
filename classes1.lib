@@ -1,1 +1,66 @@
+#!/data/data/com.termux/files/usr/bin/bash
 
+MF_ROOT="${MF_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)}"
+MF_VERSION="${MF_VERSION:-v0.01.0}"
+
+mf_root() {
+    printf '%s\n' "$MF_ROOT"
+}
+
+mf_version() {
+    printf '%s\n' "$MF_VERSION"
+}
+
+mf_timestamp() {
+    date +%s
+}
+
+mf_date() {
+    date '+%Y-%m-%d'
+}
+
+mf_time() {
+    date '+%H:%M:%S'
+}
+
+mf_is_termux() {
+    [[ -n "${PREFIX:-}" && -d "${PREFIX:-}" ]]
+}
+
+mf_command_exists() {
+    command -v "$1" >/dev/null 2>&1
+}
+
+mf_dir_exists() {
+    [[ -d "$1" ]]
+}
+
+mf_file_exists() {
+    [[ -f "$1" ]]
+}
+
+mf_create_dir() {
+    mkdir -p "$1"
+}
+
+mf_read_file() {
+    [[ -f "$1" ]] || return 1
+    cat "$1"
+}
+
+mf_write_file() {
+    local file="$1"
+    shift
+    printf '%s\n' "$*" > "$file"
+}
+
+mf_append_file() {
+    local file="$1"
+    shift
+    printf '%s\n' "$*" >> "$file"
+}
+
+mf_die() {
+    printf '%s\n' "${1:-Unknown error}" >&2
+    return 1
+}
