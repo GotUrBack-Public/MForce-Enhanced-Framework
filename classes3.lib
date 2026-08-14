@@ -1,1 +1,63 @@
+#!/data/data/com.termux/files/usr/bin/bash
 
+mf_json_exists() {
+    [[ -f "$1" ]] && command -v jq >/dev/null 2>&1
+}
+
+mf_json_get() {
+    local file="$1"
+    local query="$2"
+
+    mf_json_exists "$file" || return 1
+    jq -r "$query" "$file"
+}
+
+mf_json_valid() {
+    local file="$1"
+
+    mf_json_exists "$file" || return 1
+    jq empty "$file" >/dev/null 2>&1
+}
+
+mf_json_array_count() {
+    local file="$1"
+    local query="$2"
+
+    mf_json_get "$file" "$query | length"
+}
+
+mf_json_has() {
+    local file="$1"
+    local query="$2"
+
+    [[ "$(mf_json_get "$file" "$query // empty")" != "" ]]
+}
+
+mf_config_value() {
+    local file="$1"
+    local key="$2"
+
+    mf_json_get "$file" ".$key"
+}
+
+mf_data_file() {
+    local root="$1"
+    local name="$2"
+
+    printf '%s/src/data/%s\n' "$root" "$name"
+}
+
+mf_config_file() {
+    local root="$1"
+    local name="$2"
+
+    printf '%s/cfg/%s\n' "$root" "$name"
+}
+
+mf_library_file() {
+    local root="$1"
+    local library="$2"
+    local file="$3"
+
+    printf '%s/src/lib/%s/%s\n' "$root" "$library" "$file"
+}
