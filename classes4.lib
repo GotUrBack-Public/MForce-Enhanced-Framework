@@ -1,1 +1,67 @@
+#!/data/data/com.termux/files/usr/bin/bash
 
+mf_system_name() {
+    if mf_is_termux 2>/dev/null; then
+        printf 'Termux\n'
+        return
+    fi
+
+    uname -s
+}
+
+mf_kernel() {
+    uname -srm
+}
+
+mf_arch() {
+    uname -m
+}
+
+mf_shell() {
+    printf '%s\n' "${SHELL:-bash}"
+}
+
+mf_termux_prefix() {
+    printf '%s\n' "${PREFIX:-}"
+}
+
+mf_android_version() {
+    getprop ro.build.version.release 2>/dev/null
+}
+
+mf_android_sdk() {
+    getprop ro.build.version.sdk 2>/dev/null
+}
+
+mf_device_model() {
+    getprop ro.product.model 2>/dev/null
+}
+
+mf_package_installed() {
+    local package="$1"
+
+    if command -v dpkg >/dev/null 2>&1; then
+        dpkg -s "$package" >/dev/null 2>&1
+        return
+    fi
+
+    return 1
+}
+
+mf_package_available() {
+    command -v pkg >/dev/null 2>&1
+}
+
+mf_cpu_count() {
+    if command -v nproc >/dev/null 2>&1; then
+        nproc
+    else
+        printf '1\n'
+    fi
+}
+
+mf_uptime() {
+    if [[ -f /proc/uptime ]]; then
+        awk '{print $1}' /proc/uptime
+    fi
+}
