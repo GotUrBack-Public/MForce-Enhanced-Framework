@@ -1,1 +1,8 @@
-
+{
+  "name": "MForce Enhanced Framework",
+  "version": "v0.01.0",
+  "license": "MIT",
+  "language": "Shell",
+  "platform": "Termux",
+  "repository": "GotUrBack-Public/MForce-Enhanced-Framework"
+}
