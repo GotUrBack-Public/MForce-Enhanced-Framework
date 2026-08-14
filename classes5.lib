@@ -1,1 +1,79 @@
+#!/data/data/com.termux/files/usr/bin/bash
 
+mf_random_string() {
+    local length="${1:-8}"
+    local chars='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789'
+    local output=''
+    local i
+
+    for ((i = 0; i < length; i++)); do
+        output+="${chars:RANDOM % ${#chars}:1}"
+    done
+
+    printf '%s\n' "$output"
+}
+
+mf_random_id() {
+    printf '%s-%s-%s\n' \
+        "$(mf_random_string 4)" \
+        "$(mf_random_string 4)" \
+        "$(mf_timestamp)"
+}
+
+mf_trim() {
+    local value="$1"
+
+    value="${value#"${value%%[![:space:]]*}"}"
+    value="${value%"${value##*[![:space:]]}"}"
+
+    printf '%s\n' "$value"
+}
+
+mf_lower() {
+    printf '%s\n' "$1" | tr '[:upper:]' '[:lower:]'
+}
+
+mf_upper() {
+    printf '%s\n' "$1" | tr '[:lower:]' '[:upper:]'
+}
+
+mf_contains() {
+    local value="$1"
+    local search="$2"
+
+    [[ "$value" == *"$search"* ]]
+}
+
+mf_is_number() {
+    [[ "$1" =~ ^[0-9]+$ ]]
+}
+
+mf_is_empty() {
+    [[ -z "$1" ]]
+}
+
+mf_bool() {
+    case "${1,,}" in
+        true|yes|1|on)
+            return 0
+            ;;
+        false|no|0|off)
+            return 1
+            ;;
+    esac
+
+    return 1
+}
+
+mf_sleep() {
+    sleep "${1:-1}"
+}
+
+mf_pause() {
+    printf '%s' "${1:-Press ENTER to continue...}"
+    read -r
+}
+
+mf_safe_name() {
+    printf '%s\n' "$1" | tr -cd '[:alnum:]_-'
+}
