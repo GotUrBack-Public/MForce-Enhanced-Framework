@@ -2,6 +2,12 @@
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 DATA_FILE="$ROOT_DIR/src/data/funcs.json"
+COLOR_DIR="$ROOT_DIR/src/colors"
+
+source "$COLOR_DIR/bse.sh"
+source "$COLOR_DIR/uic.sh"
+source "$COLOR_DIR/sts.sh"
+source "$COLOR_DIR/mnu.sh"
 
 CATEGORY_ID="${1:-}"
 CATEGORY_NAME="${2:-Category}"
@@ -29,33 +35,33 @@ cleanup() {
 load_functions() {
     if [[ -z "$CATEGORY_ID" ]]; then
         clear
-        printf '\033[1;31m[ERROR]\033[0m No category selected.\n'
+        printf '%s[ERROR]%s No category selected.\n' "$STATUS_ERROR" "$CLR_RESET"
         printf '\n'
-        printf 'Press ENTER to exit...\n'
+        printf '%sPress ENTER to exit...%s\n' "$UI_MUTED" "$CLR_RESET"
         read -r
         exit 1
     fi
 
     if [[ ! -f "$DATA_FILE" ]]; then
         clear
-        printf '\033[1;31m[ERROR]\033[0m Function database not found.\n'
+        printf '%s[ERROR]%s Function database not found.\n' "$STATUS_ERROR" "$CLR_RESET"
         printf '\n'
-        printf 'Missing:\n'
+        printf '%sMissing:%s\n' "$UI_MUTED" "$CLR_RESET"
         printf '  %s\n' "$DATA_FILE"
         printf '\n'
-        printf 'Press ENTER to exit...\n'
+        printf '%sPress ENTER to exit...%s\n' "$UI_MUTED" "$CLR_RESET"
         read -r
         exit 1
     fi
 
     if ! command -v jq >/dev/null 2>&1; then
         clear
-        printf '\033[1;31m[ERROR]\033[0m jq is not installed.\n'
+        printf '%s[ERROR]%s jq is not installed.\n' "$STATUS_ERROR" "$CLR_RESET"
         printf '\n'
-        printf 'Install it with:\n'
+        printf '%sInstall it with:%s\n' "$UI_MUTED" "$CLR_RESET"
         printf '  pkg install jq\n'
         printf '\n'
-        printf 'Press ENTER to exit...\n'
+        printf '%sPress ENTER to exit...%s\n' "$UI_MUTED" "$CLR_RESET"
         read -r
         exit 1
     fi
@@ -75,13 +81,15 @@ load_functions() {
 }
 
 draw_header() {
-    printf '\033[1;36m'
+    printf '%s' "$UI_BORDER"
     printf '╔══════════════════════════════════════════════════════╗\n'
-    printf '║                 MFORCE ENHANCED                      ║\n'
+    printf '║%s                 MFORCE ENHANCED%s                      ║\n' "$UI_TITLE" "$UI_BORDER"
     printf '╠══════════════════════════════════════════════════════╣\n'
-    printf '║ %-52s ║\n' "CATEGORY: $CATEGORY_NAME"
+    printf '║%s %-52s%s║\n' "$UI_TEXT" "CATEGORY: $CATEGORY_NAME" "$UI_BORDER"
+    printf '╠══════════════════════════════════════════════════════╣\n'
+    printf '║%s                 FUNCTION SELECT%s                     ║\n' "$UI_TEXT" "$UI_BORDER"
     printf '╚══════════════════════════════════════════════════════╝\n'
-    printf '\033[0m'
+    printf '%s' "$CLR_RESET"
 }
 
 draw_menu() {
@@ -90,21 +98,22 @@ draw_menu() {
     printf '\n'
 
     if [[ ${#FUNCTIONS[@]} -eq 0 ]]; then
-        printf '  \033[1;33mNo functions available.\033[0m\n'
+        printf '  %sNo functions available.%s\n' "$STATUS_WARNING" "$CLR_RESET"
     else
         for i in "${!FUNCTIONS[@]}"; do
             if [[ "$i" -eq "$SELECTED" ]]; then
-                printf '  \033[1;36m❯ %s\033[0m\n' "${FUNCTIONS[$i]}"
+                printf '  %s❯ %s%s\n' "$MENU_SELECTED" "${FUNCTIONS[$i]}" "$CLR_RESET"
             else
-                printf '    \033[90m%s\033[0m\n' "${FUNCTIONS[$i]}"
+                printf '    %s%s%s\n' "$MENU_NORMAL" "${FUNCTIONS[$i]}" "$CLR_RESET"
             fi
         done
     fi
 
     printf '\n'
-    printf '  \033[90m↑ ↓\033[0m Navigate   '
-    printf '\033[90mENTER\033[0m Select   '
-    printf '\033[90mQ\033[0m Back\n'
+    printf '  %s↑ ↓%s Navigate   %sENTER%s Select   %sQ%s Back\n' \
+        "$MENU_KEY" "$CLR_RESET" \
+        "$MENU_KEY" "$CLR_RESET" \
+        "$MENU_KEY" "$CLR_RESET"
 }
 
 read_key() {
@@ -194,5 +203,7 @@ main() {
         esac
     done
 }
+
+trap cleanup INT TERM
 
 main
