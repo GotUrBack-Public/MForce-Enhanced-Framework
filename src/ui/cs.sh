@@ -2,6 +2,12 @@
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 DATA_FILE="$ROOT_DIR/src/data/cats.json"
+COLOR_DIR="$ROOT_DIR/src/colors"
+
+source "$COLOR_DIR/bse.sh"
+source "$COLOR_DIR/uic.sh"
+source "$COLOR_DIR/sts.sh"
+source "$COLOR_DIR/mnu.sh"
 
 CATEGORIES=()
 CATEGORY_IDS=()
@@ -25,24 +31,24 @@ cleanup() {
 load_categories() {
     if [[ ! -f "$DATA_FILE" ]]; then
         clear
-        printf '\033[1;31m[ERROR]\033[0m Category database not found.\n'
+        printf '%s[ERROR]%s Category database not found.\n' "$STATUS_ERROR" "$CLR_RESET"
         printf '\n'
-        printf 'Missing:\n'
+        printf '%sMissing:%s\n' "$UI_MUTED" "$CLR_RESET"
         printf '  %s\n' "$DATA_FILE"
         printf '\n'
-        printf 'Press ENTER to exit...\n'
+        printf '%sPress ENTER to exit...%s\n' "$UI_MUTED" "$CLR_RESET"
         read -r
         exit 1
     fi
 
     if ! command -v jq >/dev/null 2>&1; then
         clear
-        printf '\033[1;31m[ERROR]\033[0m jq is not installed.\n'
+        printf '%s[ERROR]%s jq is not installed.\n' "$STATUS_ERROR" "$CLR_RESET"
         printf '\n'
-        printf 'Install it with:\n'
+        printf '%sInstall it with:%s\n' "$UI_MUTED" "$CLR_RESET"
         printf '  pkg install jq\n'
         printf '\n'
-        printf 'Press ENTER to exit...\n'
+        printf '%sPress ENTER to exit...%s\n' "$UI_MUTED" "$CLR_RESET"
         read -r
         exit 1
     fi
@@ -61,22 +67,22 @@ load_categories() {
 
     if [[ ${#CATEGORIES[@]} -eq 0 ]]; then
         clear
-        printf '\033[1;33m[WARNING]\033[0m No categories available.\n'
+        printf '%s[WARNING]%s No categories available.\n' "$STATUS_WARNING" "$CLR_RESET"
         printf '\n'
-        printf 'Press ENTER to exit...\n'
+        printf '%sPress ENTER to exit...%s\n' "$UI_MUTED" "$CLR_RESET"
         read -r
         exit 0
     fi
 }
 
 draw_header() {
-    printf '\033[1;36m'
+    printf '%s' "$UI_BORDER"
     printf '╔══════════════════════════════════════════════════════╗\n'
-    printf '║                 MFORCE ENHANCED                      ║\n'
+    printf '║%s                 MFORCE ENHANCED%s                      ║\n' "$UI_TITLE" "$UI_BORDER"
     printf '╠══════════════════════════════════════════════════════╣\n'
-    printf '║                 CATEGORY SELECT                      ║\n'
+    printf '║%s                 CATEGORY SELECT%s                      ║\n' "$UI_TEXT" "$UI_BORDER"
     printf '╚══════════════════════════════════════════════════════╝\n'
-    printf '\033[0m'
+    printf '%s' "$CLR_RESET"
 }
 
 draw_menu() {
@@ -86,16 +92,17 @@ draw_menu() {
 
     for i in "${!CATEGORIES[@]}"; do
         if [[ "$i" -eq "$SELECTED" ]]; then
-            printf '  \033[1;36m❯ %s\033[0m\n' "${CATEGORIES[$i]}"
+            printf '  %s❯ %s%s\n' "$MENU_SELECTED" "${CATEGORIES[$i]}" "$CLR_RESET"
         else
-            printf '    \033[90m%s\033[0m\n' "${CATEGORIES[$i]}"
+            printf '    %s%s%s\n' "$MENU_NORMAL" "${CATEGORIES[$i]}" "$CLR_RESET"
         fi
     done
 
     printf '\n'
-    printf '  \033[90m↑ ↓\033[0m Navigate   '
-    printf '\033[90mENTER\033[0m Select   '
-    printf '\033[90mQ\033[0m Exit\n'
+    printf '  %s↑ ↓%s Navigate   %sENTER%s Select   %sQ%s Exit\n' \
+        "$MENU_KEY" "$CLR_RESET" \
+        "$MENU_KEY" "$CLR_RESET" \
+        "$MENU_KEY" "$CLR_RESET"
 }
 
 read_key() {
@@ -172,5 +179,7 @@ main() {
         esac
     done
 }
+
+trap cleanup INT TERM
 
 main
