@@ -1,0 +1,6 @@
+System Information
+
+Displays Android, Termux, kernel, architecture and runtime information.
+
+Usage:
+  vkn193.sh
