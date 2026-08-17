@@ -1,0 +1,10 @@
+{
+  "id": "sys193",
+  "name": "System Information",
+  "version": "1.0.0",
+  "type": "function",
+  "category": "sys",
+  "entry": "vkn193.sh",
+  "enabled": true,
+  "library": "sys193"
+}
