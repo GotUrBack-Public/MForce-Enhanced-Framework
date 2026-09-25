@@ -15,7 +15,7 @@
   <a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/graphs/contributors">
     <img src="https://img.shields.io/github/contributors/GotUrBack-Public/MForce-Enhanced-Framework?style=flat-square" alt="Contributors">
   </a>
-  <img src="https://img.shields.io/badge/version-v0.01.0-blue?style=flat-square" alt="Version">
+  <img src="https://img.shields.io/badge/version-v0.01.3-blue?style=flat-square" alt="Version">
   <img src="https://img.shields.io/badge/language-Shell-4EAA25?style=flat-square&logo=gnu-bash&logoColor=white" alt="Shell">
   <img src="https://img.shields.io/badge/license-MIT-yellow?style=flat-square" alt="License">
 </p>
