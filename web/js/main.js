@@ -171,6 +171,27 @@
         'RATE + DOM REVIEW       [AVAILABLE]\n' +
         'ROBOTS + RDAP           [AVAILABLE]\n\n' +
         'Manual verification remains essential.'
+   },
+    scanner: {
+      title: 'tcp401 — authorized TCP connect scan',
+      description: 'Bounded port checks for systems you own or have permission to assess.',
+      output: '$ bash src/functions/tcp401.sh 127.0.0.1 --authorized --ports 22,80,443\n\n' +
+        'MFORCE / TCP CONNECT SCAN\n' +
+        'Target: 127.0.0.1\n' +
+        '22/tcp     CLOSED_OR_FILTERED\n' +
+        '80/tcp     OPEN  (illustrative)\n' +
+        '443/tcp    CLOSED_OR_FILTERED\n\n' +
+        '# Example output only. Not a live scan.'
+    },
+    updater: {
+      title: 'upd501 — official update center',
+      description: 'Check and apply official fast-forward updates without overwriting local edits.',
+      output: '$ bash src/functions/upd501.sh --check\n\n' +
+        'MFORCE / UPDATE CENTER\n' +
+        '[1/3] Current revision: abc123\n' +
+        '[2/3] Checking upstream ...\n' +
+        '[3/3] Update available: abc123 -> def456\n\n' +
+        '# Check only. No files changed.'
     }
   };
   const moduleTabs = $$('[data-module]');
@@ -277,8 +298,8 @@
   auditTabs.forEach((tab, index) => {
     tab.addEventListener('click', () => chooseAudit(tab.dataset.audit));
     tab.addEventListener('keydown', event => {
-      const next = event.key === 'ArrowRight' ? (index+1)%auditTabs.length :
-                   event.key === 'ArrowLeft' ? (index+auditTabs.length-1)%auditTabs.length :
+      const next = event.key === 'ArrowRight' || event.key === 'ArrowDown' ? (index+1)%auditTabs.length :
+                   event.key === 'ArrowLeft' || event.key === 'ArrowUp' ? (index+auditTabs.length-1)%auditTabs.length :
                    event.key === 'Home' ? 0 : event.key === 'End' ? auditTabs.length-1 : -1;
       if (next >= 0) { event.preventDefault(); auditTabs[next].focus(); chooseAudit(auditTabs[next].dataset.audit); }
     });
