@@ -1,12 +1,13 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+source "$ROOT_DIR/src/core/runtime.sh" || exit 1
 COLOR_DIR="$ROOT_DIR/src/colors"
 
-source "$COLOR_DIR/bse.sh"
-source "$COLOR_DIR/uic.sh"
-source "$COLOR_DIR/sts.sh"
-source "$COLOR_DIR/mnu.sh"
+source "$COLOR_DIR/bse.sh" || exit 1
+source "$COLOR_DIR/uic.sh" || exit 1
+source "$COLOR_DIR/sts.sh" || exit 1
+source "$COLOR_DIR/mnu.sh" || exit 1
 
 CATEGORY_ID="${1:-}"
 CATEGORY_NAME="${2:-Category}"
@@ -18,6 +19,11 @@ ENTRY_FILE="$ROOT_DIR/src/functions/$FUNCTION_ENTRY"
 LIB_ID=""
 
 resolve_library() {
+    mf_require_json "$ROOT_DIR/src/data/funcs.json" functions || exit 1
+    mf_require_category "$CATEGORY_ID" || exit 1
+    jq -e --arg id "$FUNCTION_ID" --arg entry "$FUNCTION_ENTRY" --arg category "$CATEGORY_ID" \
+        '.functions | any(.id == $id and .entry == $entry and .category == $category and .enabled)' \
+        "$ROOT_DIR/src/data/funcs.json" >/dev/null || exit 1
     if [[ ! -f "$ROOT_DIR/src/data/funcs.json" ]]; then
         return
     fi
@@ -46,52 +52,14 @@ get_metadata() {
         return
     fi
 
+    mf_require_json "$file" metadata || exit 1
+
     META_VERSION="$(jq -r '.version // "unknown"' "$file" 2>/dev/null)"
     META_TYPE="$(jq -r '.type // "function"' "$file" 2>/dev/null)"
-    META_CATEGORY="$(jq -r '.category // "'"$CATEGORY_ID"'"' "$file" 2>/dev/null)"
+    META_CATEGORY="$(jq -r --arg category "$CATEGORY_ID" '.category // $category' "$file" 2>/dev/null)"
 }
 
-hide_cursor() {
-    printf '\033[?25l'
-}
-
-show_cursor() {
-    printf '\033[?25h'
-}
-
-cleanup() {
-    show_cursor
-    stty echo icanon 2>/dev/null
-    clear
-    exit 0
-}
-
-read_key() {
-    local key
-
-    IFS= read -rsn1 key
-
-    case "$key" in
-        $'\x1b')
-            IFS= read -rsn2 key
-
-            case "$key" in
-                '[A') echo "UP" ;;
-                '[B') echo "DOWN" ;;
-                '[D') echo "LEFT" ;;
-                '[C') echo "RIGHT" ;;
-            esac
-            ;;
-
-        "")
-            echo "ENTER"
-            ;;
-
-        q|Q)
-            echo "BACK"
-            ;;
-    esac
-}
+read_key() { mf_read_key "BACK"; }
 
 draw_header() {
     printf '%s' "$UI_BORDER"
@@ -155,14 +123,14 @@ run_function() {
         printf '\n'
         printf '%sPress ENTER to return...%s\n' "$UI_MUTED" "$CLR_RESET"
 
-        read -r
+        read -r || exit 0
 
         stty -echo -icanon min 1 time 0 2>/dev/null
         hide_cursor
         return
     fi
 
-    exec "$ENTRY_FILE"
+    exec bash "$ENTRY_FILE"
 }
 
 main() {
@@ -175,7 +143,9 @@ main() {
     while true; do
         draw_page
 
-        case "$(read_key)" in
+        read_key
+        case "$MF_KEY" in
+            EOF) exit 0 ;;
             ENTER)
                 run_function
                 ;;
@@ -184,7 +154,7 @@ main() {
                 stty echo icanon 2>/dev/null
                 show_cursor
 
-                exec "$ROOT_DIR/src/ui/fs.sh" \
+                exec bash "$ROOT_DIR/src/ui/fs.sh" \
                     "$CATEGORY_ID" \
                     "$CATEGORY_NAME"
                 ;;
@@ -192,6 +162,5 @@ main() {
     done
 }
 
-trap cleanup INT TERM
 
 main

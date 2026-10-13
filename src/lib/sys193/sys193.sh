@@ -1,6 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
+source "$ROOT_DIR/src/core/runtime.sh" || exit 1
+mf_module_resources "sys193" "${1:-}" || exit 1
 
 get_value() {
     local value="$1"
@@ -71,6 +73,6 @@ get_value "$(hostname 2>/dev/null)"
 printf '\n'
 printf '\033[90mPress ENTER to return...\033[0m\n'
 
-read -r
+read -r || exit 0
 
-exec "$ROOT_DIR/src/ui/fs.sh" "sys" "System"
+exec bash "$ROOT_DIR/src/ui/fs.sh" "sys" "System"

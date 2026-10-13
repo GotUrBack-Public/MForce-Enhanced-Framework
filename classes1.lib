@@ -1,7 +1,7 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
 MF_ROOT="${MF_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)}"
-MF_VERSION="${MF_VERSION:-v0.01.0}"
+MF_VERSION="${MF_VERSION:-$(jq -r .version "$MF_ROOT/cfg/zrk391.json" 2>/dev/null)}"
 
 mf_root() {
     printf '%s\n' "$MF_ROOT"

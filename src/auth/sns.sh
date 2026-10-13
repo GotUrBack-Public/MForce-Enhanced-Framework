@@ -1,40 +1,40 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+source "$ROOT_DIR/src/core/runtime.sh" || exit 1
 AUTH_DIR="$ROOT_DIR/src/auth"
-SESSION_DIR="${TMPDIR:-$PREFIX/tmp}/mforce-enhanced"
-SESSION_FILE="$SESSION_DIR/session.json"
+SESSION_DIR=""
+SESSION_FILE=""
+UI_PID=""
 
 create_session() {
-    mkdir -p "$SESSION_DIR"
-
-    local session_id
-    local created
-
-    session_id="$(printf '%s-%s-%s' "$RANDOM" "$RANDOM" "$(date +%s)")"
-    created="$(date +%s)"
-
-    cat > "$SESSION_FILE" <<EOF
-{
-  "authenticated": true,
-  "session_id": "$session_id",
-  "created": $created
-}
-EOF
+    local base="${TMPDIR:-${PREFIX:+$PREFIX/tmp}}"
+    base="${base:-/tmp}"
+    SESSION_DIR="$(umask 077; mktemp -d "$base/mforce-enhanced.XXXXXXXXXX")" || return 1
+    SESSION_FILE="$SESSION_DIR/session.json"
+    # Local run metadata, not an authentication credential.
+    (umask 077; jq -n --arg id "${SESSION_DIR##*/}" --argjson created "$(date +%s)" \
+        '{authenticated: true, session_id: $id, created: $created}' > "$SESSION_FILE") || return 1
 }
 
-cleanup() {
-    rm -f "$SESSION_FILE"
-    printf '\033[?25h'
-    stty echo icanon 2>/dev/null
-    clear
-    exit 0
+session_cleanup() {
+    local status=$?
+    trap - EXIT
+    if [[ -n "$UI_PID" ]]; then
+        kill -TERM "$UI_PID" 2>/dev/null || :
+        wait "$UI_PID" 2>/dev/null || :
+    fi
+    if [[ -n "$SESSION_DIR" ]]; then
+        rm -f -- "$SESSION_FILE"
+        rmdir -- "$SESSION_DIR" 2>/dev/null || :
+    fi
+    mf_restore_terminal
+    return "$status"
 }
 
 main() {
-    create_session
-
-    trap cleanup INT TERM EXIT
+    trap session_cleanup EXIT
+    create_session || exit 1
 
     printf '\033[?25l'
     stty -echo icanon 2>/dev/null
@@ -58,9 +58,13 @@ main() {
     stty echo icanon 2>/dev/null
     printf '\033[?25h'
 
-    trap - EXIT
-
-    exec "$ROOT_DIR/src/ui/cs.sh"
+    # Keep this supervisor alive across the UI chain of exec calls.
+    bash "$ROOT_DIR/src/ui/cs.sh" <&0 &
+    UI_PID=$!
+    local status=0
+    wait "$UI_PID" || status=$?
+    UI_PID=""
+    return "$status"
 }
 
 main

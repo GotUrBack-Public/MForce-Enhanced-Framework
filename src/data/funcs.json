@@ -12,7 +12,7 @@
       "entry": "qtx742.sh",
       "name": "Connection Test",
       "category": "net",
-      "enabled": true
+      "enabled": false
     },
     {
       "id": "sys193",
@@ -26,7 +26,7 @@
       "entry": "rpx521.sh",
       "name": "OSINT Search",
       "category": "osint",
-      "enabled": true
+      "enabled": false
     }
   ]
 }

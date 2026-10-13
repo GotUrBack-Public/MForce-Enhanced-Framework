@@ -1,28 +1,25 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+source "$ROOT_DIR/src/core/runtime.sh" || exit 1
 AUTH_DIR="$ROOT_DIR/src/auth"
 CONFIG_FILE="$AUTH_DIR/ath.json"
-SESSION_DIR="${TMPDIR:-$PREFIX/tmp}/mforce-enhanced"
-SESSION_FILE="$SESSION_DIR/session.json"
 
 generate_code() {
     local chars="ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
     local code=""
-    local i
+    local i length
+    length="$(get_value '.code_length // 6')"
 
-    for ((i=0; i<6; i++)); do
+    for ((i=0; i<length; i++)); do
         code+="${chars:RANDOM%${#chars}:1}"
     done
 
-    printf '%s-%s\n' "${code:0:3}" "${code:3:3}"
-}
-
-cleanup() {
-    printf '\033[?25h'
-    stty echo icanon 2>/dev/null
-    clear
-    exit 0
+    if (( length > 3 )); then
+        printf '%s-%s\n' "${code:0:3}" "${code:3}"
+    else
+        printf '%s\n' "$code"
+    fi
 }
 
 show_header() {
@@ -39,31 +36,11 @@ show_header() {
 }
 
 verify_config() {
-    if [[ ! -f "$CONFIG_FILE" ]]; then
-        printf '\033[1;31m[ERROR]\033[0m Authentication configuration not found.\n'
-        printf '\n'
-        printf 'Missing:\n'
-        printf '  %s\n' "$CONFIG_FILE"
-        printf '\n'
-        printf 'Press ENTER to exit...\n'
-        read -r
-        exit 1
-    fi
-
-    if ! command -v jq >/dev/null 2>&1; then
-        printf '\033[1;31m[ERROR]\033[0m jq is required.\n'
-        printf '\n'
-        printf 'Install it with:\n'
-        printf '  pkg install jq\n'
-        printf '\n'
-        printf 'Press ENTER to exit...\n'
-        read -r
-        exit 1
-    fi
+    mf_require_json "$CONFIG_FILE" auth || exit 1
 }
 
 is_enabled() {
-    jq -r '.enabled // true' "$CONFIG_FILE"
+    jq -r 'if has("enabled") then .enabled else true end' "$CONFIG_FILE"
 }
 
 get_value() {
@@ -73,15 +50,18 @@ get_value() {
 main() {
     verify_config
 
-    if [[ "$(is_enabled)" != "true" ]]; then
-        exec "$AUTH_DIR/sns.sh"
+    local enabled
+    enabled="$(is_enabled)" || exit 1
+    if [[ "$enabled" == "false" ]]; then
+        exec bash "$AUTH_DIR/sns.sh"
     fi
 
     local max_attempts
     local delay
     local attempts=0
     local code
-    local input
+    local input code_normalized input_normalized case_sensitive
+    case_sensitive="$(get_value '.case_sensitive // false')"
 
     max_attempts="$(get_value '.max_attempts // 3')"
     delay="$(get_value '.delay_on_failure // 2')"
@@ -104,11 +84,14 @@ main() {
 
         printf '  \033[90mCode:\033[0m '
 
-        IFS= read -r input
+        IFS= read -r input || exit 0
 
         input="${input// /}"
-        input="${input^^}"
-        code_normalized="${code^^}"
+        code_normalized="$code"
+        if [[ "$case_sensitive" == false ]]; then
+            input="${input^^}"
+            code_normalized="${code^^}"
+        fi
         input_normalized="${input//-/}"
 
         if [[ "$input_normalized" == "${code_normalized//-/}" ]]; then
@@ -119,7 +102,7 @@ main() {
             stty echo icanon 2>/dev/null
             printf '\033[?25h'
 
-            exec "$AUTH_DIR/sns.sh"
+            exec bash "$AUTH_DIR/sns.sh"
         fi
 
         ((attempts++))
@@ -147,6 +130,5 @@ main() {
     exit 1
 }
 
-trap cleanup INT TERM
 
 main

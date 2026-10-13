@@ -1,6 +1,7 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+source "$ROOT_DIR/src/core/runtime.sh" || exit 1
 LIB_DIR="$ROOT_DIR/src/lib/frc386"
 
 if [[ ! -f "$LIB_DIR/frc386.sh" ]]; then
@@ -9,4 +10,4 @@ if [[ ! -f "$LIB_DIR/frc386.sh" ]]; then
     exit 1
 fi
 
-exec "$LIB_DIR/frc386.sh"
+exec bash "$LIB_DIR/frc386.sh" "$@"
