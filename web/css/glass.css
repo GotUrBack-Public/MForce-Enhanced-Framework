@@ -32,7 +32,7 @@ a{color:inherit}
 .hero-noise{opacity:.12}
 .hero-sweep{opacity:.26}
 .hero-halo{background:rgba(150,173,201,.12);filter:blur(100px)}
-.hero-orbit{opacity:.22;filter:none}
+.hero-orbit{opacity:.22;filter:none;transform:translate3d(var(--glass-move-x,0px),var(--glass-move-y,0px),0);transition:transform .24s ease-out}
 .hero-orbit::before,.hero-orbit::after{border-color:rgba(197,218,231,.21)}
 .hero-orbit i{background:#a9c2d3;box-shadow:0 0 12px #a9c2d355}
 .glass-ambient{position:absolute;z-index:0;pointer-events:none;border-radius:50%;filter:blur(10px);opacity:.8;animation:glass-drift 19s ease-in-out infinite alternate}
@@ -184,7 +184,7 @@ a{color:inherit}
 @media(max-width:480px){.hero h1{font-size:clamp(40px,11.3vw,55px)}.glass-art-caption{font-size:8px;padding:10px}.explore-rail-label{display:none}.explore-rail a{padding:10px}.explore-rail a span{display:none}.hero-status{font-size:9px}.hero-orbit{opacity:.12}}
 @media(hover:none){.glass-shine::after{display:none}.module-card:hover,.osint-tool:hover,.academy-track:hover{transform:none}}
 @media(prefers-reduced-motion:reduce){
-  .glass-ambient,.glass-visible,.glass-shine::after{animation:none!important;transition:none!important}
+  .glass-ambient,.glass-visible,.glass-shine::after,.hero-orbit{animation:none!important;transition:none!important;transform:none!important}
   .glass-visible{opacity:1!important;transform:none!important}
   .module-card,.osint-tool,.academy-track,.explore-rail a{transition:none!important}
   .module-card:hover,.osint-tool:hover,.academy-track:hover,.explore-rail a:hover{transform:none!important}
