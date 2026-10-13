@@ -220,3 +220,6 @@ body{overflow-x:clip}
   .inspector-tabs button[aria-selected=true]{background:#103347}
 }
 @media(max-width:600px){.module-card-new{min-height:300px}}
+
+/* The HTML hidden attribute must win over authored flex layouts. */
+.tutorial-platform-row[hidden]{display:none}
