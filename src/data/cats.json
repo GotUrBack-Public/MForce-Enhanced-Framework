@@ -29,6 +29,11 @@
       "id": "cfg",
       "name": "Settings",
       "enabled": true
+    },
+    {
+      "id": "upd",
+      "name": "Updates",
+      "enabled": true
     }
   ]
 }
