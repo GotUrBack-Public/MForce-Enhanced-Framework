@@ -141,6 +141,7 @@
   const platformRow = $('#tutorial-platform-row');
   const progressLabel = $('#tutorial-progress-label');
   const progressFill = $('#tutorial-progress-fill');
+  const progressBar = $('#tutorial-progress');
   const previous = $('#tutorial-prev');
   const next = $('#tutorial-next');
   const copyButton = $('#tutorial-copy');
@@ -182,6 +183,7 @@
     if (stepIndicator) stepIndicator.textContent = 'STEP ' + two(activeStep + 1) + ' / ' + two(path.steps.length);
     if (progressLabel) progressLabel.textContent = two(activeStep + 1) + ' / ' + two(path.steps.length);
     if (progressFill) progressFill.style.width = (100 * (activeStep + 1) / path.steps.length) + '%';
+    if (progressBar) progressBar.setAttribute('aria-valuenow', String(activeStep + 1));
     if (previous) previous.disabled = activeStep === 0;
     if (next) next.textContent = activeStep === path.steps.length - 1
       ? (activePath === paths.length - 1 ? 'RESTART PATH ↺' : 'NEXT PATH →')
