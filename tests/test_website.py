@@ -97,6 +97,11 @@ class WebsiteTests(unittest.TestCase):
         self.assertIn("max-width:1180px", style)
 
     @unittest.skipUnless(shutil.which("node"), "Node.js unavailable")
+    def test_javascript_interactions(self):
+        subprocess.run(["node", str(ROOT / "tests/site_interactions.js")],
+                       check=True, capture_output=True, text=True)
+
+    @unittest.skipUnless(shutil.which("node"), "Node.js unavailable")
     def test_javascript_syntax(self):
         for name in ("global.js", "main.js", "learn.js"):
             with self.subTest(name=name):
