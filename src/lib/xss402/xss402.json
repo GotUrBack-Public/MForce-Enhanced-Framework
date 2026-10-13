@@ -1,0 +1,10 @@
+{
+  "id": "xss402",
+  "name": "XSS Payload Lab",
+  "version": "1.0.0",
+  "type": "offensive",
+  "category": "offensive",
+  "entry": "xss402.sh",
+  "enabled": true,
+  "library": "xss402"
+}
