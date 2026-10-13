@@ -1,0 +1,10 @@
+CREATE DATABASE IF NOT EXISTS mforce_logs CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE mforce_logs;
+CREATE TABLE IF NOT EXISTS module_runs (
+ id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+ started_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ module_id VARCHAR(128) NOT NULL,
+ exit_code INT NOT NULL,
+ output MEDIUMTEXT,
+ INDEX idx_module_time (module_id, started_at)
+);
