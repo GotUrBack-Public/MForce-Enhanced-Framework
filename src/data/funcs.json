@@ -99,6 +99,10 @@
       "enabled": true
     },
     {
+      "id": "upd501",
+      "entry": "upd501.sh",
+      "name": "Update MForce",
+      "category": "upd",
       "id": "tcp401",
       "entry": "tcp401.sh",
       "name": "TCP Port Scanner",

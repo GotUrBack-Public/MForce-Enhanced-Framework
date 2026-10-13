@@ -14,6 +14,7 @@ category_description() {
         util) printf 'General-purpose utilities (planned)' ;;
         file) printf 'File operations (planned)' ;;
         cfg) printf 'Application options (planned)' ;;
+        upd) printf 'Check and install official updates with a progress display' ;;
         *) printf 'Explore the available modules' ;;
     esac
 }

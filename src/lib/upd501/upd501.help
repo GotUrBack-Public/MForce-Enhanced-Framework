@@ -1,0 +1,15 @@
+MForce Update Center — Educational Purpose / Professional Usage
+
+Updates MForce to the latest official commit on the main branch.
+Requires Git, Python 3, a clean working tree and an official origin remote.
+The updater refuses detached HEAD, other branches, diverged histories,
+local changes and non-official remote URLs.
+
+Usage:
+  bash src/functions/upd501.sh --check
+  bash src/functions/upd501.sh
+  bash src/functions/upd501.sh --yes
+
+Update is a Git fast-forward, never a force reset.
+Progress animation is indeterminate, not a fake percentage.
+Restart the framework after successful update.

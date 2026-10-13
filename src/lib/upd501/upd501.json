@@ -1,0 +1,10 @@
+{
+  "id": "upd501",
+  "name": "Update MForce",
+  "version": "1.0.0",
+  "type": "maintenance",
+  "category": "upd",
+  "entry": "upd501.sh",
+  "enabled": true,
+  "library": "upd501"
+}
