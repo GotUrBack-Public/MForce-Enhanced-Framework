@@ -1,0 +1,10 @@
+{
+  "id": "tls213",
+  "name": "TLS Certificate",
+  "version": "1.0.0",
+  "type": "osint",
+  "category": "net",
+  "entry": "tls213.sh",
+  "enabled": true,
+  "library": "tls213"
+}

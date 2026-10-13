@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#07111c">
   <meta name="color-scheme" content="dark">
-  <meta name="description" content="MForce Enhanced Framework. Open-source, modular command-line tooling for Termux and Linux, designed for network visibility and system insight.">
+  <meta name="description" content="MForce Enhanced Framework. Open-source Termux and Linux terminal toolkit with authorized network, website, API and OSINT inspection.">
   <meta property="og:type" content="website">
   <meta property="og:title" content="MForce — Enhanced Framework">
   <meta property="og:description" content="Network visibility. System insight. One consistent interface.">
@@ -14,10 +14,10 @@
   <link rel="canonical" href="../../">
   <link rel="icon" type="image/png" href="../../assets/banners/logo.png">
   <title>MForce — Enhanced Framework for Termux & Linux</title>
-  <link rel="stylesheet" href="../css/global.css?v=4">
-  <link rel="stylesheet" href="../css/main.css?v=4">
-  <script defer src="../js/global.js?v=4"></script>
-  <script defer src="../js/main.js?v=4"></script>
+  <link rel="stylesheet" href="../css/global.css?v=5">
+  <link rel="stylesheet" href="../css/main.css?v=5">
+  <script defer src="../js/global.js?v=5"></script>
+  <script defer src="../js/main.js?v=5"></script>
   <style>/* Critical fallback when external stylesheets are blocked */html{background:#07111c;color:#edf5fa;font-family:system-ui,sans-serif}body{margin:0}a{color:#39cbe5}</style>
 </head>
 <body>
@@ -27,7 +27,7 @@
   <div class="container header-inner">
     <a class="brand" href="../../" aria-label="MForce home"><span class="brand-emblem" aria-hidden="true">M<span>/</span>F</span><span class="brand-words"><strong>MFORCE</strong><small>ENHANCED FRAMEWORK</small></span></a>
     <nav class="nav" id="navigation" aria-label="Main navigation">
-      <a href="#platform">Platform</a><a href="#modules">Modules</a><a href="#architecture">Architecture</a><a href="#security">Security</a>
+      <a href="#platform">Platform</a><a href="#modules">Modules</a><a href="#osint">OSINT</a><a href="#security">Security</a><a href="#responsible-use">Responsible use</a>
       <a class="nav-github" href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
     </nav>
     <button class="command-trigger" type="button" data-command-open aria-label="Open quick navigation"><span>SEARCH</span><kbd>⌘ K</kbd></button>
@@ -42,10 +42,10 @@
         <div class="hero-status"><span class="pulse" aria-hidden="true"></span> MFORCE / OPEN SOURCE <span class="status-divider">/</span> v0.01.2</div>
         <p class="overline">TERMINAL-FIRST. PLATFORM-FLEXIBLE.</p>
         <h1>Take command<br>of your <span>system<span class="hero-period">.</span></span></h1>
-        <p class="hero-description">A modular, open-source Bash framework for <strong>Termux and Linux.</strong> One consistent terminal experience for network visibility, system insight, and everything you build next.</p>
+        <p class="hero-description">A modular, open-source Bash framework for <strong>Termux and Linux.</strong> Inspect public DNS, IPs, websites, APIs and JavaScript patterns with a transparent, low-impact workflow.</p>
         <div class="hero-actions"><a class="button button-primary" href="#install">Get started <span>↗</span></a><a class="button button-secondary" href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework" target="_blank" rel="noopener noreferrer">View source <span>↗</span></a></div>
         <div class="hero-platforms"><span>CHOOSE YOUR ENVIRONMENT</span><button type="button" data-platform-link="termux">↳ TERMUX</button><button type="button" data-platform-link="linux">↳ LINUX</button></div>
-        <div class="hero-footnote"><span class="micro-line"></span><span>OPEN CODE. LOCAL EXECUTION. NO ROOT REQUIRED.</span></div>
+        <div class="hero-footnote"><span class="micro-line"></span><span>EDUCATIONAL PURPOSE / PROFESSIONAL USAGE / AUTHORIZED TARGETS ONLY.</span></div>
       </div>
       <div class="hero-art" aria-label="MForce official branding and system preview">
         <div class="hero-art-frame"><div class="frame-scan" aria-hidden="true"></div>
@@ -59,22 +59,22 @@
     </div>
     <div class="container hero-bottom"><span>01 — PLATFORM</span><span>SCROLL TO EXPLORE <span>↓</span></span></div>
   </section>
-  <div class="facts"><div class="container facts-inner"><div class="fact"><strong data-count="2">02<span> / 04</span></strong><small>MODULES IMPLEMENTED / PLANNED</small></div><div class="fact"><strong data-count="100">100<span>%</span></strong><small>OPEN-SOURCE CODE</small></div><div class="fact"><strong data-count="1">01</strong><small>CONSISTENT TERMINAL INTERFACE</small></div><div class="fact"><strong>MIT</strong><small>LICENSE</small></div></div></div>
+  <div class="facts"><div class="container facts-inner"><div class="fact"><strong data-count="12">12<span> / 14</span></strong><small>ACTIVE / REGISTERED MODULES</small></div><div class="fact"><strong data-count="100">100<span>%</span></strong><small>OPEN-SOURCE CODE</small></div><div class="fact"><strong data-count="1">01</strong><small>CONSISTENT TERMINAL INTERFACE</small></div><div class="fact"><strong>MIT</strong><small>LICENSE</small></div></div></div>
   <div class="signal-band" aria-label="MForce — Bash runtime, terminal-first, open-source"><div class="signal-track" aria-hidden="true"><span>TERMINAL FIRST <b>✳</b> MODULAR CORE <b>✳</b> TERMUX + LINUX <b>✳</b> OPEN SOURCE <b>✳</b></span><span>TERMINAL FIRST <b>✳</b> MODULAR CORE <b>✳</b> TERMUX + LINUX <b>✳</b> OPEN SOURCE <b>✳</b></span></div></div>
   <section class="section modules-section" id="modules"><div class="container">
     <div class="section-intro"><div><p class="section-label">01 / CAPABILITIES</p><h2>Start with insight.<br><span>Go further from here.</span></h2></div><p class="section-lead">Explore the core modules below. Select one to preview the kind of information the framework can surface — no account or remote connection required.</p></div>
     <div class="modules-grid">
       <article class="module-card" data-card="network"><div class="card-top"><span class="card-icon">01</span><span class="state state-ready"><i></i> AVAILABLE</span></div><div class="module-content"><span class="card-label">CORE MODULE / NETWORK</span><h3>Network<br>Information</h3><p>Inspect network interfaces, local IP addresses, and host information directly from the terminal.</p></div><div class="card-bottom"><span>TERMINAL MODULE</span><button type="button" data-inspect="network" aria-label="Preview network module">PREVIEW ↗</button></div></article>
       <article class="module-card" data-card="system"><div class="card-top"><span class="card-icon">02</span><span class="state state-ready"><i></i> AVAILABLE</span></div><div class="module-content"><span class="card-label">CORE MODULE / SYSTEM</span><h3>System<br>Information</h3><p>Read architecture, kernel, Android release, SDK, device identifiers, and runtime details.</p></div><div class="card-bottom"><span>TERMINAL MODULE</span><button type="button" data-inspect="system" aria-label="Preview system module">PREVIEW ↗</button></div></article>
-      <article class="module-card muted-card" data-card="future"><div class="card-top"><span class="card-icon">03</span><span class="state state-planned">PLANNED</span></div><div class="module-content"><span class="card-label">FUTURE CAPABILITIES</span><h3>Built to<br>evolve.</h3><p>Connection Test and OSINT Search are registered for future development, but not available yet.</p></div><div class="card-bottom"><span>DEVELOPMENT ROADMAP</span><button type="button" data-inspect="future" aria-label="Preview planned modules">VIEW STATUS ↗</button></div></article>
+      <article class="module-card" data-card="future"><div class="card-top"><span class="card-icon">03</span><span class="state state-ready"><i></i> AVAILABLE</span></div><div class="module-content"><span class="card-label">PUBLIC INTELLIGENCE</span><h3>OSINT<br>Toolkit</h3><p>Ten focused modules for DNS, IPs, websites, APIs, rate-limit signals, JavaScript patterns, TLS and RDAP.</p></div><div class="card-bottom"><span>PUBLIC-DATA INSPECTION</span><button type="button" data-inspect="future" aria-label="Preview OSINT tools">PREVIEW ↗</button></div></article>
     </div>
     <div class="module-inspector" id="module-inspector">
       <div class="inspector-heading"><div><span class="inspector-marker">●</span> MODULE EXPLORER <span class="inspector-muted">/ INTERACTIVE PREVIEW</span></div><span class="sample-label">ILLUSTRATIVE OUTPUT · NOT LIVE</span></div>
       <div class="inspector-layout"><div class="inspector-tabs" role="tablist" aria-label="Module previews">
         <button type="button" role="tab" id="tab-network" aria-controls="inspector-panel" data-module="network" aria-selected="true" tabindex="0"><span>01</span> NETWORK INFORMATION <b>↗</b></button>
         <button type="button" role="tab" id="tab-system" aria-controls="inspector-panel" data-module="system" aria-selected="false" tabindex="-1"><span>02</span> SYSTEM INFORMATION <b>↗</b></button>
-        <button type="button" role="tab" id="tab-future" aria-controls="inspector-panel" data-module="future" aria-selected="false" tabindex="-1"><span>03</span> IN DEVELOPMENT <b>↗</b></button>
-        <div class="inspector-aside"><span>USE ↑ ↓ TO NAVIGATE</span><span>PREVIEW ONLY. NO DEVICE SCANNING.</span></div>
+        <button type="button" role="tab" id="tab-future" aria-controls="inspector-panel" data-module="future" aria-selected="false" tabindex="-1"><span>03</span> OSINT TOOLKIT <b>↗</b></button>
+        <div class="inspector-aside"><span>USE ↑ ↓ TO NAVIGATE</span><span>EDUCATIONAL / AUTHORIZED USE ONLY.</span></div>
       </div><div class="inspector-screen" role="tabpanel" id="inspector-panel" aria-labelledby="tab-network" tabindex="0">
         <div class="inspector-screen-bar"><span><i></i> <span id="inspector-title">network_info.sh — example</span></span><button type="button" id="replay-preview" aria-label="Replay module preview">↻ REPLAY</button></div>
         <pre id="inspector-output" class="inspector-output" aria-live="off">$ bash src/functions/lar386.sh --help
@@ -85,8 +85,32 @@
       </div></div>
     </div>
   </div></section>
+  <section class="section osint-section" id="osint"><div class="container">
+    <div class="section-intro"><div><p class="section-label">02 / OPEN-SOURCE INTELLIGENCE</p><h2>See the surface.<br><span>Understand the signals.</span></h2></div><p class="section-lead">Ten low-impact OSINT tools, available inside MForce. Clear observations rather than speculative vulnerability scores. For systems you own or have authorization to assess.</p></div>
+    <div class="osint-tool-grid">
+      <article class="osint-tool"><span>01 / NETWORK</span><h3>DNS + IP</h3><p>Inspect public records, IP scope and reverse DNS.</p><small>RECORD INSPECTION</small></article>
+      <article class="osint-tool"><span>02 / WEB</span><h3>Website audit</h3><p>HTTP status, security headers, cookie and form indicators.</p><small>PASSIVE GET</small></article>
+      <article class="osint-tool"><span>03 / CLIENT-SIDE</span><h3>DOM patterns</h3><p>Find innerHTML, outerHTML, insertAdjacentHTML and eval references.</p><small>STATIC HEURISTICS</small></article>
+      <article class="osint-tool"><span>04 / APIS</span><h3>Response insight</h3><p>Public JSON structure, CORS hints and status codes.</p><small>NO RESPONSE SECRETS</small></article>
+      <article class="osint-tool"><span>05 / TRAFFIC</span><h3>Rate-limit hints</h3><p>Observe HTTP 429, Retry-After and RateLimit headers.</p><small>NO LOAD TESTING</small></article>
+      <article class="osint-tool"><span>06 / TRUST</span><h3>TLS + RDAP</h3><p>Certificates, registration data, robots and sitemaps.</p><small>PUBLIC INFORMATION</small></article>
+    </div>
+    <div class="audit-console">
+      <div class="audit-console-top"><span>● WEB INSPECTOR / EXAMPLE REPORT</span><span>ILLUSTRATIVE · NOT LIVE</span></div>
+      <div class="audit-tabs" role="tablist" aria-label="Example audit reports"><button type="button" role="tab" id="audit-rate" data-audit="rate" aria-controls="audit-output" aria-selected="true" tabindex="0">RATE LIMITS</button><button type="button" role="tab" id="audit-dom" data-audit="dom" aria-controls="audit-output" aria-selected="false" tabindex="-1">DOM ANALYSIS</button><button type="button" role="tab" id="audit-headers" data-audit="headers" aria-controls="audit-output" aria-selected="false" tabindex="-1">SECURITY HEADERS</button></div>
+      <pre id="audit-output" role="tabpanel" aria-labelledby="audit-rate" tabindex="0">HTTP 200 / example.org
+RateLimit-* headers  : Not observed
+Retry-After          : Not observed
+HTTP 429             : Not observed
+Assessment           : UNKNOWN
+
+No limit evidence does not mean no limits exist.
+No burst testing or bypass attempts.</pre>
+      <div class="audit-console-foot"><span>OBSERVATION ≠ PROOF OF A VULNERABILITY</span><a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/blob/main/docs/OSINT.md" target="_blank" rel="noopener noreferrer">DOCUMENTATION ↗</a></div>
+    </div>
+  </div></section>
   <section class="section architecture-section" id="architecture"><div class="container architecture-grid">
-    <div class="architecture-text"><p class="section-label">02 / ARCHITECTURE</p><h2>One framework.<br><span>Two environments.</span></h2><p>Run the same Bash-based framework in Termux or a compatible Linux environment. The modular runtime, user interface, and configuration remain yours to inspect and extend. Some device-specific information varies by platform.</p><div class="architecture-list"><div><b>01</b><span>Modular Bash entry points</span></div><div><b>02</b><span>Explicit JSON configuration</span></div><div><b>03</b><span>Keyboard-driven navigation</span></div></div><a class="quiet-link" href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework#architecture" target="_blank" rel="noopener noreferrer">Explore technical architecture ↗</a></div>
+    <div class="architecture-text"><p class="section-label">03 / ARCHITECTURE</p><h2>One framework.<br><span>Two environments.</span></h2><p>Run the same Bash-based framework in Termux or a compatible Linux environment. The modular runtime, user interface, and configuration remain yours to inspect and extend. Some device-specific information varies by platform.</p><div class="architecture-list"><div><b>01</b><span>Modular Bash entry points</span></div><div><b>02</b><span>Explicit JSON configuration</span></div><div><b>03</b><span>Keyboard-driven navigation</span></div></div><a class="quiet-link" href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework#architecture" target="_blank" rel="noopener noreferrer">Explore technical architecture ↗</a></div>
     <div class="console" id="install">
       <div class="console-top"><div class="console-lights" aria-hidden="true"><i></i><i></i><i></i></div><span>QUICK START / INSTALLATION</span><span>bash</span></div>
       <div class="platform-toggle" role="group" aria-label="Select operating environment"><span class="toggle-label">ENVIRONMENT</span><div class="platform-buttons"><button type="button" data-platform="termux" aria-pressed="true">TERMUX</button><button type="button" data-platform="linux" aria-pressed="false">LINUX <span>DEBIAN / UBUNTU</span></button></div></div>
@@ -99,8 +123,17 @@ bash xrm742.sh</code></pre><div class="terminal-cursor" aria-hidden="true">▍</
       <div class="console-footer"><span id="platform-note">Termux on Android. Root is not required.</span><button type="button" id="copy-command">COPY COMMANDS <span>↗</span></button></div>
     </div>
   </div></section>
-  <section class="section security-section" id="security"><div class="container security-grid"><div><p class="section-label">03 / SECURITY</p><h2>Transparent by design.<br><span>Responsible by default.</span></h2><p>Security reports belong in private channels, not public issues. Review the project's security policy and published bounty scope before conducting research.</p><div class="security-links"><a class="quiet-link" href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/blob/main/SECURITY.md" target="_blank" rel="noopener noreferrer">Security policy ↗</a><a class="quiet-link" href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/tree/main/Bug_Bounty" target="_blank" rel="noopener noreferrer">Bug bounty ↗</a></div></div><div class="security-panel" aria-hidden="true"><div class="security-rings"><span></span><span></span><span></span></div><div class="security-emblem">MF<span>.</span></div><div class="security-panel-footer"><span>OPEN SOURCE / AUDITABLE</span><span>◆ RESPONSIBLE DISCLOSURE</span></div></div></div></section>
-  <section class="cta-section"><div class="container cta-layout"><div><p class="section-label">04 / CONTRIBUTE</p><h2>Build what's next.</h2><p>Read the code, test the modules, or contribute improvements to the framework.</p></div><a class="button button-primary" href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework" target="_blank" rel="noopener noreferrer">Explore on GitHub <span>↗</span></a></div></section>
+  <section class="section security-section" id="security"><div class="container security-grid"><div><p class="section-label">04 / SECURITY</p><h2>Transparent by design.<br><span>Responsible by default.</span></h2><p>Security reports belong in private channels, not public issues. Review the project's security policy and published bounty scope before conducting research.</p><div class="security-links"><a class="quiet-link" href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/blob/main/SECURITY.md" target="_blank" rel="noopener noreferrer">Security policy ↗</a><a class="quiet-link" href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/tree/main/Bug_Bounty" target="_blank" rel="noopener noreferrer">Bug bounty ↗</a></div></div><div class="security-panel" aria-hidden="true"><div class="security-rings"><span></span><span></span><span></span></div><div class="security-emblem">MF<span>.</span></div><div class="security-panel-footer"><span>OPEN SOURCE / AUDITABLE</span><span>◆ RESPONSIBLE DISCLOSURE</span></div></div></div></section>
+  <section class="section responsible-section" id="responsible-use"><div class="container">
+    <div class="section-intro"><div><p class="section-label">05 / RESPONSIBLE USE</p><h2>Purpose matters.<br><span>Permission comes first.</span></h2></div><p class="section-lead">Public data is not necessarily free of personal information. Review your scope, legal basis, collection and retention before using the toolkit.</p></div>
+    <div class="responsible-grid">
+      <article><span>01 / EDUCATIONAL PURPOSE</span><h3>Learn responsibly.</h3><p>Use your own environments or explicitly permitted targets. Education never authorizes unauthorized access or scanning.</p></article>
+      <article><span>02 / PROFESSIONAL USAGE</span><h3>Work within scope.</h3><p>Useful for permitted infrastructure inventories, professional audits and scoped research. Follow service policies and written authorization.</p></article>
+      <article><span>03 / GDPR / DSGVO</span><h3>Minimize by default.</h3><p>A privacy-conscious deployment is possible with a lawful basis, purpose limitation and safeguards. GDPR compliance is not automatic; RDAP uses a third-party service.</p></article>
+    </div>
+    <p class="responsible-note">Data protection depends on how each tool is used. Network requests and shell history can expose metadata; no general legal certification is provided.</p>
+  </div></section>
+  <section class="cta-section"><div class="container cta-layout"><div><p class="section-label">06 / CONTRIBUTE</p><h2>Build what's next.</h2><p>Read the code, test the modules, or contribute improvements to the framework.</p></div><a class="button button-primary" href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework" target="_blank" rel="noopener noreferrer">Explore on GitHub <span>↗</span></a></div></section>
 </main>
 <button class="back-to-top" type="button" aria-label="Back to top" title="Back to top">↑</button>
 <dialog class="command-dialog" id="command-dialog" aria-label="Quick navigation">
@@ -110,10 +143,12 @@ bash xrm742.sh</code></pre><div class="terminal-cursor" aria-hidden="true">▍</
   <div class="command-results" id="command-results">
     <a href="#platform" data-keywords="home overview platform termux linux">↗ <span>Platform overview</span><small>01</small></a>
     <a href="#modules" data-keywords="network system modules capabilities explorer">↗ <span>Explore modules</span><small>02</small></a>
+    <a href="#osint" data-keywords="osint dns ip website api ratelimits innerhtml javascript">↗ <span>OSINT inspection tools</span><small>05</small></a>
+    <a href="#responsible-use" data-keywords="educational professional gdpr dsgvo compliance privacy">↗ <span>Responsible usage & privacy</span><small>06</small></a>
     <a href="#install" data-keywords="installation setup commands termux linux">↗ <span>Installation & setup</span><small>03</small></a>
     <a href="#security" data-keywords="vulnerability disclosure policy security">↗ <span>Security & disclosures</span><small>04</small></a>
     <a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework" target="_blank" rel="noopener noreferrer" data-keywords="github source repository code">↗ <span>Open GitHub repository</span><small>↗</small></a>
   </div><div class="command-dialog-foot">ESC TO CLOSE <span>↑ ↓ NAVIGATE · ENTER OPEN</span></div>
 </dialog>
-<footer class="site-footer"><div class="container footer-main"><div class="footer-wordmark">MFORCE<span> / ENHANCED FRAMEWORK</span></div><div class="footer-links"><a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework" target="_blank" rel="noopener noreferrer">GITHUB ↗</a><a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/issues" target="_blank" rel="noopener noreferrer">ISSUES ↗</a><a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">LICENSE ↗</a></div></div><div class="container footer-meta"><span>© <span id="year">2026</span> MFORCE ENHANCED FRAMEWORK</span><span>TERMUX + LINUX · MIT LICENSED</span></div></footer>
+<footer class="site-footer"><div class="container footer-main"><div class="footer-wordmark">MFORCE<span> / ENHANCED FRAMEWORK</span></div><div class="footer-links"><a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework" target="_blank" rel="noopener noreferrer">GITHUB ↗</a><a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/issues" target="_blank" rel="noopener noreferrer">ISSUES ↗</a><a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">LICENSE ↗</a><a href="#responsible-use">RESPONSIBLE USE ↗</a></div></div><div class="container footer-meta"><span>© <span id="year">2026</span> MFORCE ENHANCED FRAMEWORK</span><span>TERMUX + LINUX · EDUCATIONAL / PROFESSIONAL · MIT</span></div></footer>
 </body></html>

@@ -1,0 +1,10 @@
+{
+  "id": "rob315",
+  "name": "Robots & Sitemap",
+  "version": "1.0.0",
+  "type": "osint",
+  "category": "osint",
+  "entry": "rob315.sh",
+  "enabled": true,
+  "library": "rob315"
+}

@@ -1,0 +1,10 @@
+{
+  "id": "hdr214",
+  "name": "HTTP Headers",
+  "version": "1.0.0",
+  "type": "osint",
+  "category": "net",
+  "entry": "hdr214.sh",
+  "enabled": true,
+  "library": "hdr214"
+}

@@ -1,0 +1,14 @@
+Rate Limit Signals
+
+Check one response for 429 and RateLimit/Retry-After headers; no stress tests.
+
+Usage:
+  bash src/functions/rat313.sh [public target]
+Example:
+  bash src/functions/rat313.sh https://example.org
+
+EDUCATIONAL PURPOSE / PROFESSIONAL USAGE
+Only inspect owned or authorized targets. GDPR-conscious use requires
+appropriate legal basis, data minimization, and safeguards.
+No module certifies GDPR compliance. HTTP checks are low-impact;
+rate limits are never bypassed; DOM matches are not XSS proof.

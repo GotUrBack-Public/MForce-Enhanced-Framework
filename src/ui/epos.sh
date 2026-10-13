@@ -6,7 +6,7 @@ source "$ROOT_DIR/src/ui/theme.lib" || exit 1
 main() {
     hide_cursor
     mf_ui_header 'INITIALIZING' "$(mf_ui_platform) / $MF_VERSION"
-    mf_ui_text 'MForce Enhanced Framework' bright
+    mf_ui_logo
     mf_ui_gap
     mf_ui_section 'RUNTIME CHECKS'
     mf_ui_status 'Project configuration validated'

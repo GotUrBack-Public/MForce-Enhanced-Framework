@@ -53,3 +53,25 @@
 @media(max-width:430px){.inspector-tabs button{font-size:7px;letter-spacing:0}.inspector-screen-foot{font-size:8px;flex-wrap:wrap}.platform-buttons{width:100%;justify-content:stretch}.platform-buttons button{flex:1;padding:10px 8px}.platform-buttons button span{display:block;margin-top:4px}.signal-track>span{font-size:9px}.hero-platforms>span{flex-basis:100%}}
 @media(hover:none){.module-card::before{display:none}}
 @media(prefers-reduced-motion:reduce){.hero-grid,.hero-sweep,.frame-scan,.brand-image::after,.hero-status .pulse,.floating-tag strong i,.inspector-marker,.inspector-screen-bar i,.terminal-meta i,.signal-track,.inspector-output::after{animation:none!important}.motion-ready .hero-status,.motion-ready .overline,.motion-ready .hero h1,.motion-ready .hero-description,.motion-ready .hero-actions,.motion-ready .hero-platforms,.motion-ready .hero-art{animation:none!important}.motion-ready [data-reveal]{opacity:1!important;transform:none!important;transition:none!important}}
+
+/* OSINT explorer / illustrative report / responsible use */
+.osint-section{background:radial-gradient(ellipse at 80% 0,rgba(0,184,217,.09),transparent 55%),#07121e;border-block:1px solid #294b60}
+.osint-tool-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.osint-tool{min-height:215px;padding:30px;background:linear-gradient(145deg,#102636,#0a1b29);border:1px solid #2b4b5f;transition:border-color .25s,transform .25s,box-shadow .25s;position:relative;overflow:hidden}
+.osint-tool:hover{transform:translateY(-5px);border-color:var(--cyan);box-shadow:0 24px 45px #0004}
+.osint-tool>span,.osint-tool>small,.responsible-grid article>span{font:10px var(--mono);letter-spacing:.09em;color:var(--cyan)}
+.osint-tool h3{font-size:25px;letter-spacing:-.045em;margin:29px 0 8px}.osint-tool p{font-size:13px;color:#a5bbcb;line-height:1.7;margin:0 0 16px}.osint-tool>small{color:#759cae}
+.audit-console{margin-top:36px;border:1px solid #356079;background:#07131e;box-shadow:0 25px 60px #02080e70}
+.audit-console-top,.audit-console-foot{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:17px 23px;color:#99b7c8;font:10px var(--mono);letter-spacing:.07em}
+.audit-console-top{border-bottom:1px solid #2a4a60}.audit-console-top>span:first-child{color:var(--cyan)}
+.audit-tabs{display:flex;gap:10px;flex-wrap:wrap;padding:18px 23px 0}.audit-tabs button{background:transparent;border:1px solid #35546a;color:#a7c2d2;cursor:pointer;padding:12px 16px;font:10px var(--mono);transition:border-color .2s,background .2s}
+.audit-tabs button:hover{border-color:var(--cyan)}.audit-tabs button[aria-selected=true]{background:var(--cyan);border-color:var(--cyan);color:#07111c}
+#audit-output{padding:27px 23px 36px;margin:0;min-height:260px;white-space:pre-wrap;overflow-wrap:anywhere;color:#d3e4ef;font:12px/2 var(--mono)}
+.audit-console-foot{border-top:1px solid #294b60}.audit-console-foot a{color:var(--cyan)}.audit-console-foot a:hover{text-decoration:underline}
+.responsible-section{background:#0b1927;border-top:1px solid #294b60}.responsible-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.responsible-grid article{padding:30px;background:#0f2536;border:1px solid #315367;min-height:225px}
+.responsible-grid article h3{font-size:23px;margin:27px 0 10px;letter-spacing:-.04em}.responsible-grid article p{font-size:13px;color:#a5bdcb;line-height:1.75;margin:0}
+.responsible-note{font:10px/1.9 var(--mono);color:#92abbc;margin-top:26px}
+@media(max-width:900px){.osint-tool-grid,.responsible-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.responsible-grid article:last-child{grid-column:span 2}}
+@media(max-width:600px){.osint-tool-grid,.responsible-grid{grid-template-columns:1fr}.responsible-grid article:last-child{grid-column:auto}.audit-console-top,.audit-console-foot{align-items:flex-start;flex-direction:column}.audit-tabs{padding:16px 12px 0;gap:6px}.audit-tabs button{padding:10px;font-size:9px}.osint-tool{min-height:185px}}
+@media(prefers-reduced-motion:reduce){.osint-tool,.audit-tabs button{transition:none!important}}

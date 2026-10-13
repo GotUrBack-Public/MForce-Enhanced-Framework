@@ -1,0 +1,14 @@
+RDAP Registration
+
+Registration data using rdap.org (target disclosed to external provider).
+
+Usage:
+  bash src/functions/rdp316.sh [public target]
+Example:
+  bash src/functions/rdp316.sh example.org
+
+EDUCATIONAL PURPOSE / PROFESSIONAL USAGE
+Only inspect owned or authorized targets. GDPR-conscious use requires
+appropriate legal basis, data minimization, and safeguards.
+No module certifies GDPR compliance. HTTP checks are low-impact;
+rate limits are never bypassed; DOM matches are not XSS proof.

@@ -1,0 +1,10 @@
+{
+  "id": "web311",
+  "name": "Website Inspector",
+  "version": "1.0.0",
+  "type": "osint",
+  "category": "osint",
+  "entry": "web311.sh",
+  "enabled": true,
+  "library": "web311"
+}

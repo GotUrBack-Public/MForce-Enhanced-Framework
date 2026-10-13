@@ -27,6 +27,76 @@
       "name": "OSINT Search",
       "category": "osint",
       "enabled": false
+    },
+    {
+      "id": "dns211",
+      "entry": "dns211.sh",
+      "name": "DNS Records",
+      "category": "net",
+      "enabled": true
+    },
+    {
+      "id": "ipa212",
+      "entry": "ipa212.sh",
+      "name": "IP Intelligence",
+      "category": "net",
+      "enabled": true
+    },
+    {
+      "id": "tls213",
+      "entry": "tls213.sh",
+      "name": "TLS Certificate",
+      "category": "net",
+      "enabled": true
+    },
+    {
+      "id": "hdr214",
+      "entry": "hdr214.sh",
+      "name": "HTTP Headers",
+      "category": "net",
+      "enabled": true
+    },
+    {
+      "id": "web311",
+      "entry": "web311.sh",
+      "name": "Website Inspector",
+      "category": "osint",
+      "enabled": true
+    },
+    {
+      "id": "api312",
+      "entry": "api312.sh",
+      "name": "API Metadata",
+      "category": "osint",
+      "enabled": true
+    },
+    {
+      "id": "rat313",
+      "entry": "rat313.sh",
+      "name": "Rate Limit Signals",
+      "category": "osint",
+      "enabled": true
+    },
+    {
+      "id": "jsn314",
+      "entry": "jsn314.sh",
+      "name": "JavaScript DOM Review",
+      "category": "osint",
+      "enabled": true
+    },
+    {
+      "id": "rob315",
+      "entry": "rob315.sh",
+      "name": "Robots & Sitemap",
+      "category": "osint",
+      "enabled": true
+    },
+    {
+      "id": "rdp316",
+      "entry": "rdp316.sh",
+      "name": "RDAP Registration",
+      "category": "osint",
+      "enabled": true
     }
   ]
 }

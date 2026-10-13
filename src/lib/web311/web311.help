@@ -1,0 +1,14 @@
+Website Inspector
+
+Passive HTML and HTTP audit, forms, metadata, rate signals and DOM sink detection.
+
+Usage:
+  bash src/functions/web311.sh [public target]
+Example:
+  bash src/functions/web311.sh https://example.org
+
+EDUCATIONAL PURPOSE / PROFESSIONAL USAGE
+Only inspect owned or authorized targets. GDPR-conscious use requires
+appropriate legal basis, data minimization, and safeguards.
+No module certifies GDPR compliance. HTTP checks are low-impact;
+rate limits are never bypassed; DOM matches are not XSS proof.

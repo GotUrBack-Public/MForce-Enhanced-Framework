@@ -1,0 +1,10 @@
+{
+  "id": "jsn314",
+  "name": "JavaScript DOM Review",
+  "version": "1.0.0",
+  "type": "osint",
+  "category": "osint",
+  "entry": "jsn314.sh",
+  "enabled": true,
+  "library": "jsn314"
+}
