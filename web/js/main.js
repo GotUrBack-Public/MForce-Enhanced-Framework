@@ -283,7 +283,7 @@
     dom: 'JAVASCRIPT / STATIC PATTERNS\nSource               : illustrative app.js\ninnerHTML            : 1 occurrence\ninsertAdjacentHTML   : 1 occurrence\nAssessment           : MANUAL REVIEW\n\nA DOM sink is NOT proof of XSS.\nNo payload injection or code execution.',
     headers: 'SECURITY HEADERS / EXAMPLE\nContent-Security-Policy  : Observed\nReferrer-Policy          : Observed\nHSTS                     : Observed\nX-Content-Type-Options   : Not observed\n\nMissing headers are review hints, not an exploit.'
   };
-  const auditTabs = $('[data-audit]');
+  const auditTabs = $$('[data-audit]');
   const auditOutput = $('#audit-output');
   const chooseAudit = name => {
     if (!(name in audits)) return;
