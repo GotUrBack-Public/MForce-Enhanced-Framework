@@ -97,6 +97,13 @@
       "name": "RDAP Registration",
       "category": "osint",
       "enabled": true
+    },
+    {
+      "id": "tcp401",
+      "entry": "tcp401.sh",
+      "name": "TCP Port Scanner",
+      "category": "offensive",
+      "enabled": true
     }
   ]
 }
