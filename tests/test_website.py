@@ -109,7 +109,7 @@ class WebsiteTests(unittest.TestCase):
         self.assertIn("IntersectionObserver", glass_js)
         self.assertIn("aria-current", glass_js)
         self.assertIn("motionQuery.matches", glass_js)
-        self.assertNotRegex(glass_js, r"\\bfetch\\s*\\(|XMLHttpRequest|WebSocket\\s*\\(")
+        self.assertNotRegex(glass_js, r"\bfetch\s*\(|XMLHttpRequest|WebSocket\s*\(")
 
     @unittest.skipUnless(shutil.which("node"), "Node.js unavailable")
     def test_javascript_interactions(self):
