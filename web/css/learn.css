@@ -209,3 +209,14 @@ body{overflow-x:clip}
   .hero-orbit::before,.hero-orbit::after,.hero-orbit i,.academy-orbit,.stage-led,.tutorial-terminal-top i{animation:none!important}
   .tutorial-choice,.tutorial-choice-arrow,.academy-track,.tutorial-track span,.tutorial-controls button,.hero-learn-teaser,.osint-tool::after{transition:none!important}
 }
+
+/* Five-module explorer: keep all tabs reachable on narrow screens. */
+.module-card-new{min-height:340px;background:linear-gradient(145deg,#102c3b,#0a1c2a)}
+.module-card-new .card-icon{border-color:#4b94ab}
+@media(max-width:900px){.module-card:last-child{grid-column:auto}}
+@media(max-width:760px){
+  .inspector-tabs{display:flex;flex-direction:row;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity;scrollbar-width:thin}
+  .inspector-tabs button{flex:0 0 144px;min-height:70px;scroll-snap-align:start;white-space:normal}
+  .inspector-tabs button[aria-selected=true]{background:#103347}
+}
+@media(max-width:600px){.module-card-new{min-height:300px}}
