@@ -1,0 +1,189 @@
+#!/usr/bin/env bash
+# Shared MForce terminal presentation. Source after src/core/runtime.sh.
+mf_require_json "$MF_ROOT/src/colors/clrs.json" colors || return 1
+# Output remains readable on narrow screens and when color is disabled.
+MF_UI_COLS=80
+MF_UI_LINES=24
+MF_UI_COMPACT=0
+MF_UI_COLOR=0
+MF_UI_GLYPH=1
+MF_UI_BORDER=''
+MF_UI_ACCENT=''
+MF_UI_BRIGHT=''
+MF_UI_MUTED=''
+MF_UI_DIM=''
+MF_UI_GOOD=''
+MF_UI_WARN=''
+MF_UI_RESET=''
+MF_UI_BOLD=''
+
+mf_ui_init() {
+    local cols=0
+    if [[ -n "${MF_UI_COLUMNS:-}" ]]; then
+        cols="$MF_UI_COLUMNS"
+    elif [[ -t 1 ]]; then
+        cols="$(tput cols 2>/dev/null || :)"
+    fi
+    [[ "$cols" =~ ^[0-9]+$ ]] || cols=0
+    ((cols >= 20)) || cols="${COLUMNS:-80}"
+    [[ "$cols" =~ ^[0-9]+$ ]] || cols=80
+    ((cols < 30)) && cols=30
+    ((cols > 100)) && cols=100
+    MF_UI_COLS=$cols
+    local lines=0
+    if [[ -t 1 ]]; then lines="$(tput lines 2>/dev/null || :)"; fi
+    [[ "$lines" =~ ^[0-9]+$ ]] || lines=0
+    ((lines >= 10)) || lines="${LINES:-32}"
+    [[ "$lines" =~ ^[0-9]+$ ]] || lines=32
+    MF_UI_LINES=$lines
+    MF_UI_COMPACT=0
+    ((lines < 29 || cols < 44)) && MF_UI_COMPACT=1
+    if [[ "${MF_UI_FORCE_COMPACT:-}" == 1 ]]; then MF_UI_COMPACT=1; fi
+
+    MF_UI_COLOR=0
+    MF_UI_GLYPH=1
+    [[ "${MF_UI_ASCII:-0}" != 1 && "${LC_ALL:-${LC_CTYPE:-${LANG:-}}}" != C ]] || MF_UI_GLYPH=0
+    if [[ -t 1 && ! -v NO_COLOR && "${TERM:-dumb}" != dumb && "${MF_UI_NO_COLOR:-0}" != 1 ]]; then
+        MF_UI_COLOR=1
+    fi
+    MF_UI_RESET=''; MF_UI_ACCENT=''; MF_UI_BRIGHT=''; MF_UI_MUTED=''
+    MF_UI_DIM=''; MF_UI_GOOD=''; MF_UI_WARN=''; MF_UI_BOLD=''
+    if ((MF_UI_COLOR)); then
+        MF_UI_RESET=$'\e[0m'
+        MF_UI_ACCENT=$'\e[38;5;44m'
+        MF_UI_BRIGHT=$'\e[1;97m'
+        MF_UI_MUTED=$'\e[38;5;109m'
+        MF_UI_DIM=$'\e[38;5;60m'
+        MF_UI_GOOD=$'\e[38;5;78m'
+        MF_UI_WARN=$'\e[38;5;220m'
+        MF_UI_BOLD=$'\e[1m'
+        local colors
+        colors="$(tput colors 2>/dev/null || :)"
+        if [[ "$colors" =~ ^[0-9]+$ ]] && ((colors < 256)); then
+            MF_UI_ACCENT=$'\e[96m'; MF_UI_MUTED=$'\e[37m'; MF_UI_DIM=$'\e[90m'
+            MF_UI_GOOD=$'\e[92m'; MF_UI_WARN=$'\e[93m'
+        fi
+    fi
+}
+
+# Bash-only repeat: no external utilities and bounded by terminal width.
+mf_ui_repeat() {
+    local character="$1" count="$2" padding
+    ((count > 0)) || return 0
+    printf -v padding '%*s' "$count" ''
+    printf '%s' "${padding// /$character}"
+}
+
+mf_ui_clip() {
+    local text="$1" available="$2"
+    ((available > 0)) || return 0
+    # ASCII-only markup for dashboard metadata; Bash character indexing honors UTF-8 locales.
+    if ((${#text} > available)); then
+        if ((available > 3)); then printf '%s...' "${text:0:available-3}"
+        else printf '%s' "${text:0:available}"; fi
+    else
+        printf '%s' "$text"
+    fi
+}
+
+mf_ui_clear() {
+    [[ -t 1 && "${TERM:-dumb}" != dumb ]] && printf '\033[H\033[2J' || :
+}
+
+mf_ui_platform() {
+    if mf_is_termux; then printf 'TERMUX'
+    elif [[ "$(uname -s 2>/dev/null)" == Linux ]]; then printf 'LINUX'
+    else printf 'UNIX'; fi
+}
+
+mf_ui_rule() {
+    ((MF_UI_COMPACT)) && return 0
+    printf '%s  ' "$MF_UI_DIM"
+    mf_ui_repeat "$([[ "$MF_UI_GLYPH" == 1 ]] && printf '─' || printf '-')" "$((MF_UI_COLS-4))"
+    printf '%s\n' "$MF_UI_RESET"
+}
+
+mf_ui_header() {
+    local page="$1" section="${2:-WORKSPACE}" rule max_label width
+    mf_ui_init
+    mf_ui_clear
+    rule='─'; ((MF_UI_GLYPH)) || rule='-'
+    max_label=$((MF_UI_COLS-16))
+    width=$((MF_UI_COLS-4))
+    printf '\n%s  %s' "$MF_UI_ACCENT" "$([[ "$MF_UI_GLYPH" == 1 ]] && printf '╭' || printf '+')"
+    mf_ui_repeat "$rule" "$((width-2))"
+    printf '%s%s\n' "$([[ "$MF_UI_GLYPH" == 1 ]] && printf '╮' || printf '+')" "$MF_UI_RESET"
+    printf '  %s  %s%s%s\n' "$( ((MF_UI_GLYPH)) && printf '│' || printf '|')" "$MF_UI_BRIGHT" "$(mf_ui_clip 'MFORCE / ENHANCED FRAMEWORK' "$((MF_UI_COLS-6))")" "$MF_UI_RESET"
+    printf '  %s  %s%s%s\n' "$( ((MF_UI_GLYPH)) && printf '│' || printf '|')" "$MF_UI_ACCENT" "$(mf_ui_clip "$page / $section" "$((MF_UI_COLS-6))")" "$MF_UI_RESET"
+    printf '%s  ' "$MF_UI_ACCENT"
+    printf '%s' "$( ((MF_UI_GLYPH)) && printf '╰' || printf '+')"
+    mf_ui_repeat "$rule" "$((width-2))"
+    printf '%s%s\n' "$( ((MF_UI_GLYPH)) && printf '╯' || printf '+')" "$MF_UI_RESET"
+    ((MF_UI_COMPACT)) || printf '\n'
+}
+
+mf_ui_section() {
+    local label="$1"
+    printf '  %s%s%s\n' "$MF_UI_ACCENT" "$(mf_ui_clip "$label" "$((MF_UI_COLS-4))")" "$MF_UI_RESET"
+    mf_ui_rule
+}
+
+mf_ui_row() {
+    local index="$1" label="$2" note="${3:-}" selected="${4:-0}" marker=' ' available
+    available=$((MF_UI_COLS-14))
+    ((selected)) && marker='>'
+    ((MF_UI_GLYPH)) && ((selected)) && marker='❯'
+    if ((selected)); then
+        printf '%s  %s  %02d  %s%s%s\n' "$MF_UI_ACCENT" "$marker" "$index" "$MF_UI_BRIGHT" "$(mf_ui_clip "$label" "$available")" "$MF_UI_RESET"
+    else
+        printf '  %s  %02d  %s%s%s\n' "$marker" "$index" "$MF_UI_MUTED" "$(mf_ui_clip "$label" "$available")" "$MF_UI_RESET"
+    fi
+    if [[ -n "$note" ]] && (( ! MF_UI_COMPACT )); then
+        printf '         %s%s%s\n' "$MF_UI_DIM" "$(mf_ui_clip "$note" "$((MF_UI_COLS-11))")" "$MF_UI_RESET"
+    fi
+}
+
+mf_ui_text() {
+    local text="$1" tone="${2:-normal}" color="$MF_UI_MUTED"
+    case "$tone" in bright) color="$MF_UI_BRIGHT";; accent) color="$MF_UI_ACCENT";; good) color="$MF_UI_GOOD";; warn) color="$MF_UI_WARN";; esac
+    printf '  %s%s%s\n' "$color" "$(mf_ui_clip "$text" "$((MF_UI_COLS-4))")" "$MF_UI_RESET"
+}
+
+mf_ui_field() {
+    local label="$1" value="$2" key_width=13
+    ((MF_UI_COLS < 53)) && key_width=10
+    printf '  %s%-*.*s%s %s%s%s\n' "$MF_UI_DIM" "$key_width" "$key_width" "$label" "$MF_UI_RESET" "$MF_UI_BRIGHT" "$(mf_ui_clip "$value" "$((MF_UI_COLS-key_width-5))")" "$MF_UI_RESET"
+}
+
+mf_ui_gap() { ((MF_UI_COMPACT)) || printf '\n'; }
+
+mf_ui_footer() {
+    local legend="$1" compact="${2:-ENTER  Select  |  Q  Back}"
+    if ((MF_UI_COMPACT)); then legend="$compact"
+    else mf_ui_gap; mf_ui_rule; fi
+    printf '  %s%s%s\n' "$MF_UI_MUTED" "$(mf_ui_clip "$legend" "$((MF_UI_COLS-4))")" "$MF_UI_RESET"
+    mf_ui_gap
+}
+
+mf_ui_status() {
+    local label="$1" status="${2:-ready}" color="$MF_UI_GOOD" token='●'
+    ((MF_UI_GLYPH)) || token='*'
+    [[ "$status" == warning ]] && color="$MF_UI_WARN"
+    printf '  %s%s%s  %s\n' "$color" "$token" "$MF_UI_RESET" "$(mf_ui_clip "$label" "$((MF_UI_COLS-7))")"
+}
+
+mf_ui_pause() { mf_read_key BACK; }
+
+mf_ui_help() {
+    mf_ui_header 'KEYBOARD GUIDE' 'NAVIGATION'
+    mf_ui_section 'KEYBOARD SHORTCUTS'
+    mf_ui_field 'UP / K' 'Previous item'
+    mf_ui_field 'DOWN / J' 'Next item'
+    mf_ui_field 'ENTER' 'Select highlighted item'
+    mf_ui_field '1 - 9' 'Jump to numbered item'
+    mf_ui_field 'HOME / END' 'First / last item'
+    mf_ui_field 'Q' 'Go back or exit'
+    mf_ui_field '?' 'Open keyboard guide'
+    mf_ui_footer 'ANY KEY  Return to menu'
+    mf_ui_pause
+}
