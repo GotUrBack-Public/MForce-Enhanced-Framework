@@ -1,0 +1,9 @@
+HTTP Reflection Inspector — bounded real HTTP GET checks.
+Sends a unique harmless alphanumeric marker in each query parameter.
+Maximum 8 requests, no redirects, no POST, no XSS payloads.
+Usage:
+  bash src/functions/ref403.sh 'http://127.0.0.1:8000/?q=test' --authorized
+  bash src/functions/ref403.sh 'https://your-authorized-site.example/?q=test' --authorized --allow-public --json
+  bash src/functions/ref403.sh 'http://127.0.0.1:8000/' --authorized --param q
+A reflection is NOT a vulnerability or proof of XSS.
+Use only against systems you own or have explicit authorization to assess.
