@@ -1,5 +1,3 @@
-
-<h1 align="center">MForce Enhanced Framework</h1>
 <p align="center">
 <img src="https://img.shields.io/badge/Bot-Active-green" alt="Bot status">
 <img src="https://img.shields.io/badge/Version-v0.01.2-blue" alt="Version">
@@ -39,4 +37,4 @@
 
 
 
-<p align="center"><img src="assets/banners/logo.png" alt="MForce Enhanced Framework" width="100%"></p>
+<p align="center"><img src="assets/banners/logo.png" alt="MForce Enhanced Framework" width="80%"></p>
