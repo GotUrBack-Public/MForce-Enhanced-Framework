@@ -1,0 +1,10 @@
+{
+  "id": "ref403",
+  "name": "HTTP Reflection Inspector",
+  "version": "1.0.0",
+  "type": "offensive",
+  "category": "offensive",
+  "entry": "ref403.sh",
+  "enabled": true,
+  "library": "ref403"
+}
