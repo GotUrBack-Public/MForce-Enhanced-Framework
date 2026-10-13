@@ -20,6 +20,7 @@
   <a href="#capabilities">Capabilities</a> &nbsp; / &nbsp;
   <a href="#architecture">Architecture</a> &nbsp; / &nbsp;
   <a href="#configuration">Configuration</a> &nbsp; / &nbsp;
+  <a href="#website-tutorials--future-schulung">Tutorials</a> &nbsp; / &nbsp;
   <a href="#development">Development</a>
 </p>
 
@@ -36,7 +37,7 @@ A rebuild of the original [mForce](https://github.com/MidnightCoding1/mForce) ar
 | Navigate categories, inspect a module, then run it. | Separate entry points, shared libraries and module resources. | JSON registries, validated settings and configurable colors. |
 
 > **Project status · Early development**<br>
-> Network Information, System Information and ten passive OSINT modules are available. More features remain under development.
+> Fourteen modules are enabled: Network Information, System Information, ten passive OSINT modules, the authorized TCP Port Scanner and the Update Center. More features remain under development.
 
 ## Quick start
 
@@ -142,9 +143,9 @@ bash src/functions/tcp401.sh example.org --authorized --allow-public --ports 80,
 
 The scanner uses TCP connections, not exploits. Its port count, timeouts and concurrency are bounded. `--authorized` is your confirmation of permission; `--allow-public` is additionally required for public IP addresses.
 
-### Update MForce — Update Center (PR #11)
+### Update MForce — Update Center
 
-These commands become available **after [PR #11](https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/pull/11) is merged**. Updates require an official Git clone on `main`, a clean working tree, Git and Python 3.
+The Update Center is available in the **Updates** category. Updates require an official Git clone on `main`, a clean working tree, Git and Python 3.
 
 ```bash
 # Check for a new version; do not change files
@@ -175,6 +176,8 @@ python3 -m unittest discover -s tests -v
 | **Network Information** | Display network interfaces, addresses and hostname. | Available |
 | **System Information** | Inspect architecture, kernel, Android version, SDK, device and runtime details. | Available |
 | **OSINT toolkit (10 modules)** | DNS, IP, TLS, HTTP, websites, APIs, JavaScript, rate indicators, robots and RDAP. | Available |
+| **TCP Port Scanner** | Bounded TCP connect checks for explicitly authorized targets. | Available |
+| **Update Center** | Check the official repository and apply safe fast-forward updates. | Available |
 | Connection Test | Registered entry for a future connectivity module. | Not implemented · disabled |
 | OSINT Search | Registered entry for a future search module. | Not implemented · disabled |
 
@@ -195,6 +198,20 @@ Android properties are read through `getprop` in Termux; those fields are unavai
 The existing information modules display their results locally; they do not upload their output.
 
 </details>
+
+## Website, tutorials & future Schulung
+
+The [MForce website](https://goturback-public.github.io/MForce-Enhanced-Framework/) includes an interactive module explorer, OSINT report examples and five guided command tutorials:
+
+1. First launch — install and run on Termux or Debian/Ubuntu Linux.
+2. Website intelligence — review public HTTP, JavaScript and rate-limit signals.
+3. Network basics — DNS, TLS and IP context.
+4. Authorized port checks — localhost-first TCP scanning and careful interpretation.
+5. Update Center — check, apply and restart safely.
+
+The website only shows examples and **never runs network scans**. The **Schulung / MForce Academy** tab is a roadmap for future training (terminal foundations, OSINT methodology, authorized security and reporting/privacy). **No courses, certifications or enrollment are currently offered.**
+
+Website regression checks are included in `tests/test_website.py`. Training examples and source files are maintained under `web/`.
 
 ## OSINT: Educational Purpose & Professional Usage
 
