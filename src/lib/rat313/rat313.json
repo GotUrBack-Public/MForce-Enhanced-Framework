@@ -1,0 +1,10 @@
+{
+  "id": "rat313",
+  "name": "Rate Limit Signals",
+  "version": "1.0.0",
+  "type": "osint",
+  "category": "osint",
+  "entry": "rat313.sh",
+  "enabled": true,
+  "library": "rat313"
+}

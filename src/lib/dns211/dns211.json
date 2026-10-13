@@ -1,0 +1,10 @@
+{
+  "id": "dns211",
+  "name": "DNS Records",
+  "version": "1.0.0",
+  "type": "osint",
+  "category": "net",
+  "entry": "dns211.sh",
+  "enabled": true,
+  "library": "dns211"
+}

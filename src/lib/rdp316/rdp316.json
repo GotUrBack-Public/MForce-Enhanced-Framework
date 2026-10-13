@@ -1,0 +1,10 @@
+{
+  "id": "rdp316",
+  "name": "RDAP Registration",
+  "version": "1.0.0",
+  "type": "osint",
+  "category": "osint",
+  "entry": "rdp316.sh",
+  "enabled": true,
+  "library": "rdp316"
+}

@@ -1,0 +1,10 @@
+{
+  "id": "ipa212",
+  "name": "IP Intelligence",
+  "version": "1.0.0",
+  "type": "osint",
+  "category": "net",
+  "entry": "ipa212.sh",
+  "enabled": true,
+  "library": "ipa212"
+}
