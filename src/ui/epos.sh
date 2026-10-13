@@ -1,42 +1,22 @@
-#!/data/data/com.termux/files/usr/bin/bash
-
+#!/usr/bin/env bash
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 source "$ROOT_DIR/src/core/runtime.sh" || exit 1
-
-VERSION="$MF_VERSION"
+source "$ROOT_DIR/src/ui/theme.lib" || exit 1
 
 main() {
     hide_cursor
-
-    clear
-
-    printf '\033[1;36m'
-    printf '╔══════════════════════════════════════════════════════╗\n'
-    printf '║                                                      ║\n'
-    printf '║             MFORCE ENHANCED FRAMEWORK               ║\n'
-    printf '║                                                      ║\n'
-    printf '║                    %s                         ║\n' "$VERSION"
-    printf '║                                                      ║\n'
-    printf '╚══════════════════════════════════════════════════════╝\n'
-    printf '\033[0m'
-
-    printf '\n'
-    printf '  \033[1;37mInitializing framework...\033[0m\n'
-    printf '\n'
-
-    sleep 0.5
-
-    printf '  \033[1;32m[✓]\033[0m Framework loaded\n'
-    printf '  \033[1;32m[✓]\033[0m Version: %s\n' "$VERSION"
-    printf '  \033[1;32m[✓]\033[0m Runtime: Termux\n'
-
-    sleep 0.8
-
-    stty echo icanon 2>/dev/null
-    show_cursor
-
+    mf_ui_header 'INITIALIZING' "$(mf_ui_platform) / $MF_VERSION"
+    mf_ui_text 'MForce Enhanced Framework' bright
+    mf_ui_gap
+    mf_ui_section 'RUNTIME CHECKS'
+    mf_ui_status 'Project configuration validated'
+    mf_ui_status 'Shared runtime libraries loaded'
+    mf_ui_status "Platform detected: $(mf_ui_platform)"
+    mf_ui_gap
+    mf_ui_text 'Starting local session...' accent
+    # Motion is modest and never slows redirected output or automated tests.
+    [[ -t 0 && -t 1 && "${MF_UI_REDUCED_MOTION:-0}" != 1 ]] && sleep 0.35
+    stty echo icanon 2>/dev/null || :; show_cursor
     exec bash "$ROOT_DIR/src/auth/lgn.sh"
 }
-
-
 main
