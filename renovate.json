@@ -1,1 +1,32 @@
-{"$schema":"https://docs.renovatebot.com/renovate-schema.json","extends":["config:recommended",":dependencyDashboard"],"prConcurrentLimit":5,"labels":["dependencies","security"],"vulnerabilityAlerts":{"enabled":true},"minimumReleaseAge":"3 days"}
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":dependencyDashboard"
+  ],
+  "prConcurrentLimit": 5,
+  "labels": [
+    "dependencies",
+    "security"
+  ],
+  "vulnerabilityAlerts": {
+    "enabled": true
+  },
+  "minimumReleaseAge": "3 days",
+  "ignoreDeps": [],
+  "enabledManagers": [
+    "pip_requirements",
+    "poetry",
+    "npm",
+    "dockerfile",
+    "github-actions"
+  ],
+  "packageRules": [
+    {
+      "matchManagers": [
+        "github-actions"
+      ],
+      "enabled": false
+    }
+  ]
+}
