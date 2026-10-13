@@ -8,12 +8,18 @@
   const closeButton = document.querySelector('[data-command-close]');
   const search = document.getElementById('command-search');
   const results = [...document.querySelectorAll('.command-results a')];
+  const emptyMessage = document.getElementById('command-empty');
   let selected = 0;
   let lastFocus = null;
   const available = () => results.filter(link => !link.hidden);
   const setSelected = index => {
     const list = available();
-    if (!list.length) return;
+    if (emptyMessage) emptyMessage.hidden = list.length !== 0;
+    if (!list.length) {
+      selected = 0;
+      results.forEach(link => link.classList.remove('highlight'));
+      return;
+    }
     selected = ((index % list.length) + list.length) % list.length;
     results.forEach(link => link.classList.toggle('highlight', link === list[selected]));
   };
