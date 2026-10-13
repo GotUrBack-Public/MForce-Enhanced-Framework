@@ -1,1 +1,224 @@
 
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="MForce Enhanced Framework – Security, Development & Bug Bounty">
+  <title>MForce | Enhanced Framework</title>
+  <style>
+    :root {
+      --bg: #080d16;
+      --card: #111c2d;
+      --accent: #00e5a0;
+      --text: #f1f5f9;
+      --muted: #9caec0;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    header {
+      padding: 20px 8%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #243247;
+    }
+
+    .logo {
+      color: var(--accent);
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    nav a {
+      color: var(--text);
+      margin-left: 20px;
+      text-decoration: none;
+    }
+
+    nav a:hover { color: var(--accent); }
+
+    .hero {
+      text-align: center;
+      padding: 110px 20px;
+      background: radial-gradient(
+        ellipse at top, #15334a, var(--bg) 70%
+      );
+    }
+
+    h1 {
+      font-size: clamp(2.4rem, 6vw, 4rem);
+      margin-bottom: 15px;
+    }
+
+    h1 span { color: var(--accent); }
+
+    .hero p {
+      max-width: 650px;
+      margin: 0 auto 30px;
+      color: var(--muted);
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 13px 25px;
+      margin: 8px;
+      border-radius: 8px;
+      background: var(--accent);
+      color: #06130f;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .btn.secondary {
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+    }
+
+    section {
+      max-width: 1100px;
+      margin: auto;
+      padding: 65px 20px;
+    }
+
+    h2 { text-align: center; margin-bottom: 35px; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: var(--card);
+      padding: 25px;
+      border: 1px solid #243247;
+      border-radius: 12px;
+    }
+
+    .card h3 { color: var(--accent); }
+    .card p { color: var(--muted); }
+
+    .bounty {
+      text-align: center;
+      background: #0e1e27;
+      border: 1px solid #245b4b;
+      border-radius: 14px;
+      padding: 40px 20px;
+    }
+
+    .reward {
+      font-size: 3rem;
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      color: var(--muted);
+      border-top: 1px solid #243247;
+    }
+
+    @media (max-width: 600px) {
+      header { flex-direction: column; gap: 15px; }
+      nav a { margin: 0 8px; }
+      .hero { padding: 75px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">MFORCE_</div>
+  <nav>
+    <a href="#features">Features</a>
+    <a href="#bounty">Bug Bounty</a>
+    <a href="#about">About</a>
+  </nav>
+</header>
+
+<main>
+  <div class="hero">
+    <h1>MForce <span>Enhanced</span> Framework</h1>
+    <p>
+      An open-source, Termux-focused framework
+      for terminal utilities, development and
+      security-conscious workflows.
+    </p>
+    <a class="btn"
+       href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework">
+      View on GitHub
+    </a>
+    <a class="btn secondary" href="#bounty">
+      Bug Bounty Program
+    </a>
+  </div>
+
+  <section id="features">
+    <h2>Framework Features</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>Terminal Tools</h3>
+        <p>Utilities designed for Termux environments.</p>
+      </div>
+      <div class="card">
+        <h3>Open Source</h3>
+        <p>Transparent development and community contributions.</p>
+      </div>
+      <div class="card">
+        <h3>Security Focus</h3>
+        <p>Regression testing and responsible disclosure.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="bounty">
+    <div class="bounty">
+      <h2>Security Bug Bounty</h2>
+      <p>Help identify and responsibly report vulnerabilities.</p>
+      <div class="reward">Up to €100</div>
+      <p>
+        Rewards depend on verified severity,
+        eligibility and program conditions.
+      </p>
+      <a class="btn"
+         href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/tree/main/Bug_Bounty">
+        View Bounty Rules
+      </a>
+    </div>
+  </section>
+
+  <section id="about">
+    <h2>About MForce</h2>
+    <p style="text-align:center;color:var(--muted)">
+      MForce Enhanced Framework is an evolving
+      open-source project. Contributions, testing
+      and responsible security research are welcome.
+    </p>
+  </section>
+</main>
+
+<footer>
+  &copy; 2026 MForce Enhanced Framework
+  | Open Source Project
+</footer>
+
+</body>
+</html>
+
+
+
+
