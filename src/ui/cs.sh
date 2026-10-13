@@ -1,177 +1,103 @@
-#!/data/data/com.termux/files/usr/bin/bash
-
+#!/usr/bin/env bash
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 source "$ROOT_DIR/src/core/runtime.sh" || exit 1
-DATA_FILE="$ROOT_DIR/src/data/cats.json"
-COLOR_DIR="$ROOT_DIR/src/colors"
+source "$ROOT_DIR/src/ui/theme.lib" || exit 1
 
-source "$COLOR_DIR/bse.sh" || exit 1
-source "$COLOR_DIR/uic.sh" || exit 1
-source "$COLOR_DIR/sts.sh" || exit 1
-source "$COLOR_DIR/mnu.sh" || exit 1
+CATEGORIES=() CATEGORY_IDS=() CATEGORY_COUNTS=() MENU_ITEMS=()
+SELECTED=0 LAST_CATEGORY=0
 
-CATEGORIES=()
-CATEGORY_IDS=()
-SELECTED=0
-LAST_CATEGORY=0
-MENU_ITEMS=()
+category_description() {
+    case "$1" in
+        net) printf 'Interfaces, local addresses and connectivity context' ;;
+        sys) printf 'Kernel, architecture, platform and runtime details' ;;
+        osint) printf 'Search tools (planned; currently unavailable)' ;;
+        util) printf 'General-purpose utilities (planned)' ;;
+        file) printf 'File operations (planned)' ;;
+        cfg) printf 'Application options (planned)' ;;
+        *) printf 'Explore the available modules' ;;
+    esac
+}
 
 load_categories() {
-    mf_require_json "$DATA_FILE" categories || exit 1
-    if [[ ! -f "$DATA_FILE" ]]; then
-        clear
-        printf '%s[ERROR]%s Category database not found.\n' "$STATUS_ERROR" "$CLR_RESET"
-        printf '\n'
-        printf '%sMissing:%s\n' "$UI_MUTED" "$CLR_RESET"
-        printf '  %s\n' "$DATA_FILE"
-        printf '\n'
-        printf '%sPress ENTER to exit...%s\n' "$UI_MUTED" "$CLR_RESET"
-        read -r || exit 0
-        exit 1
-    fi
-
-    if ! command -v jq >/dev/null 2>&1; then
-        clear
-        printf '%s[ERROR]%s jq is not installed.\n' "$STATUS_ERROR" "$CLR_RESET"
-        printf '\n'
-        printf '%sInstall it with:%s\n' "$UI_MUTED" "$CLR_RESET"
-        printf '  pkg install jq\n'
-        printf '\n'
-        printf '%sPress ENTER to exit...%s\n' "$UI_MUTED" "$CLR_RESET"
-        read -r || exit 0
-        exit 1
-    fi
-
-    local rows
-    rows="$(
-        jq -r '
-            .categories[]
-            | select(.enabled == true)
-            | [.id, .name]
-            | @tsv
-        ' "$DATA_FILE"
-    )" || exit 1
-
+    mf_require_json "$ROOT_DIR/src/data/cats.json" categories || exit 1
+    mf_require_json "$ROOT_DIR/src/data/funcs.json" functions || exit 1
+    local id name count
     while IFS=$'\t' read -r id name; do
         [[ -n "$id" ]] || continue
-        CATEGORY_IDS+=("$id")
-        CATEGORIES+=("$name")
-    done <<< "$rows"
-
-    MENU_ITEMS=("${CATEGORIES[@]}" "Category Info" "About")
+        CATEGORIES+=("$name") CATEGORY_IDS+=("$id")
+        count="$(jq -r --arg id "$id" '[.functions[] | select(.category == $id and .enabled == true)] | length' "$ROOT_DIR/src/data/funcs.json")" || exit 1
+        CATEGORY_COUNTS+=("$count")
+    done < <(jq -r '.categories[] | select(.enabled == true) | [.id,.name] | @tsv' "$ROOT_DIR/src/data/cats.json")
+    MENU_ITEMS=("${CATEGORIES[@]}" 'Category Info' 'About')
 }
 
-draw_header() {
-    printf '%s' "$UI_BORDER"
-    printf '╔══════════════════════════════════════════════════════╗\n'
-    printf '║%s                 MFORCE ENHANCED%s                      ║\n' "$UI_TITLE" "$UI_BORDER"
-    printf '╠══════════════════════════════════════════════════════╣\n'
-    printf '║%s                  MAIN MENU%s                           ║\n' "$UI_TEXT" "$UI_BORDER"
-    printf '╚══════════════════════════════════════════════════════╝\n'
-    printf '%s' "$CLR_RESET"
-}
-
-draw_menu() {
-    local i
-    local total=${#MENU_ITEMS[@]}
-
-    printf '\n'
-
-    for i in "${!MENU_ITEMS[@]}"; do
-        if [[ "$i" -eq "$SELECTED" ]]; then
-            printf '  %s❯ %s%s\n' \
-                "$MENU_SELECTED" \
-                "${MENU_ITEMS[$i]}" \
-                "$CLR_RESET"
-        else
-            printf '    %s%s%s\n' \
-                "$MENU_NORMAL" \
-                "${MENU_ITEMS[$i]}" \
-                "$CLR_RESET"
-        fi
-
-        if [[ "$i" -eq $((${#CATEGORIES[@]} - 1)) ]]; then
-            printf '\n'
-        fi
+draw_page() {
+    local i note selected_id count current
+    ((SELECTED < ${#CATEGORIES[@]})) && LAST_CATEGORY=$SELECTED
+    mf_ui_header 'MAIN MENU' "$(mf_ui_platform) / $MF_VERSION"
+    mf_ui_text 'Choose a workspace. All operations run locally.' bright
+    mf_ui_gap
+    mf_ui_section 'WORKSPACES'
+    for i in "${!CATEGORIES[@]}"; do
+        count="${CATEGORY_COUNTS[$i]}"
+        if ((count > 0)); then note="$count AVAILABLE MODULE(S)"; else note='NO ACTIVE MODULES'; fi
+        mf_ui_row "$((i+1))" "${CATEGORIES[$i]}" "$([[ $i -eq $SELECTED ]] && printf '%s' "$note")" "$((i == SELECTED))"
     done
-
-    printf '\n'
-    printf '  %s↑ ↓%s Navigate   %sENTER%s Select   %sQ%s Exit\n' \
-        "$MENU_KEY" "$CLR_RESET" \
-        "$MENU_KEY" "$CLR_RESET" \
-        "$MENU_KEY" "$CLR_RESET"
+    mf_ui_gap
+    mf_ui_section 'QUICK ACCESS'
+    mf_ui_row "$(( ${#CATEGORIES[@]}+1 ))" 'Category Info' '' "$((SELECTED == ${#CATEGORIES[@]}))"
+    mf_ui_row "$(( ${#CATEGORIES[@]}+2 ))" 'About MForce' '' "$((SELECTED == ${#CATEGORIES[@]}+1))"
+    mf_ui_gap
+    if (( ! MF_UI_COMPACT )) && ((SELECTED < ${#CATEGORIES[@]})); then
+        selected_id="${CATEGORY_IDS[$SELECTED]}"
+        mf_ui_text "FOCUS  /  ${CATEGORIES[$SELECTED]}" accent
+        mf_ui_text "$(category_description "$selected_id")"
+    elif (( ! MF_UI_COMPACT )); then
+        mf_ui_text 'FOCUS  /  INFORMATION' accent
+        if ((SELECTED == ${#CATEGORIES[@]})); then
+            mf_ui_text 'Details for the last selected workspace'
+        else
+            mf_ui_text 'Version, source, platform and licensing'
+        fi
+    fi
+    mf_ui_footer 'UP/DOWN or J/K  Navigate  |  ENTER  Open  |  ?  Help  |  Q  Exit' 'ARROWS  ENTER  ? HELP  Q EXIT'
 }
 
-read_key() { mf_read_key "QUIT"; }
-
-open_category() {
-    local index="${1:-$SELECTED}"
-    [[ -n "${CATEGORY_IDS[$index]:-}" ]] || return 1
-
-    stty echo icanon 2>/dev/null
+launch() {
+    local script="$1"; shift
+    stty echo icanon 2>/dev/null || :
     show_cursor
-
-    exec bash "$ROOT_DIR/src/ui/cp.sh" \
-        "${CATEGORY_IDS[$index]}" \
-        "${CATEGORIES[$index]}"
-}
-
-open_about() {
-    stty echo icanon 2>/dev/null
-    show_cursor
-
-    exec bash "$ROOT_DIR/src/ui/ap.sh"
+    exec bash "$ROOT_DIR/src/ui/$script" "$@"
 }
 
 main() {
     load_categories
-
     hide_cursor
-    stty -echo -icanon min 1 time 0 2>/dev/null
-
-    while true; do
-        clear
-        if (( SELECTED < ${#CATEGORIES[@]} )); then LAST_CATEGORY="$SELECTED"; fi
-        draw_header
-        draw_menu
-
-        read_key
+    stty -echo -icanon min 1 time 0 2>/dev/null || :
+    while :; do
+        draw_page
+        mf_read_key QUIT
         case "$MF_KEY" in
-            EOF) exit 0 ;;
-            UP)
-                ((SELECTED--))
-
-                if (( SELECTED < 0 )); then
-                    SELECTED=$((${#MENU_ITEMS[@]} - 1))
-                fi
+            EOF|QUIT) cleanup ;;
+            UP) ((SELECTED=(SELECTED+${#MENU_ITEMS[@]}-1)%${#MENU_ITEMS[@]})) ;;
+            DOWN) ((SELECTED=(SELECTED+1)%${#MENU_ITEMS[@]})) ;;
+            HOME) SELECTED=0 ;;
+            END) SELECTED=$((${#MENU_ITEMS[@]}-1)) ;;
+            HELP) mf_ui_help ;;
+            DIGIT_*)
+                number=${MF_KEY#DIGIT_}
+                if ((number>=1 && number<=${#MENU_ITEMS[@]})); then SELECTED=$((number-1)); fi
                 ;;
-
-            DOWN)
-                ((SELECTED++))
-
-                if (( SELECTED >= ${#MENU_ITEMS[@]} )); then
-                    SELECTED=0
-                fi
-                ;;
-
             ENTER)
-                if (( SELECTED < ${#CATEGORIES[@]} )); then
-                    open_category
-                elif (( SELECTED == ${#CATEGORIES[@]} )); then
-                    if (( ${#CATEGORIES[@]} > 0 )); then
-                        open_category "$LAST_CATEGORY"
+                if ((SELECTED < ${#CATEGORIES[@]})); then
+                    launch cp.sh "${CATEGORY_IDS[$SELECTED]}" "${CATEGORIES[$SELECTED]}"
+                elif ((SELECTED == ${#CATEGORIES[@]})); then
+                    if ((${#CATEGORIES[@]} > 0)); then
+                        launch cp.sh "${CATEGORY_IDS[$LAST_CATEGORY]}" "${CATEGORIES[$LAST_CATEGORY]}"
                     fi
-                else
-                    open_about
-                fi
-                ;;
-
-            QUIT)
-                cleanup
+                else launch ap.sh; fi
                 ;;
         esac
     done
 }
-
-
 main

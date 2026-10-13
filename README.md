@@ -3,13 +3,13 @@
 </p>
 
 <p align="center">
-  <strong>A modular terminal framework, built for Termux.</strong><br>
+  <strong>A modular terminal framework, built for Termux and Linux.</strong><br>
   Network visibility. System insight. One consistent interface.
 </p>
 
 <p align="center">
   <a href="cfg/zrk391.json"><img src="https://img.shields.io/badge/VERSION-v0.01.2-0b1118?style=flat-square&amp;labelColor=1c2631&amp;color=00b8d9" alt="Version v0.01.2"></a>
-  <img src="https://img.shields.io/badge/PLATFORM-Termux-0b1118?style=flat-square&amp;labelColor=1c2631" alt="Platform: Termux">
+  <img src="https://img.shields.io/badge/PLATFORM-Termux%20%2F%20Linux-0b1118?style=flat-square&amp;labelColor=1c2631" alt="Platform: Termux / Linux">
   <img src="https://img.shields.io/badge/CORE-Bash-0b1118?style=flat-square&amp;labelColor=1c2631" alt="Core: Bash">
   <a href="LICENSE"><img src="https://img.shields.io/badge/LICENSE-MIT-0b1118?style=flat-square&amp;labelColor=1c2631" alt="MIT License"></a>
 </p>
@@ -26,7 +26,7 @@
 
 ## Overview
 
-**MForce Enhanced Framework** brings network and system information into a keyboard-driven terminal interface. Built in Bash for Termux, it separates navigation, module entry points, reusable libraries and configuration into small, readable components.
+**MForce Enhanced Framework** brings network and system information into a keyboard-driven terminal interface. Built in Bash for Termux and Linux, it separates navigation, module entry points, reusable libraries and configuration into small, readable components.
 
 A rebuild of the original [mForce](https://github.com/MidnightCoding1/mForce) architecture, focused on a consistent interface and a clear foundation for additional modules.
 
@@ -39,11 +39,24 @@ A rebuild of the original [mForce](https://github.com/MidnightCoding1/mForce) ar
 
 ## Quick start
 
-Run in **Termux**. Root access is not required.
+Run in **Termux** or a compatible **Linux** environment. Root access is not required.
+
+For Termux, install dependencies and start the framework:
 
 ```bash
 pkg update
 pkg install git bash jq coreutils ncurses-utils iproute2
+
+git clone https://github.com/GotUrBack-Public/MForce-Enhanced-Framework.git
+cd MForce-Enhanced-Framework
+bash xrm742.sh
+```
+
+On Debian or Ubuntu Linux, the corresponding setup is:
+
+```bash
+sudo apt update
+sudo apt install git bash jq coreutils ncurses-bin iproute2
 
 git clone https://github.com/GotUrBack-Public/MForce-Enhanced-Framework.git
 cd MForce-Enhanced-Framework
@@ -56,6 +69,10 @@ At startup, enter the displayed confirmation code. Then select a category, open 
 | :--- | :--- |
 | <kbd>↑</kbd> <kbd>↓</kbd> | Move through the menu |
 | <kbd>Enter</kbd> | Open the selected item or run the previewed module |
+| <kbd>J</kbd> / <kbd>K</kbd> | Move down / up in menus |
+| <kbd>1</kbd>–<kbd>9</kbd> | Jump to a numbered menu item |
+| <kbd>Home</kbd> / <kbd>End</kbd> | Move to the first / last item |
+| <kbd>?</kbd> | Open the keyboard guide |
 | <kbd>Q</kbd> | Go back; exit from the main menu |
 
 **Category Info** describes the last highlighted category, or the first category initially. Closing standard input exits cleanly.
@@ -69,7 +86,7 @@ At startup, enter the displayed confirmation code. Then select a category, open 
 | Connection Test | Registered entry for a future connectivity module. | Not implemented · disabled |
 | OSINT Search | Registered entry for a future search module. | Not implemented · disabled |
 
-The **Utilities**, **Files** and **Settings** categories are present but contain no modules yet. Web files are placeholders.
+The **Utilities**, **Files** and **Settings** categories are present but contain no modules yet. The website assets and landing page live under [`web/`](web/).
 
 <details>
 <summary><strong>Module help and platform notes</strong></summary>
@@ -79,7 +96,7 @@ bash src/functions/lar386.sh --help
 bash src/functions/vkn193.sh --help
 ```
 
-Android properties are read through `getprop`. Missing system information is reported as unavailable. Access to network interfaces depends on Android permissions and the device environment.
+Android properties are read through `getprop` in Termux; those fields are unavailable on Linux systems without Android property services. Missing system information is reported as unavailable. Access to network interfaces depends on Android permissions and the device environment.
 
 The existing information modules display their results locally; they do not upload their output.
 
@@ -160,6 +177,6 @@ See the [security policy](SECURITY.md) for the trust model and reporting guidanc
 
 <p align="center">
   <strong>MFORCE ENHANCED FRAMEWORK</strong><br>
-  Built for Termux · Written in Bash · <a href="LICENSE">MIT licensed</a><br>
+  Built for Termux and Linux · Written in Bash · <a href="LICENSE">MIT licensed</a><br>
   <sub>Based on the original <a href="https://github.com/MidnightCoding1/mForce">mForce</a> project.</sub>
 </p>

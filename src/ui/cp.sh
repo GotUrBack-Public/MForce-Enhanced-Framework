@@ -1,118 +1,57 @@
-#!/data/data/com.termux/files/usr/bin/bash
-
+#!/usr/bin/env bash
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 source "$ROOT_DIR/src/core/runtime.sh" || exit 1
-DATA_DIR="$ROOT_DIR/src/data"
-COLOR_DIR="$ROOT_DIR/src/colors"
-
-source "$COLOR_DIR/bse.sh" || exit 1
-source "$COLOR_DIR/uic.sh" || exit 1
-source "$COLOR_DIR/sts.sh" || exit 1
-source "$COLOR_DIR/mnu.sh" || exit 1
-
-CATEGORY_ID="${1:-}"
-CATEGORY_NAME="${2:-Category}"
-
-FUNCTION_COUNT=0
-ENABLED_COUNT=0
+source "$ROOT_DIR/src/ui/theme.lib" || exit 1
+CATEGORY_ID="${1:-}" CATEGORY_NAME="${2:-Category}"
+FUNCTION_COUNT=0 ENABLED_COUNT=0
 
 load_category_data() {
-    mf_require_json "$DATA_DIR/funcs.json" functions || exit 1
+    mf_require_json "$ROOT_DIR/src/data/funcs.json" functions || exit 1
     mf_require_category "$CATEGORY_ID" || exit 1
-    if [[ -z "$CATEGORY_ID" ]]; then
-        return 1
-    fi
-
-    if [[ ! -f "$DATA_DIR/funcs.json" ]]; then
-        return 1
-    fi
-
-    if ! command -v jq >/dev/null 2>&1; then
-        return 1
-    fi
-
-    FUNCTION_COUNT="$(
-        jq -r --arg category "$CATEGORY_ID" '
-            [.functions[] | select(.category == $category)] | length
-        ' "$DATA_DIR/funcs.json"
-    )"
-
-    ENABLED_COUNT="$(
-        jq -r --arg category "$CATEGORY_ID" '
-            [.functions[] | select(.category == $category and .enabled == true)] | length
-        ' "$DATA_DIR/funcs.json"
-    )"
-}
-
-draw_header() {
-    printf '%s' "$UI_BORDER"
-    printf '╔══════════════════════════════════════════════════════╗\n'
-    printf '║%s                 MFORCE ENHANCED%s                      ║\n' "$UI_TITLE" "$UI_BORDER"
-    printf '╠══════════════════════════════════════════════════════╣\n'
-    printf '║%s                  CATEGORY INFO%s                       ║\n' "$UI_TEXT" "$UI_BORDER"
-    printf '╚══════════════════════════════════════════════════════╝\n'
-    printf '%s' "$CLR_RESET"
+    FUNCTION_COUNT="$(jq -r --arg id "$CATEGORY_ID" '[.functions[] | select(.category == $id)] | length' "$ROOT_DIR/src/data/funcs.json")" || exit 1
+    ENABLED_COUNT="$(jq -r --arg id "$CATEGORY_ID" '[.functions[] | select(.category == $id and .enabled == true)] | length' "$ROOT_DIR/src/data/funcs.json")" || exit 1
 }
 
 draw_page() {
-    clear
-    draw_header
-
-    printf '\n'
-    printf '  %s%s%s\n' "$UI_TITLE" "$CATEGORY_NAME" "$CLR_RESET"
-    printf '\n'
-
-    printf '  %sCategory ID%s : %s\n' "$UI_MUTED" "$CLR_RESET" "$CATEGORY_ID"
-    printf '  %sFunctions%s   : %s\n' "$UI_MUTED" "$CLR_RESET" "$FUNCTION_COUNT"
-    printf '  %sEnabled%s     : %s\n' "$UI_MUTED" "$CLR_RESET" "$ENABLED_COUNT"
-
-    printf '\n'
-
+    mf_ui_header 'CATEGORY INFO' "$CATEGORY_NAME / $(mf_ui_platform)"
+    mf_ui_section 'WORKSPACE OVERVIEW'
+    mf_ui_text "$CATEGORY_NAME" bright
+    mf_ui_gap
+    mf_ui_field 'Category ID' "$CATEGORY_ID"
+    mf_ui_field 'Registered' "$FUNCTION_COUNT"
+    mf_ui_field 'Available' "$ENABLED_COUNT"
+    mf_ui_gap
     if (( ENABLED_COUNT > 0 )); then
-        printf '  %s● Category available%s\n' \
-            "$STATUS_SUCCESS" "$CLR_RESET"
+        mf_ui_status 'This workspace is ready to explore.'
     else
-        printf '  %s● No enabled functions%s\n' \
-            "$STATUS_WARNING" "$CLR_RESET"
+        mf_ui_status 'No active modules in this workspace yet.' warning
     fi
-
-    printf '\n'
-    printf '  %sENTER%s Open functions\n' "$MENU_KEY" "$CLR_RESET"
-    printf '  %sQ%s Back\n' "$MENU_KEY" "$CLR_RESET"
+    mf_ui_gap
+    mf_ui_section 'NEXT ACTION'
+    if ((ENABLED_COUNT > 0)); then
+        mf_ui_text 'Press ENTER to browse the available tools.'
+    else
+        mf_ui_text 'Press ENTER to view the empty module list.'
+    fi
+    mf_ui_footer 'ENTER  Modules  |  Q  Back'
 }
 
-read_key() { mf_read_key "BACK"; }
-
+return_to() {
+    stty echo icanon 2>/dev/null || :; show_cursor
+    exec bash "$ROOT_DIR/src/ui/$1" "${@:2}"
+}
 main() {
     load_category_data
-
-    hide_cursor
-    stty -echo -icanon min 1 time 0 2>/dev/null
-
-    while true; do
+    hide_cursor; stty -echo -icanon min 1 time 0 2>/dev/null || :
+    while :; do
         draw_page
-
-        read_key
+        mf_read_key BACK
         case "$MF_KEY" in
             EOF) exit 0 ;;
-            ENTER)
-                stty echo icanon 2>/dev/null
-                show_cursor
-
-                exec bash "$ROOT_DIR/src/ui/fs.sh" \
-                    "$CATEGORY_ID" \
-                    "$CATEGORY_NAME"
-                ;;
-
-            BACK)
-                stty echo icanon 2>/dev/null
-                show_cursor
-
-                exec bash "$ROOT_DIR/src/ui/cs.sh"
-                ;;
+            ENTER) return_to fs.sh "$CATEGORY_ID" "$CATEGORY_NAME" ;;
+            BACK) return_to cs.sh ;;
+            HELP) mf_ui_help ;;
         esac
     done
 }
-
-
 main
