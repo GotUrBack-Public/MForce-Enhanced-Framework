@@ -16,6 +16,11 @@
       "enabled": true
     },
     {
+      "id": "offensive",
+      "name": "Offensive Security",
+      "enabled": true
+    },
+    {
       "id": "util",
       "name": "Utilities",
       "enabled": true

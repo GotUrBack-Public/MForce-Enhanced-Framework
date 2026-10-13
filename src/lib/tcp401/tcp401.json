@@ -1,0 +1,10 @@
+{
+  "id": "tcp401",
+  "name": "TCP Port Scanner",
+  "version": "1.0.0",
+  "type": "offensive",
+  "category": "offensive",
+  "entry": "tcp401.sh",
+  "enabled": true,
+  "library": "tcp401"
+}
