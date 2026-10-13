@@ -10,7 +10,7 @@
 
   // Progressive enhancement: no content is hidden without working JavaScript.
   if (canAnimate()) {
-    const revealTargets = $$('.section-intro, .module-card, .module-inspector, .architecture-text, .console, .security-grid > div, .cta-layout');
+    const revealTargets = $$('.section-intro, .module-card, .module-inspector, .architecture-text, .console, .security-grid > div, .cta-layout, .osint-tool, .audit-console, .responsible-grid article, .responsible-section .section-intro');
     revealTargets.forEach((el, i) => {
       el.dataset.reveal = '';
       if (el.classList.contains('module-card')) el.style.transitionDelay = ((i % 3) * 110) + 'ms';
@@ -64,7 +64,7 @@
       note: 'Termux on Android. Root is not required.',
       commands: [
         'pkg update',
-        'pkg install git bash jq coreutils ncurses-utils iproute2',
+        'pkg install git bash jq python coreutils ncurses-utils iproute2',
         '',
         'git clone https://github.com/GotUrBack-Public/MForce-Enhanced-Framework.git',
         'cd MForce-Enhanced-Framework',
@@ -76,7 +76,7 @@
       note: 'Debian / Ubuntu example. Packages vary by distribution.',
       commands: [
         'sudo apt update',
-        'sudo apt install -y git bash jq coreutils ncurses-bin iproute2',
+        'sudo apt install -y git bash jq python3 coreutils ncurses-bin iproute2',
         '',
         'git clone https://github.com/GotUrBack-Public/MForce-Enhanced-Framework.git',
         'cd MForce-Enhanced-Framework',
@@ -163,13 +163,14 @@
         '# Some fields differ on Linux.'
     },
     future: {
-      title: 'development_roadmap — status',
-      description: 'These modules are planned, not executable yet.',
-      output: '# MFORCE ROADMAP\n\n' +
-        'CONNECTION TEST     [NOT IMPLEMENTED]\n' +
-        'OSINT SEARCH        [NOT IMPLEMENTED]\n\n' +
-        'Follow the repository for updates.\n' +
-        'No future functionality is represented as active.'
+      title: 'osint_toolkit — available',
+      description: 'Ten low-impact, authorized public-data inspection modules.',
+      output: '# MFORCE OSINT / AUTHORIZED USE ONLY\n\n' +
+        'DNS, IP, TLS, HTTP        [AVAILABLE]\n' +
+        'WEBSITE + API INSPECT   [AVAILABLE]\n' +
+        'RATE + DOM REVIEW       [AVAILABLE]\n' +
+        'ROBOTS + RDAP           [AVAILABLE]\n\n' +
+        'Manual verification remains essential.'
     }
   };
   const moduleTabs = $$('[data-module]');
@@ -254,6 +255,34 @@
       card.style.setProperty('--my', (event.clientY - box.top) + 'px');
     }, { passive: true }));
   }
+
+  // These samples are intentionally static; the website makes no OSINT requests.
+  const audits = {
+    rate: 'HTTP 200 / example.org\nRateLimit-* headers  : Not observed\nRetry-After          : Not observed\nHTTP 429             : Not observed\nAssessment           : UNKNOWN\n\nNo limit evidence does not mean no limits exist.\nNo burst testing or bypass attempts.',
+    dom: 'JAVASCRIPT / STATIC PATTERNS\nSource               : illustrative app.js\ninnerHTML            : 1 occurrence\ninsertAdjacentHTML   : 1 occurrence\nAssessment           : MANUAL REVIEW\n\nA DOM sink is NOT proof of XSS.\nNo payload injection or code execution.',
+    headers: 'SECURITY HEADERS / EXAMPLE\nContent-Security-Policy  : Observed\nReferrer-Policy          : Observed\nHSTS                     : Observed\nX-Content-Type-Options   : Not observed\n\nMissing headers are review hints, not an exploit.'
+  };
+  const auditTabs = $('[data-audit]');
+  const auditOutput = $('#audit-output');
+  const chooseAudit = name => {
+    if (!(name in audits)) return;
+    auditTabs.forEach(tab => {
+      const selected = tab.dataset.audit === name;
+      tab.setAttribute('aria-selected', String(selected));
+      tab.tabIndex = selected ? 0 : -1;
+      if (selected && auditOutput) auditOutput.setAttribute('aria-labelledby', tab.id);
+    });
+    if (auditOutput) auditOutput.textContent = audits[name];
+  };
+  auditTabs.forEach((tab, index) => {
+    tab.addEventListener('click', () => chooseAudit(tab.dataset.audit));
+    tab.addEventListener('keydown', event => {
+      const next = event.key === 'ArrowRight' ? (index+1)%auditTabs.length :
+                   event.key === 'ArrowLeft' ? (index+auditTabs.length-1)%auditTabs.length :
+                   event.key === 'Home' ? 0 : event.key === 'End' ? auditTabs.length-1 : -1;
+      if (next >= 0) { event.preventDefault(); auditTabs[next].focus(); chooseAudit(auditTabs[next].dataset.audit); }
+    });
+  });
 
   // Browser back/forward or restored tab: honor current platform choices.
   setPlatform(currentPlatform);

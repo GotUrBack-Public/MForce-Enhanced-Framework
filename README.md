@@ -35,7 +35,7 @@ A rebuild of the original [mForce](https://github.com/MidnightCoding1/mForce) ar
 | Navigate categories, inspect a module, then run it. | Separate entry points, shared libraries and module resources. | JSON registries, validated settings and configurable colors. |
 
 > **Project status · Early development**<br>
-> Network Information and System Information are implemented. Additional modules and the web interface are still under development.
+> Network Information, System Information and ten passive OSINT modules are available. More features remain under development.
 
 ## Quick start
 
@@ -45,7 +45,7 @@ For Termux, install dependencies and start the framework:
 
 ```bash
 pkg update
-pkg install git bash jq coreutils ncurses-utils iproute2
+pkg install git bash jq python coreutils ncurses-utils iproute2
 
 git clone https://github.com/GotUrBack-Public/MForce-Enhanced-Framework.git
 cd MForce-Enhanced-Framework
@@ -56,7 +56,7 @@ On Debian or Ubuntu Linux, the corresponding setup is:
 
 ```bash
 sudo apt update
-sudo apt install git bash jq coreutils ncurses-bin iproute2
+sudo apt install git bash jq python3 coreutils ncurses-bin iproute2
 
 git clone https://github.com/GotUrBack-Public/MForce-Enhanced-Framework.git
 cd MForce-Enhanced-Framework
@@ -83,8 +83,11 @@ At startup, enter the displayed confirmation code. Then select a category, open 
 | :--- | :--- | :--- |
 | **Network Information** | Display network interfaces, addresses and hostname. | Available |
 | **System Information** | Inspect architecture, kernel, Android version, SDK, device and runtime details. | Available |
+| **OSINT toolkit (10 modules)** | DNS, IP, TLS, HTTP, websites, APIs, JavaScript, rate indicators, robots and RDAP. | Available |
 | Connection Test | Registered entry for a future connectivity module. | Not implemented · disabled |
 | OSINT Search | Registered entry for a future search module. | Not implemented · disabled |
+
+See the [OSINT toolkit documentation](docs/OSINT.md) for ten additional public-information tools for Network and OSINT, including DNS, IP, TLS, HTTP headers, websites, APIs, rate-limit signals, JavaScript patterns, robots/sitemaps and RDAP.
 
 The **Utilities**, **Files** and **Settings** categories are present but contain no modules yet. The website assets and landing page live under [`web/`](web/).
 
@@ -101,6 +104,12 @@ Android properties are read through `getprop` in Termux; those fields are unavai
 The existing information modules display their results locally; they do not upload their output.
 
 </details>
+
+## OSINT: Educational Purpose & Professional Usage
+
+These modules are intended for authorized learning, owned-asset inventories and expressly permitted professional reviews. **Do not inspect systems beyond your permitted scope.** Rate-limit observations come from single HTTP responses or advertised headers; absent headers do not prove unlimited access. DOM patterns such as `innerHTML` are static review hints and **not confirmed XSS**. The toolkit neither brute-forces nor submits forms or bypasses controls.
+
+**DSGVO-konforme Einsatzmöglichkeiten:** A privacy-conscious use case requires an appropriate legal basis, data minimization and retention/transfer assessment. Public IP addresses and URLs may be personal data. The toolkit does not automatically certify GDPR compliance. The RDAP mode forwards the target to a third-party RDAP referral provider. [Read limitations and safety notes](docs/OSINT.md).
 
 ## Architecture
 

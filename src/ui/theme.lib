@@ -122,6 +122,21 @@ mf_ui_header() {
     ((MF_UI_COMPACT)) || printf '\n'
 }
 
+# ASCII rendition of the MFORCE cyan wordmark, with narrow-screen fallback.
+mf_ui_logo() {
+    if ((MF_UI_COLS < 55)); then
+        printf '  %sMFORCE%s  /  ENHANCED FRAMEWORK\n' "$MF_UI_ACCENT" "$MF_UI_RESET"
+        return
+    fi
+    printf '%s' "$MF_UI_ACCENT"
+    printf '%s\n' '  __  __ _____ ___  ____   ____ _____'
+    printf '%s\n' ' |  \/  |  ___/ _ \|  _ \ / ___| ____|'
+    printf '%s\n' ' | |\/| | |_ | | | | |_) | |   |  _|'
+    printf '%s\n' ' | |  | |  _|| |_| |  _ <| |___| |___'
+    printf '%s\n' ' |_|  |_|_|   \___/|_| \_\\____|_____|'
+    printf '  %sENHANCED FRAMEWORK%s\n\n' "$MF_UI_MUTED" "$MF_UI_RESET"
+}
+
 mf_ui_section() {
     local label="$1"
     printf '  %s%s%s\n' "$MF_UI_ACCENT" "$(mf_ui_clip "$label" "$((MF_UI_COLS-4))")" "$MF_UI_RESET"
