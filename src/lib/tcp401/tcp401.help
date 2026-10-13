@@ -1,0 +1,16 @@
+TCP Port Scanner — Educational Purpose / Professional Usage
+
+TCP connect-based port checks for Termux and Linux. Root not required.
+Use only against systems you own or are explicitly authorized to test.
+
+Usage:
+  bash src/functions/tcp401.sh 127.0.0.1 --authorized
+  bash src/functions/tcp401.sh 192.168.1.10 --authorized --ports 22,80,443
+  bash src/functions/tcp401.sh example.org --authorized --allow-public --ports 80,443 --json
+
+Default: 19 common ports; max 128 ports, 8 workers, 3-second timeout.
+Only 256 address/port combinations per invocation.
+No stealth, exploitation, firewall evasion or rate-limit bypass.
+Results: OPEN or CLOSED_OR_FILTERED; not vulnerability findings.
+Privacy: scan only within your legal authorization, avoid collecting
+personal data without a lawful basis, and minimize stored results.
