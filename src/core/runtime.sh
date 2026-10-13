@@ -10,7 +10,11 @@ unset mf_lib
 mf_require_json() {
     local file="$1" kind="$2"
     if ! command -v jq >/dev/null 2>&1; then
-        printf 'ERROR: jq is required. Install with: pkg install jq\n' >&2
+        if mf_is_termux; then
+            printf 'ERROR: jq is required. Install with: pkg install jq\n' >&2
+        else
+            printf 'ERROR: jq is required. Install it using your Linux package manager.\n' >&2
+        fi
         return 1
     fi
     # Slurp first to reject empty files and multiple top-level documents.
@@ -37,8 +41,9 @@ hide_cursor() { mf_cursor_hide; }
 show_cursor() { mf_cursor_show; }
 cleanup() { exit 0; }
 
+
 mf_read_key() {
-    local key tail
+    local key tail last
     MF_KEY=IGNORE
     IFS= read -rsn1 key || { MF_KEY=EOF; return 0; }
     case "$key" in
@@ -49,9 +54,23 @@ mf_read_key() {
                 '[B') MF_KEY=DOWN ;;
                 '[C') MF_KEY=RIGHT ;;
                 '[D') MF_KEY=LEFT ;;
+                '[H'|'OH') MF_KEY=HOME ;;
+                '[F'|'OF') MF_KEY=END ;;
+                '[1'|'[7')
+                    IFS= read -rsn1 -t 0.10 last || :
+                    [[ "$last" == '~' ]] && MF_KEY=HOME
+                    ;;
+                '[4'|'[8')
+                    IFS= read -rsn1 -t 0.10 last || :
+                    [[ "$last" == '~' ]] && MF_KEY=END
+                    ;;
             esac ;;
         '') MF_KEY=ENTER ;;
         q|Q) MF_KEY="${1:-BACK}" ;;
+        j|J) MF_KEY=DOWN ;;
+        k|K) MF_KEY=UP ;;
+        '?') MF_KEY=HELP ;;
+        [1-9]) MF_KEY="DIGIT_$key" ;;
     esac
     return 0
 }
