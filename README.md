@@ -21,6 +21,7 @@
   <a href="#architecture">Architecture</a> &nbsp; / &nbsp;
   <a href="#configuration">Configuration</a> &nbsp; / &nbsp;
   <a href="#website-tutorials--future-schulung">Tutorials</a> &nbsp; / &nbsp;
+  <a href="#community-contributing--privacy">Community & DSGVO</a> &nbsp; / &nbsp;
   <a href="#development">Development</a>
 </p>
 
@@ -37,7 +38,7 @@ A rebuild of the original [mForce](https://github.com/MidnightCoding1/mForce) ar
 | Navigate categories, inspect a module, then run it. | Separate entry points, shared libraries and module resources. | JSON registries, validated settings and configurable colors. |
 
 > **Project status · Early development**<br>
-> Fourteen modules are enabled: Network Information, System Information, ten passive OSINT modules, the authorized TCP Port Scanner and the Update Center. More features remain under development.
+> Sixteen modules are enabled: Network Information, System Information, ten OSINT inspection modules, three Offensive Security tools (TCP Scanner, offline XSS Payload Lab and HTTP Reflection Inspector), and the Update Center. More features remain under development.
 
 ## Quick start
 
@@ -198,6 +199,8 @@ python3 -m unittest discover -s tests -v
 | **System Information** | Inspect architecture, kernel, Android version, SDK, device and runtime details. | Available |
 | **OSINT toolkit (10 modules)** | DNS, IP, TLS, HTTP, websites, APIs, JavaScript, rate indicators, robots and RDAP. | Available |
 | **TCP Port Scanner** | Bounded TCP connect checks for explicitly authorized targets. | Available |
+| **XSS Payload Lab** | Offline collection of 100 categorized test payloads for owned labs. | Available |
+| **HTTP Reflection Inspector** | Actual bounded GET requests with harmless markers to detect input reflection on authorized targets. | Available |
 | **Update Center** | Check the official repository and apply safe fast-forward updates. | Available |
 | Connection Test | Registered entry for a future connectivity module. | Not implemented · disabled |
 | OSINT Search | Registered entry for a future search module. | Not implemented · disabled |
@@ -253,6 +256,7 @@ The application starts at `xrm742.sh`, displays startup confirmation and opens t
 | [`src/functions/`](src/functions/) | Module entry scripts |
 | [`src/lib/`](src/lib/) | Module implementations, metadata, configuration and help |
 | [`src/data/`](src/data/) | Category and function registries |
+| [`DSGVO/`](DSGVO/README.md) | Privacy/data-flow documentation, checklists and templates |
 | [`src/colors/`](src/colors/) | Terminal color definitions and UI roles |
 | [`cfg/`](cfg/) | Project metadata and application version |
 | `classes1.lib` – `classes5.lib` | Shared file, terminal, JSON, system and text helpers |
@@ -285,6 +289,33 @@ Module `.conf` files are parsed as data, never executed as shell code. Their `en
 
 </details>
 
+## Community, contributing & privacy
+
+The project welcomes contributions to its Bash/Python modules, Termux and Linux
+compatibility, static website, tutorials, accessibility, translations and
+privacy/security documentation. All contributions should include reproducible
+tests and an accurate description of what was verified.
+
+| Resource | Purpose |
+| :--- | :--- |
+| [Contributing guide](CONTRIBUTING.md) | Getting started and pull-request workflow |
+| [Detailed contribution instructions](social/how_to_contribute.md) | Module registration, tests, review checklist and Termux setup |
+| [Contributors and credits](social/contributors.md) | Maintainer attribution, original mForce credit and GitHub contributor history |
+| [AI usage and transparency](social/ai_usage.txt) | Disclosure expectations, human validation and sensitive-data handling |
+| [Code of Conduct](CODE_OF_CONDUCT.md) | Community behavior and reporting |
+| [Guidelines & Terms of Use](GUIDLINES&&TERMSOFUSE.md) | Authorization, limitations, license and responsible use |
+| [DSGVO / GDPR hub](DSGVO/README.md) | Technical data flows, privacy checklists, templates and incident response |
+| [Security policy](SECURITY.md) | Private vulnerability reporting and trust boundaries |
+| [Support](SUPPORT.md) | Help channels and troubleshooting |
+| [Changelog](CHANGELOG.md) | Project capability and documentation history |
+
+**Datenschutz:** MForce does not automatically make an assessment GDPR-compliant.
+Network requests, DNS/RDAP lookups, shell history, website hosting and user
+exports may involve personal data. The [data-flow inventory](DSGVO/DATENFLUESSE.md)
+explains the actual processing surfaces. The [privacy notice template](DSGVO/DATENSCHUTZHINWEISE_VORLAGE.md)
+is **not** a published legal privacy policy and requires verified operator
+details before use.
+
 ## Development
 
 Install **Python 3** and **jq**, then run the regression suite:
@@ -299,7 +330,9 @@ Tests use isolated repository copies and pseudo-terminals to exercise startup, c
 | :--- | :--- |
 | [Regression suite](tests/test_regression.py) | Automated behavioral and structural checks |
 | [CI workflow](.github/workflows/audit.yml) | Configured to run checks on pushes and pull requests |
-| [Audit report](docs/AUDIT-2026-10-13.md) | Findings, fixes, validation and remaining limits |
+| [Audit report](docs/AUDIT-2026-10-13.md) | Historical findings, fixes, validation and remaining limits |
+| [Maintainer handbook](docs/MAINTAINERS.md) | Review, security triage and release procedure |
+| [Documentation integrity tests](tests/test_documentation.py) | Validate required governance docs and repository links |
 | [Report a bug](https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/issues/new?template=bug_report.md) | Reproduction steps and expected behavior |
 | [Suggest a feature](https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/issues/new?template=feature_request.md) | Proposals for the next iteration |
 
@@ -309,7 +342,7 @@ Linux regression checks do not replace testing on an Android device running Term
 
 The visible startup code is an **interaction confirmation**, not a password or access-control boundary. Session JSON contains local run metadata, not an authorization token. Scripts remain directly callable.
 
-See the [security policy](SECURITY.md) for the trust model and reporting guidance. Keep credentials and personal or sensitive device data out of public issues.
+See the [security policy](SECURITY.md) for the trust model and reporting guidance. Keep credentials and personal or sensitive device data out of public issues. For data protection responsibilities and operational templates, see [DSGVO/](DSGVO/README.md).
 
 ---
 

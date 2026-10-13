@@ -1,1 +1,61 @@
+MFORCE ENHANCED FRAMEWORK — AI USAGE & TRANSPARENCY
+Last documentation review: 2026-10-13
+Repository: https://github.com/GotUrBack-Public/MForce-Enhanced-Framework
 
+1. PURPOSE
+AI-assisted development is permitted in this project for drafting documentation,
+brainstorming, generating candidate code and tests, refactoring, and reviewing
+security or accessibility considerations. The existence of AI-assisted material
+does not establish that it has been tested, audited, or approved.
+
+2. DISCLOSURE IN CONTRIBUTIONS
+When submitting a pull request, identify material AI assistance in the PR
+description, including the tool/model if known, which files or components were
+affected, and what you personally reviewed and tested. No need to list routine
+spelling corrections or autocomplete for trivial edits.
+
+Example disclosure:
+  AI assistance: used to draft the initial tests and documentation.
+  Human validation: reviewed the diff; ran the full unittest suite locally.
+  Limitations: not yet tested on a physical Android/Termux device.
+
+Do not claim tests, a security audit, or human review took place unless it did.
+Do not fabricate contributors, provenance, benchmarks, citations or findings.
+Never treat generated security payloads or scanning results as validated evidence.
+
+3. HUMAN ACCOUNTABILITY
+The person submitting the contribution remains responsible for its correctness,
+licensing, privacy, security and authorized use. Maintainers decide whether to
+merge. AI is not a maintainer, author of record, copyright holder, or reviewer
+with merge authority. Review security-relevant logic manually, including network
+boundaries, input handling, error paths, credentials, and update mechanisms.
+
+4. DATA AND PRIVACY
+Do not send private repository material, access tokens, vulnerability reports,
+personal data, private target URLs, raw logs, or user-submitted scan results to
+external AI providers without the necessary authorization and legal basis.
+Use synthetic examples and redacted logs. Check the AI provider's data handling
+terms and organizational policies before using an external service.
+
+5. QUALITY GATES
+- Review generated code line by line and understand its behavior.
+- Confirm shell syntax, JSON validity and executable permissions.
+- Run: python3 -m unittest discover -s tests -v
+- Test actual Termux and Linux behavior when applicable.
+- Keep public-facing descriptions aligned with implemented functionality.
+- No unapproved third-party tracking, exfiltration, or remote code execution.
+- Respect the project's security policy and responsible testing boundaries.
+
+6. ATTRIBUTION AND LICENSING
+Respect the MIT license and upstream mForce attribution. Check provenance of
+third-party snippets, fonts, images, training content and dependencies. AI output
+is not automatically free of third-party rights. Do not upload licensed code or
+copyrighted training material without permission.
+
+7. SCOPE OF THIS STATEMENT
+This is a contribution policy and transparency guide, not a quantified audit
+of how much of the current codebase was AI-generated. Historical usage cannot
+be reliably measured from the repository alone. Specific claims should be
+supported by the relevant pull-request history.
+
+Related: CONTRIBUTING.md, social/how_to_contribute.md, SECURITY.md, DSGVO/.

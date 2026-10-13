@@ -1,20 +1,39 @@
 ---
-name: Feature request
-about: Suggest an idea for this project
-title: ''
-labels: ''
-assignees: ''
-
+name: "Feature request"
+about: "Suggest a scoped feature or improvement"
+title: "[Feature] "
+labels: []
+assignees: []
 ---
 
-**Is your feature request related to a problem? Please describe.**
-A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+## Problem and user benefit
 
-**Describe the solution you'd like**
-A clear and concise description of what you want to happen.
+What problem does this solve? Who needs it (Termux, Linux,
+website, tutorials, Academy or maintainers)?
 
-**Describe alternatives you've considered**
-A clear and concise description of any alternative solutions or features you've considered.
+## Proposed behavior
 
-**Additional context**
-Add any other context or screenshots about the feature request here.
+Describe inputs, expected outputs, menu location and how users
+would discover the feature.
+
+## Alternatives
+
+What simpler approach did you consider?
+
+## Security, privacy and performance
+
+- Does it make network requests or handle personal data?
+- Does it need explicit authorization or additional dependencies?
+- How are scope, timeouts, data retention and errors bounded?
+- How will it respect mobile accessibility and reduced motion?
+
+## Acceptance criteria
+
+- [ ] User-facing behavior is clearly specified.
+- [ ] Tests and documentation can verify the result.
+- [ ] No simulated scan results are presented as real.
+- [ ] Existing Termux/Linux behavior is preserved.
+
+## Additional context
+
+Links, non-sensitive mockups or synthetic examples only.

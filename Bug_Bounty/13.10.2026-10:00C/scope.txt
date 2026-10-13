@@ -1,65 +1,76 @@
+# MForce Enhanced Framework — Bug Bounty Scope & Conditions
 
+**Status:** Community vulnerability reporting is welcome. Financial rewards
+are discretionary, depend on available funding and must be individually
+confirmed by the project maintainers. **No automatic payout is promised.**
 
-**Up to €70 EUR for a verified High or Critical severity vulnerability.**
+## Potential recognition
 
-| Severity | Reward |
-|---|---|
-| Critical | Up to €100 |
-| High | Up to €70 |
-| Medium | 40 |
-| Low | Recognition |
+| Severity | Potential recognition |
+| --- | --- |
+| Critical | Up to €70, subject to prior confirmation and funding |
+| High | Up to €70, subject to prior confirmation and funding |
+| Medium | Public credit with consent; payment not promised |
+| Low | Public credit with consent |
 
-Rewards are discretionary and subject to validation, impact assessment, eligibility, and available program funding. Not every submission qualifies for a monetary reward.
+**Maximum possible monetary reward described by this document: €70
+per accepted vulnerability.** The reward table is intentionally
+consistent across severity levels; it does not create a funding
+commitment or guarantee any payout. The final decision, amount and
+payment method require private agreement.
 
-## Scope
+## Authorized scope
 
-The program covers security vulnerabilities in the current default branch of the MForce Enhanced Framework repository, including its application code, local scripts, and configuration handling.
+- Source code of the current default branch of
+  `GotUrBack-Public/MForce-Enhanced-Framework`.
+- Local Bash/Python runtime, module input handling, update logic,
+  official website source and configuration processing.
+- Your **own** test installations and lab targets.
 
-Only test software and environments you own or are explicitly authorized to assess.
+Excluded: GitHub and GitHub Pages platform security, third-party
+websites or APIs, RDAP providers, other people's installations,
+unrelated repositories, cloud infrastructure and unapproved targets.
 
-## Eligible Findings
+## Eligible reports
 
-We welcome reports demonstrating a genuine security impact, including:
+A report should show independently reproducible impact caused by a
+project vulnerability, such as command injection, unauthorized file
+access, information disclosure, unsafe update behavior or a
+security-relevant trust-boundary failure.
 
-- Arbitrary code execution caused by a framework vulnerability
-- Privilege escalation or unauthorized access
-- Sensitive information disclosure
-- Command injection or unsafe input handling
-- Security boundary violations
-- Other reproducible High or Critical vulnerabilities
+Severity is assessed using impact, exploitability and relevant
+CVSS considerations. A reflected parameter, a missing HTTP header
+or a static DOM-sink pattern is **not** automatically a vulnerability.
 
-Severity is assessed using technical impact, exploitability, and relevant CVSS criteria.
+## Safe testing rules
 
-## Submission Requirements
+- Test only software, systems and data you own or have explicit
+  authorization to assess.
+- No destructive actions, denial of service, social engineering,
+  phishing, credential harvesting, exfiltration or privacy invasion.
+- Do not scan or attack third-party targets as part of a report.
+- Use synthetic data and redact logs, credentials and identifiers.
+- Stop if your test causes unexpected impact.
+- Coordinate disclosure privately; do not publish unpatched details.
 
-A valid report should contain:
+## Submission checklist
 
-1. A clear description of the vulnerability.
-2. The affected version, component, or file.
-3. Reproducible steps or a safe proof of concept.
-4. An explanation of the security impact.
-5. A recommended mitigation, if available.
+1. Affected file/module and commit or application version.
+2. Short description of the vulnerability and expected behavior.
+3. Safe reproduction steps on a local or otherwise authorized setup.
+4. Actual impact, preconditions and affected trust boundary.
+5. Minimal proof of concept without private data.
+6. Suggested mitigation, if available.
 
-Please submit vulnerabilities privately through GitHub's Private Vulnerability Reporting feature when enabled. Otherwise, request a private contact channel without publicly disclosing exploit details.
+Submit privately through GitHub's Private Vulnerability Reporting
+feature **if enabled**. Otherwise request a private contact channel
+without disclosing exploit details in public.
 
-## Rules of Engagement
+## Review, rewards and acknowledgment
 
-- No destructive testing or disruption of third-party systems.
-- No social engineering, phishing, or unauthorized access.
-- No publication of vulnerabilities before coordinated disclosure.
-- No submission of fabricated or duplicate findings.
-- No testing outside the authorized project scope.
+Reports may be accepted, declined, considered duplicates or returned
+for more information. Reward eligibility is discretionary, including
+funding and independent verification; no response-time or payment
+deadline is guaranteed. Public acknowledgment requires consent.
 
-## Reward Conditions
-
-Monetary rewards may be granted for the first eligible, independently reproducible report of a previously unknown High or Critical vulnerability.
-
-The maximum reward is €70 per accepted vulnerability. Final reward decisions are made after technical review. Payment arrangements must be agreed privately before payment; no automatic payout is guaranteed.
-
-## Responsible Disclosure
-
-We value responsible security research and constructive collaboration. Researchers who follow the program rules may receive public acknowledgment with their consent.
-
-**Help us build a safer, stronger MForce Enhanced Framework.**
-
-*Security through collaboration. Recognition through contribution.*
+See [SECURITY.md](../../SECURITY.md) for reporting and trust boundaries.
