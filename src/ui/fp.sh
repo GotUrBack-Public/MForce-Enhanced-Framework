@@ -2,6 +2,7 @@
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 source "$ROOT_DIR/src/core/runtime.sh" || exit 1
 source "$ROOT_DIR/src/ui/theme.lib" || exit 1
+source "$ROOT_DIR/src/core/mariadb.sh" || exit 1
 CATEGORY_ID="${1:-}" CATEGORY_NAME="${2:-Category}"
 FUNCTION_ID="${3:-}" FUNCTION_ENTRY="${4:-}" FUNCTION_NAME="${5:-Function}"
 ENTRY_FILE="$ROOT_DIR/src/functions/$FUNCTION_ENTRY"
@@ -56,6 +57,15 @@ run_module() {
         IFS= read -r || exit 0
         hide_cursor; stty -echo -icanon min 1 time 0 2>/dev/null || :
         return
+    fi
+    if [[ "${MF_DB_READY:-0}" == 1 ]]; then
+        local output_file status
+        output_file="$(mktemp)" || { bash "$ENTRY_FILE"; return; }
+        bash "$ENTRY_FILE" 2>&1 | tee "$output_file"
+        status=${PIPESTATUS[0]}
+        mf_db_record "$FUNCTION_ID" "$status" "$output_file"
+        rm -f "$output_file"
+        exit "$status"
     fi
     exec bash "$ENTRY_FILE"
 }
