@@ -61,8 +61,8 @@ run_module() {
     if [[ "${MF_DB_READY:-0}" == 1 ]]; then
         local output_file status
         output_file="$(mktemp)" || { bash "$ENTRY_FILE"; return; }
-        bash "$ENTRY_FILE" > >(tee "$output_file") 2>&1
-        status=$?
+        bash "$ENTRY_FILE" 2>&1 | tee "$output_file"
+        status=${PIPESTATUS[0]}
         mf_db_record "$FUNCTION_ID" "$status" "$output_file"
         rm -f "$output_file"
         exit "$status"
