@@ -1,13 +1,14 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+source "$ROOT_DIR/src/core/runtime.sh" || exit 1
 CONFIG_FILE="$ROOT_DIR/cfg/zrk391.json"
 COLOR_DIR="$ROOT_DIR/src/colors"
 
-source "$COLOR_DIR/bse.sh"
-source "$COLOR_DIR/uic.sh"
-source "$COLOR_DIR/sts.sh"
-source "$COLOR_DIR/mnu.sh"
+source "$COLOR_DIR/bse.sh" || exit 1
+source "$COLOR_DIR/uic.sh" || exit 1
+source "$COLOR_DIR/sts.sh" || exit 1
+source "$COLOR_DIR/mnu.sh" || exit 1
 
 VERSION="unknown"
 NAME="MForce Enhanced Framework"
@@ -16,22 +17,8 @@ LANGUAGE="unknown"
 PLATFORM="unknown"
 REPOSITORY="unknown"
 
-hide_cursor() {
-    printf '\033[?25l'
-}
-
-show_cursor() {
-    printf '\033[?25h'
-}
-
-cleanup() {
-    show_cursor
-    stty echo icanon 2>/dev/null
-    clear
-    exit 0
-}
-
 load_config() {
+    mf_require_json "$CONFIG_FILE" project || exit 1
     if [[ ! -f "$CONFIG_FILE" ]]; then
         return
     fi
@@ -80,21 +67,7 @@ draw_page() {
     printf '  %sENTER%s Back\n' "$MENU_KEY" "$CLR_RESET"
 }
 
-read_key() {
-    local key
-
-    IFS= read -rsn1 key
-
-    case "$key" in
-        "")
-            echo "BACK"
-            ;;
-
-        q|Q)
-            echo "BACK"
-            ;;
-    esac
-}
+read_key() { mf_read_key "BACK"; }
 
 main() {
     load_config
@@ -105,17 +78,18 @@ main() {
     while true; do
         draw_page
 
-        case "$(read_key)" in
-            BACK)
+        read_key
+        case "$MF_KEY" in
+            EOF) exit 0 ;;
+            ENTER|BACK)
                 stty echo icanon 2>/dev/null
                 show_cursor
 
-                exec "$ROOT_DIR/src/ui/cs.sh"
+                exec bash "$ROOT_DIR/src/ui/cs.sh"
                 ;;
         esac
     done
 }
 
-trap cleanup INT TERM
 
 main

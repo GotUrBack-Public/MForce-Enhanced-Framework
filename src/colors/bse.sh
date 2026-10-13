@@ -3,13 +3,7 @@
 COLORS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 COLORS_FILE="$COLORS_DIR/clrs.json"
 
-if [[ ! -f "$COLORS_FILE" ]]; then
-    return 1 2>/dev/null || exit 1
-fi
-
-if ! command -v jq >/dev/null 2>&1; then
-    return 1 2>/dev/null || exit 1
-fi
+mf_require_json "$COLORS_FILE" colors || return 1
 
 CLR_RESET="$(jq -r '.reset' "$COLORS_FILE")"
 CLR_BOLD="$(jq -r '.bold' "$COLORS_FILE")"

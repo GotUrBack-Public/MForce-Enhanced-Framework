@@ -1,13 +1,14 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+source "$ROOT_DIR/src/core/runtime.sh" || exit 1
 DATA_FILE="$ROOT_DIR/src/data/funcs.json"
 COLOR_DIR="$ROOT_DIR/src/colors"
 
-source "$COLOR_DIR/bse.sh"
-source "$COLOR_DIR/uic.sh"
-source "$COLOR_DIR/sts.sh"
-source "$COLOR_DIR/mnu.sh"
+source "$COLOR_DIR/bse.sh" || exit 1
+source "$COLOR_DIR/uic.sh" || exit 1
+source "$COLOR_DIR/sts.sh" || exit 1
+source "$COLOR_DIR/mnu.sh" || exit 1
 
 CATEGORY_ID="${1:-}"
 CATEGORY_NAME="${2:-Category}"
@@ -17,28 +18,15 @@ FUNCTION_IDS=()
 FUNCTION_ENTRIES=()
 SELECTED=0
 
-hide_cursor() {
-    printf '\033[?25l'
-}
-
-show_cursor() {
-    printf '\033[?25h'
-}
-
-cleanup() {
-    show_cursor
-    stty echo icanon 2>/dev/null
-    clear
-    exit 0
-}
-
 load_functions() {
+    mf_require_json "$DATA_FILE" functions || exit 1
+    mf_require_category "$CATEGORY_ID" || exit 1
     if [[ -z "$CATEGORY_ID" ]]; then
         clear
         printf '%s[ERROR]%s No category selected.\n' "$STATUS_ERROR" "$CLR_RESET"
         printf '\n'
         printf '%sPress ENTER to exit...%s\n' "$UI_MUTED" "$CLR_RESET"
-        read -r
+        read -r || exit 0
         exit 1
     fi
 
@@ -50,7 +38,7 @@ load_functions() {
         printf '  %s\n' "$DATA_FILE"
         printf '\n'
         printf '%sPress ENTER to exit...%s\n' "$UI_MUTED" "$CLR_RESET"
-        read -r
+        read -r || exit 0
         exit 1
     fi
 
@@ -62,22 +50,26 @@ load_functions() {
         printf '  pkg install jq\n'
         printf '\n'
         printf '%sPress ENTER to exit...%s\n' "$UI_MUTED" "$CLR_RESET"
-        read -r
+        read -r || exit 0
         exit 1
     fi
 
-    while IFS=$'\t' read -r id entry name; do
-        FUNCTION_IDS+=("$id")
-        FUNCTION_ENTRIES+=("$entry")
-        FUNCTIONS+=("$name")
-    done < <(
+    local rows
+    rows="$(
         jq -r --arg category "$CATEGORY_ID" '
             .functions[]
             | select(.category == $category and .enabled == true)
             | [.id, .entry, .name]
             | @tsv
         ' "$DATA_FILE"
-    )
+    )" || exit 1
+
+    while IFS=$'\t' read -r id entry name; do
+        [[ -n "$id" ]] || continue
+        FUNCTION_IDS+=("$id")
+        FUNCTION_ENTRIES+=("$entry")
+        FUNCTIONS+=("$name")
+    done <<< "$rows"
 }
 
 draw_header() {
@@ -116,32 +108,7 @@ draw_menu() {
         "$MENU_KEY" "$CLR_RESET"
 }
 
-read_key() {
-    local key
-
-    IFS= read -rsn1 key
-
-    case "$key" in
-        $'\x1b')
-            IFS= read -rsn2 key
-
-            case "$key" in
-                '[A') echo "UP" ;;
-                '[B') echo "DOWN" ;;
-                '[D') echo "LEFT" ;;
-                '[C') echo "RIGHT" ;;
-            esac
-            ;;
-
-        "")
-            echo "ENTER"
-            ;;
-
-        q|Q)
-            echo "QUIT"
-            ;;
-    esac
-}
+read_key() { mf_read_key "QUIT"; }
 
 main() {
     load_functions
@@ -155,7 +122,9 @@ main() {
         draw_header
         draw_menu
 
-        case "$(read_key)" in
+        read_key
+        case "$MF_KEY" in
+            EOF) exit 0 ;;
             UP)
                 if (( ${#FUNCTIONS[@]} > 0 )); then
                     ((SELECTED--))
@@ -185,7 +154,7 @@ main() {
                     stty echo icanon 2>/dev/null
                     show_cursor
 
-                    exec "$ROOT_DIR/src/ui/fp.sh" \
+                    exec bash "$ROOT_DIR/src/ui/fp.sh" \
                         "$CATEGORY_ID" \
                         "$CATEGORY_NAME" \
                         "$FUNCTION_ID" \
@@ -198,12 +167,11 @@ main() {
                 stty echo icanon 2>/dev/null
                 show_cursor
 
-                exec "$ROOT_DIR/src/ui/cs.sh"
+                exec bash "$ROOT_DIR/src/ui/cs.sh"
                 ;;
         esac
     done
 }
 
-trap cleanup INT TERM
 
 main

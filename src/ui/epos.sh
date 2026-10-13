@@ -1,23 +1,9 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+source "$ROOT_DIR/src/core/runtime.sh" || exit 1
 
-VERSION="v0.01.0"
-
-hide_cursor() {
-    printf '\033[?25l'
-}
-
-show_cursor() {
-    printf '\033[?25h'
-}
-
-cleanup() {
-    show_cursor
-    stty echo icanon 2>/dev/null
-    clear
-    exit 0
-}
+VERSION="$MF_VERSION"
 
 main() {
     hide_cursor
@@ -49,9 +35,8 @@ main() {
     stty echo icanon 2>/dev/null
     show_cursor
 
-    exec "$ROOT_DIR/src/auth/lgn.sh"
+    exec bash "$ROOT_DIR/src/auth/lgn.sh"
 }
 
-trap cleanup INT TERM
 
 main

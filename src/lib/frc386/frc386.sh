@@ -1,11 +1,13 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
+source "$ROOT_DIR/src/core/runtime.sh" || exit 1
+mf_module_resources "frc386" "${1:-}" || exit 1
 LIB_DIR="$ROOT_DIR/src/lib/frc386"
 
-CONFIG_FILE="$LIB_DIR/frc386.conf"
-HELP_FILE="$LIB_DIR/frc386.help"
-DATA_FILE="$LIB_DIR/data.json"
+jq -e '.id == "frc386" and .resources.config == "frc386.conf" and
+    .resources.help == "frc386.help" and .resources.metadata == "frc386.json" and
+    .runtime.shell == "bash" and .runtime.platform == "termux"' "$LIB_DIR/data.json" >/dev/null || exit 1
 
 clear
 
@@ -36,6 +38,6 @@ fi
 printf '\n'
 printf '\033[90mPress ENTER to return...\033[0m\n'
 
-read -r
+read -r || exit 0
 
-exec "$ROOT_DIR/src/ui/fs.sh" "net" "Network"
+exec bash "$ROOT_DIR/src/ui/fs.sh" "net" "Network"

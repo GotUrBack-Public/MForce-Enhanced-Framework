@@ -1,13 +1,14 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+source "$ROOT_DIR/src/core/runtime.sh" || exit 1
 DATA_DIR="$ROOT_DIR/src/data"
 COLOR_DIR="$ROOT_DIR/src/colors"
 
-source "$COLOR_DIR/bse.sh"
-source "$COLOR_DIR/uic.sh"
-source "$COLOR_DIR/sts.sh"
-source "$COLOR_DIR/mnu.sh"
+source "$COLOR_DIR/bse.sh" || exit 1
+source "$COLOR_DIR/uic.sh" || exit 1
+source "$COLOR_DIR/sts.sh" || exit 1
+source "$COLOR_DIR/mnu.sh" || exit 1
 
 CATEGORY_ID="${1:-}"
 CATEGORY_NAME="${2:-Category}"
@@ -15,22 +16,9 @@ CATEGORY_NAME="${2:-Category}"
 FUNCTION_COUNT=0
 ENABLED_COUNT=0
 
-hide_cursor() {
-    printf '\033[?25l'
-}
-
-show_cursor() {
-    printf '\033[?25h'
-}
-
-cleanup() {
-    show_cursor
-    stty echo icanon 2>/dev/null
-    clear
-    exit 0
-}
-
 load_category_data() {
+    mf_require_json "$DATA_DIR/funcs.json" functions || exit 1
+    mf_require_category "$CATEGORY_ID" || exit 1
     if [[ -z "$CATEGORY_ID" ]]; then
         return 1
     fi
@@ -93,32 +81,7 @@ draw_page() {
     printf '  %sQ%s Back\n' "$MENU_KEY" "$CLR_RESET"
 }
 
-read_key() {
-    local key
-
-    IFS= read -rsn1 key
-
-    case "$key" in
-        $'\x1b')
-            IFS= read -rsn2 key
-
-            case "$key" in
-                '[A') echo "UP" ;;
-                '[B') echo "DOWN" ;;
-                '[D') echo "LEFT" ;;
-                '[C') echo "RIGHT" ;;
-            esac
-            ;;
-
-        "")
-            echo "ENTER"
-            ;;
-
-        q|Q)
-            echo "BACK"
-            ;;
-    esac
-}
+read_key() { mf_read_key "BACK"; }
 
 main() {
     load_category_data
@@ -129,12 +92,14 @@ main() {
     while true; do
         draw_page
 
-        case "$(read_key)" in
+        read_key
+        case "$MF_KEY" in
+            EOF) exit 0 ;;
             ENTER)
                 stty echo icanon 2>/dev/null
                 show_cursor
 
-                exec "$ROOT_DIR/src/ui/fs.sh" \
+                exec bash "$ROOT_DIR/src/ui/fs.sh" \
                     "$CATEGORY_ID" \
                     "$CATEGORY_NAME"
                 ;;
@@ -143,12 +108,11 @@ main() {
                 stty echo icanon 2>/dev/null
                 show_cursor
 
-                exec "$ROOT_DIR/src/ui/cs.sh"
+                exec bash "$ROOT_DIR/src/ui/cs.sh"
                 ;;
         esac
     done
 }
 
-trap cleanup INT TERM
 
 main
