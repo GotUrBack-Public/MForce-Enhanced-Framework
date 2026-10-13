@@ -107,7 +107,7 @@ def classify(body: str, marker: str, content_type: str) -> list[str]:
         parser = ReflectionHTML(marker)
         parser.feed(body)
         contexts |= parser.found
-        if re.search(r"<script\\b[^>]*>[\\s\\S]*?" + re.escape(marker), body, re.I):
+        if re.search(r"<script\b[^>]*>[\s\S]*?" + re.escape(marker), body, re.I):
             contexts.add("script_block")
         if not contexts:
             contexts.add("html_other")
