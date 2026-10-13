@@ -1,4 +1,4 @@
-<p align="center"><img src="assets/banners/logo.png" alt="MForce Enhanced Framework" width="100%"></p>
+
 <h1 align="center">MForce Enhanced Framework</h1>
 <p align="center">
 <img src="https://img.shields.io/badge/Bot-Active-green" alt="Bot status">
@@ -30,3 +30,13 @@
 <img src="https://img.shields.io/badge/Desktop-x86__64-3B82F6?logo=linux&logoColor=white" alt="Desktop x86_64">
 </p>
 <p align="center"><a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/pulls?q=is%3Apr+is%3Amerged">Merges</a> · <a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/graphs/contributors">Contributors</a></p>
+
+
+
+
+--------------
+
+
+
+
+<p align="center"><img src="assets/banners/logo.png" alt="MForce Enhanced Framework" width="100%"></p>
