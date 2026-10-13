@@ -143,6 +143,27 @@ bash src/functions/tcp401.sh example.org --authorized --allow-public --ports 80,
 
 The scanner uses TCP connections, not exploits. Its port count, timeouts and concurrency are bounded. `--authorized` is your confirmation of permission; `--allow-public` is additionally required for public IP addresses.
 
+### XSS Payload Lab & HTTP Reflection Inspector
+
+Two additional **real** Offensive Security modules are available: an offline, categorized 100-example XSS proof-of-concept reference library and a bounded HTTP GET reflection checker that sends harmless unique markers to explicitly authorized targets. Neither module fabricates results; the payload lab never sends requests.
+
+```bash
+# Offline XSS payload library
+bash src/functions/xss402.sh --list-categories
+bash src/functions/xss402.sh --category html
+bash src/functions/xss402.sh --search innerHTML --format json
+bash src/functions/xss402.sh --format lines --output xss-lab.txt
+
+# Real parameter reflection inspection against your local test app
+bash src/functions/ref403.sh 'http://127.0.0.1:8000/?q=hello' --authorized
+bash src/functions/ref403.sh 'http://127.0.0.1:8000/' --authorized --param q --json
+
+# Public targets only when you have explicit authorization
+bash src/functions/ref403.sh 'https://your-authorized-site.example/?q=test' --authorized --allow-public --json
+```
+
+The inspector performs up to eight bounded GET requests and stops on HTTP 429. A reflected parameter **does not prove XSS**; payload examples belong in owned labs or explicitly approved testing scopes. Read the [Offensive Security guide](docs/OFFENSIVE_XSS.md) for limitations and GDPR/DSGVO considerations.
+
 ### Update MForce — Update Center
 
 The Update Center is available in the **Updates** category. Updates require an official Git clone on `main`, a clean working tree, Git and Python 3.

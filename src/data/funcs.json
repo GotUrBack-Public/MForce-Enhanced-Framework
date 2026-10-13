@@ -111,6 +111,20 @@
       "name": "Update MForce",
       "category": "upd",
       "enabled": true
+    },
+    {
+      "id": "xss402",
+      "entry": "xss402.sh",
+      "name": "XSS Payload Lab",
+      "category": "offensive",
+      "enabled": true
+    },
+    {
+      "id": "ref403",
+      "entry": "ref403.sh",
+      "name": "HTTP Reflection Inspector",
+      "category": "offensive",
+      "enabled": true
     }
   ]
 }
