@@ -171,7 +171,7 @@ def js_check(r,p):
         for label,_,_ in findings:counts[label]=counts.get(label,0)+1
         for label,num in counts.items():line(label,str(num)+' potential occurrence(s)')
         for label,file,line_num in findings[:12]:note(label+' / '+safe(file,58)+' / line '+str(line_num))
-    note('innerHTML / DOM sinks are STATIC hints, never confirmed XSS.')
+    note('innerHTML / DOM sinks are STATIC review hints, NOT proof of XSS.')
     note('No code execution, injection, form submission or crawling.')
 def web(r,include_js=True):
     http(r);section('Public page information')
