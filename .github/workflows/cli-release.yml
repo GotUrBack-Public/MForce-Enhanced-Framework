@@ -1,0 +1,45 @@
+name: MForce CLI release archive
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout release source
+        uses: actions/checkout@v4
+      - name: Validate shell entrypoints
+        run: |
+          bash -n xrm742.sh install.sh
+      - name: Create versioned archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="${GITHUB_REF_NAME}"
+          if [[ "${GITHUB_REF_TYPE}" != "tag" ]]; then
+            version="manual-${GITHUB_RUN_ID}"
+          fi
+          mkdir -p dist
+          tar --exclude=.git --exclude=dist --exclude=security-reports \
+            -czf "dist/mforce-enhanced-framework-${version}.tar.gz" .
+          (cd dist && sha256sum *.tar.gz > SHA256SUMS)
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mforce-cli-archive
+          path: dist/
+      - name: Publish GitHub Release on version tag
+        if: github.ref_type == 'tag'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" dist/* \
+            --title "MForce Enhanced Framework $GITHUB_REF_NAME" \
+            --generate-notes
