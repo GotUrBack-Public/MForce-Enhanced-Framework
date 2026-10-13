@@ -1,7 +1,45 @@
-# MForce Enhanced Framework — Bug Bounty Program
+# MForce Enhanced Framework — Responsible Security Research
 
-**Find vulnerabilities. Improve security. Earn rewards.**
+The project welcomes independently reproducible vulnerability reports
+that improve the security of its current source code.
 
-We believe that security is a shared responsibility. The MForce Enhanced Framework Bug Bounty Program invites independent security researchers, ethical hackers, and developers to help identify and responsibly disclose vulnerabilities in our project.
+**Read the current [scope and conditions](13.10.2026-10:00C/scope.txt)
+and [SECURITY.md](../SECURITY.md) before testing.**
 
-## Security Research Reward
+## What is in scope?
+
+The current default branch of the MForce repository: its Bash/Python
+application code, official static website, module registration,
+configuration handling and update mechanism.
+
+**Not in scope:** third-party domains, GitHub infrastructure, GitHub
+Pages platform vulnerabilities, upstream services, unrelated forks,
+other users' devices and systems you do not own or have permission to test.
+
+## What makes a useful report?
+
+- A genuine security impact caused by MForce itself.
+- Clear affected component and revision.
+- Safe, reproducible steps using a local lab or authorized environment.
+- Minimal, redacted proof of concept.
+- Suggested remediation, if available.
+
+Ordinary typos, theoretical findings without impact, duplicate reports,
+automated false positives and unverified "XSS detected" claims are not
+automatically eligible.
+
+## Private disclosure
+
+Use GitHub Private Vulnerability Reporting **if enabled**. Otherwise
+request a private contact method through a minimal public issue
+**without** sensitive details. See [SECURITY.md](../SECURITY.md).
+
+## Recognition and possible rewards
+
+The scope document describes **discretionary** recognition and potential
+financial rewards subject to validation and available funding. No report
+automatically qualifies for payment; terms must be confirmed privately
+before any payout. Do not rely on a guaranteed amount or response deadline.
+
+We thank researchers who follow the scope and respect privacy.
+Public credit is optional and requires the researcher's consent.

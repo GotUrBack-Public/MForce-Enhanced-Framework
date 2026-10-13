@@ -1,38 +1,47 @@
 ---
-name: Bug report
-about: Create a report to help us improve
-title: ''
-labels: ''
-assignees: ''
-
+name: "Bug report"
+about: "Report a reproducible non-security bug in MForce"
+title: "[Bug] "
+labels: []
+assignees: []
 ---
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+## Description
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+Describe what broke and what you expected instead.
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
+## Environment
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+- Platform: [Termux / Debian / Ubuntu / other]
+- OS / Android version: [redacted if needed]
+- MForce version: [see `cfg/zrk391.json`]
+- Commit SHA: [if known]
+- Shell / Python version: [if relevant]
+- Terminal width / browser: [if UI or website issue]
 
-**Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
+## Steps to reproduce
 
-**Smartphone (please complete the following information):**
- - Device: [e.g. iPhone6]
- - OS: [e.g. iOS8.1]
- - Browser [e.g. stock browser, safari]
- - Version [e.g. 22]
+1. Start from a clean clone or describe local changes.
+2. Run this **redacted, authorized** command: `...`
+3. Observe: ...
 
-**Additional context**
-Add any other context about the problem here.
+## Expected vs actual result
+
+**Expected:**
+
+**Actual:**
+
+## Logs / screenshots
+
+Attach only minimal **redacted** output. Remove API keys, usernames,
+private domains, IPs that identify people, session IDs and credentials.
+
+## Validation
+
+- [ ] I checked the latest `main` branch.
+- [ ] I can reproduce this with a non-sensitive example.
+- [ ] I searched existing issues.
+- [ ] This is not a confidential security vulnerability.
+
+**For security vulnerabilities, do NOT use this public template.**
+Follow [SECURITY.md](../../SECURITY.md).

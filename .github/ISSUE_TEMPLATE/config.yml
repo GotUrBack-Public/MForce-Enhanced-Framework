@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: "Security disclosure instructions"
+    url: "https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/blob/main/SECURITY.md"
+    about: "Do not disclose exploit details in public issues; read the private reporting instructions."
+  - name: "Contributing guide"
+    url: "https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/blob/main/CONTRIBUTING.md"
+    about: "Read the development, testing and privacy guidelines before contributing."
