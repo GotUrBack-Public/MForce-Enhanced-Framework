@@ -97,6 +97,13 @@
       "name": "RDAP Registration",
       "category": "osint",
       "enabled": true
+    },
+    {
+      "id": "upd501",
+      "entry": "upd501.sh",
+      "name": "Update MForce",
+      "category": "upd",
+      "enabled": true
     }
   ]
 }
