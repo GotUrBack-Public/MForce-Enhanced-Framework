@@ -6,3 +6,25 @@
 @media(max-width:1000px){.container{width:calc(100% - 64px)}.nav{gap:18px}.section{padding:100px 0}}
 @media(max-width:760px){.site-header{height:70px}.container{width:calc(100% - 36px)}.menu-button{display:flex}.nav{display:none;position:absolute;top:70px;left:0;right:0;background:#0b1926;border-bottom:1px solid var(--border);padding:27px 18px;align-items:stretch;flex-direction:column;gap:25px}.nav.open{display:flex}.nav a{font-size:15px}.nav .nav-github{text-align:center}.section{padding:82px 0}.section h2,.cta-section h2{font-size:clamp(38px,9vw,58px)}.footer-main,.footer-meta{flex-direction:column;align-items:flex-start;gap:22px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+/* MForce motion system, accessible interactions and platform controls */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.nav a:not(.nav-github){position:relative}
+.nav a:not(.nav-github)::after{content:'';position:absolute;left:0;right:100%;bottom:-10px;height:1px;background:var(--bright);transition:right .3s cubic-bezier(.2,.8,.2,1)}
+.nav a:not(.nav-github):hover::after,.nav a.active:not(.nav-github)::after{right:0}
+.command-trigger{display:flex;align-items:center;gap:14px;margin-left:auto;padding:8px 9px 8px 12px;border:1px solid #254154;background:rgba(8,25,39,.75);color:#87a3b8;font:10px var(--mono);letter-spacing:.09em;cursor:pointer;transition:border-color .25s,background .25s}
+.command-trigger:hover{border-color:var(--cyan);background:#122838}
+.command-trigger kbd,.command-dialog kbd{border:1px solid #40586b;border-radius:3px;padding:5px 6px;color:#c8dae5;font:10px var(--mono)}
+.back-to-top{position:fixed;right:26px;bottom:26px;z-index:25;width:46px;height:46px;border:1px solid #386b82;background:rgba(8,26,40,.94);color:var(--bright);font-size:21px;cursor:pointer;opacity:0;transform:translateY(12px);pointer-events:none;transition:opacity .25s,transform .25s,background .25s}
+.back-to-top.show{opacity:1;transform:none;pointer-events:auto}.back-to-top:hover{background:#15405a}
+.command-dialog{width:min(580px,calc(100vw - 32px));max-height:min(650px,calc(100dvh - 60px));margin:min(16vh,110px) auto auto;padding:0;border:1px solid #45687d;border-radius:4px;color:var(--text);background:#091925;box-shadow:0 35px 100px #000b,0 0 0 1px #000;overflow:hidden}
+.command-dialog::backdrop{background:rgba(1,9,16,.77);backdrop-filter:blur(9px)}
+.command-dialog-head{padding:16px 21px;border-bottom:1px solid #2a4659;display:flex;justify-content:space-between;align-items:center;color:#aac4d4;font:10px var(--mono);letter-spacing:.08em}.command-dialog-head kbd{margin-left:10px}
+.command-dialog-head button{color:#a7c5d7;border:0;background:none;font-size:23px;cursor:pointer;line-height:1}
+#command-search{display:block;width:calc(100% - 42px);margin:18px 21px;padding:12px 1px 16px;background:transparent;color:#f2f7fa;font:18px var(--sans);border:0;border-bottom:1px solid #2e4b5e;outline:none;border-radius:0}
+#command-search::placeholder{color:#647e90}#command-search:focus{border-color:var(--cyan)}
+.command-results{padding:0 13px 20px;max-height:350px;overflow:auto}.command-results a{display:flex;gap:16px;align-items:center;margin:3px 0;padding:13px 14px;font:13px var(--sans);color:#8db7cd;border:1px solid transparent;transition:background .16s,border-color .16s}.command-results a span{flex:1;color:#d5e5ee}.command-results a small{color:#6e93a8;font:10px var(--mono)}.command-results a[hidden]{display:none}.command-results a.highlight,.command-results a:hover,.command-results a:focus-visible{background:#123245;border-color:#24556c;outline:none}
+.command-dialog-foot{display:flex;justify-content:space-between;gap:15px;padding:15px 21px;background:#0d2231;border-top:1px solid #2d4c5e;color:#729bb1;font:9px var(--mono);letter-spacing:.06em}
+@media(max-width:1040px){.command-trigger{display:none}}
+@media(max-width:760px){.nav a:not(.nav-github)::after{bottom:-5px}.command-dialog{margin:12vh auto auto}.back-to-top{right:16px;bottom:16px}}
+@media(prefers-reduced-motion:reduce){.back-to-top,.nav a::after,.command-trigger{transition:none!important}}
