@@ -85,7 +85,7 @@ class WebsiteTests(unittest.TestCase):
         self.assertIn("updater: {", script)
 
     def test_site_never_performs_network_scans(self):
-        for name in ("global.js", "main.js", "learn.js"):
+        for name in ("global.js", "main.js", "learn.js", "glass.js"):
             script = (WEB / "js" / name).read_text(encoding="utf-8")
             with self.subTest(script=name):
                 self.assertNotRegex(script, r"\bfetch\s*\(|XMLHttpRequest|WebSocket\s*\(")
@@ -95,6 +95,21 @@ class WebsiteTests(unittest.TestCase):
         self.assertIn("prefers-reduced-motion:reduce", style)
         self.assertIn("max-width:460px", style)
         self.assertIn("max-width:1180px", style)
+
+    def test_glass_design_accessibility_and_navigation(self):
+        glass_css = (WEB / "css/glass.css").read_text(encoding="utf-8")
+        glass_js = (WEB / "js/glass.js").read_text(encoding="utf-8")
+        self.assertIn("glass.css?v=7", self.markup)
+        self.assertIn("glass.js?v=7", self.markup)
+        self.assertIn('class="explore-rail"', self.markup)
+        self.assertIn('aria-label="Explore MForce sections"', self.markup)
+        self.assertIn("prefers-reduced-motion:reduce", glass_css)
+        self.assertIn("backdrop-filter", glass_css)
+        self.assertIn("@supports not", glass_css)
+        self.assertIn("IntersectionObserver", glass_js)
+        self.assertIn("aria-current", glass_js)
+        self.assertIn("motionQuery.matches", glass_js)
+        self.assertNotRegex(glass_js, r"\\bfetch\\s*\\(|XMLHttpRequest|WebSocket\\s*\\(")
 
     @unittest.skipUnless(shutil.which("node"), "Node.js unavailable")
     def test_javascript_interactions(self):
