@@ -1,0 +1,9 @@
+XSS Payload Lab — local library of 100 contextual examples.
+No network requests, no automatic injection, no filter evasion.
+Usage:
+  bash src/functions/xss402.sh --list-categories
+  bash src/functions/xss402.sh --category html
+  bash src/functions/xss402.sh --search attribute --format json
+  bash src/functions/xss402.sh --format lines --output xss-lab.txt
+Examples are executable only when you explicitly place them in your OWN lab.
+Do not use on third-party services without written authorization.
