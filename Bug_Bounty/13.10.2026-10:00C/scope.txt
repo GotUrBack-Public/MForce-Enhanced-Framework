@@ -14,8 +14,8 @@ confirmed by the project maintainers. **No automatic payout is promised.**
 | Low | Public credit with consent |
 
 **Maximum possible monetary reward described by this document: €70
-per accepted vulnerability.** This removes the previous contradictory
-€70/€100 and Medium-reward wording; it does not create a funding
+per accepted vulnerability.** The reward table is intentionally
+consistent across severity levels; it does not create a funding
 commitment or guarantee any payout. The final decision, amount and
 payment method require private agreement.
 
