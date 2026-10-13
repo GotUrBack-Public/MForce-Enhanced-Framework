@@ -88,7 +88,7 @@ class WebsiteTests(unittest.TestCase):
         for name in ("global.js", "main.js", "learn.js"):
             script = (WEB / "js" / name).read_text(encoding="utf-8")
             with self.subTest(script=name):
-                self.assertNotRegex(script, r"\\bfetch\\s*\\(|XMLHttpRequest|WebSocket\\s*\\(")
+                self.assertNotRegex(script, r"\bfetch\s*\(|XMLHttpRequest|WebSocket\s*\(")
 
     def test_reduced_motion_and_responsive_breakpoints(self):
         style = (WEB / "css/learn.css").read_text(encoding="utf-8")
