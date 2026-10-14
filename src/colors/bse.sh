@@ -1,4 +1,5 @@
 #!/data/data/com.termux/files/usr/bin/bash
+# shellcheck disable=SC2034 # Palette variables are consumed by other sourced modules.
 
 COLORS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 COLORS_FILE="$COLORS_DIR/clrs.json"

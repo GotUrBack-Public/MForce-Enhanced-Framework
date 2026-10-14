@@ -7,17 +7,34 @@ on:
       - 'v*'
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   package:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout release source
-        uses: actions/checkout@v4
-      - name: Validate shell entrypoints
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Install test dependencies
+        run: sudo apt-get update && sudo apt-get install -y jq python3
+      - name: Validate release version against project configuration
+        if: github.ref_type == 'tag'
+        shell: bash
+        run: |
+          set -euo pipefail
+          declared="$(jq -r '.version' cfg/zrk391.json)"
+          if [[ "$GITHUB_REF_NAME" != "$declared" ]]; then
+            printf 'Tag %s does not match configured version %s\n' "$GITHUB_REF_NAME" "$declared" >&2
+            exit 1
+          fi
+      - name: Run complete regression suite before packaging
         run: |
           bash -n xrm742.sh install.sh
+          python3 -m unittest discover -s tests -v
       - name: Create versioned archive
         shell: bash
         run: |

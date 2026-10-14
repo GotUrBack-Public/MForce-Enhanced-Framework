@@ -33,7 +33,7 @@ load_categories() {
 }
 
 draw_page() {
-    local i note selected_id count current
+    local i note selected_id count
     ((SELECTED < ${#CATEGORIES[@]})) && LAST_CATEGORY=$SELECTED
     mf_ui_header 'MAIN MENU' "$(mf_ui_platform) / $MF_VERSION"
     if ((MF_UI_COLS >= 63 && MF_UI_LINES >= 35)); then mf_ui_logo; fi

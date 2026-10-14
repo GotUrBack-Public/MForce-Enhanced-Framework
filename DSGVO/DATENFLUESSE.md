@@ -20,6 +20,7 @@ Bewertung einzelner Einsätze.
 | Update Center | Git-Repository-Adresse, Fetch-Metadaten | GitHub / lokale Git-Objekte | Offizieller `main`-Branch, nur Fast-Forward |
 | Statische Website | IP-Adresse, Browser-/Verbindungsmetadaten beim Abruf | GitHub Pages und ggf. Netzbetreiber | Keine eigene Analytics-Integration im Projektcode; Hosting-Logs außerhalb des Repositorys |
 | GitHub-Links / README-Badges | Browser-/Request-Metadaten | GitHub, `img.shields.io` beim Badge-Abruf | Externe Ressourcen sind gesondert zu berücksichtigen |
+| Optionale lokale MariaDB (`MF_DB_ENABLE=1`) | Modul-ID, Exit-Code, Zeitstempel; keine Roh-Ausgabe ab diesem Patch | `~/.local/state/mforce/mariadb` oder `$XDG_STATE_HOME/mforce/mariadb` | Standardmäßig aus; nur Unix-Socket, keine Netzwerkverbindung; Löschung nach sieben Tagen beim nächsten aktiven Start (1–365 konfigurierbar); alte Ausgabedaten werden bei diesem Start geleert |
 | Manuelle Exporte / Screenshots | Scanergebnisse, URLs, IPs, ggf. personenbezogene Angaben | Vom Nutzer gewähltes Dateisystem, Backups oder geteilte Dienste | Nutzer verwaltet Zugriff, Speicherfrist und Löschung |
 
 ## Technische Schutzmaßnahmen im aktuellen Code
@@ -33,6 +34,11 @@ Bewertung einzelner Einsätze.
 - Die XSS-Beispielbibliothek arbeitet offline.
 - Die Update-Funktion prüft den offiziellen Remote und den sauberen
   Git-Arbeitsbaum; sie lädt Updates von GitHub.
+- MariaDB ist opt-in (`MF_DB_ENABLE=1`); sie speichert ausschließlich
+  Modul-ID, Exit-Code und Zeitstempel, keine Roh-Ausgaben. Beim Start mit
+  aktivierter Datenbank werden frühere Ausgaben auf NULL gesetzt und
+  abgelaufene Metadaten entfernt. Es erfolgt keine Bereinigung, solange
+  die Datenbank nicht erneut gestartet wird.
 - Temporäre Sitzungsdateien verwenden restriktive Dateirechte und
   werden bei regulärem Ende entfernt.
 

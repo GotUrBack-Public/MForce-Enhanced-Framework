@@ -32,6 +32,13 @@ den Zielsystemen, den Beteiligten und den verwendeten Dienstleistern ab.
   Analytics-Skript oder Formular-Backend. GitHub Pages und Browser
   verarbeiten beim Abruf technische Verbindungsdaten; diese Verarbeitung
   liegt nicht vollständig in der Kontrolle des Quellcodes.
+- **Optionale lokale MariaDB:** Nur bei ausdrücklichem `MF_DB_ENABLE=1` werden
+  Modul-ID, Exit-Code und Zeitpunkt lokal gespeichert. Modulausgaben werden
+  nicht protokolliert. Standardaufbewahrung: sieben Tage, konfigurierbar
+  über `MF_DB_RETENTION_DAYS` (1–365); Bereinigung beim nächsten Start mit
+  aktivierter Datenbank. Bereits vorhandene Roh-Ausgaben älterer Versionen
+  werden dabei geleert. Die Datenbank bleibt bis zur manuellen Löschung
+  auf dem Gerät; bei deaktivierter Datenbank findet keine Bereinigung statt.
 - **Dauerhafte Dateien:** Exporte (`--output`), umgeleitete Terminal-Ausgaben,
   Shell-History, Screenshots, Backups und Git-Commits werden nicht
   automatisch durch MForce gelöscht.

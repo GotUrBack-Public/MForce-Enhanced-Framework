@@ -21,6 +21,8 @@
 - [ ] Empfänger, Hosting, RDAP, DNS, GitHub und Drittlandtransfers
       einschließlich Art. 44 ff. bewertet.
 - [ ] Löschfristen und Verantwortliche für die Löschung festgelegt.
+- [ ] Lokale MariaDB-Protokollierung (`MF_DB_ENABLE=1`) nur bei Bedarf aktiviert;
+      Speicherort, Aufbewahrungsdauer und manuelle Bereinigung dokumentiert.
 
 ## B. Während des Einsatzes
 

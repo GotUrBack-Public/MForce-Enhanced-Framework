@@ -11,12 +11,24 @@ etwaiger gesetzlicher Pflichten festlegen.
 | --- | --- | --- |
 | Terminal-Ausgabe | Wird angezeigt, nicht als zentraler MForce-Bericht gespeichert | Anwender; Terminal-Scrollback und Aufzeichnung prüfen |
 | Temporäre Sitzungsdatei | Bei regulärem Beenden entfernt; Absturz/SIGKILL kann Reste hinterlassen | Lokale Installation |
+| Optionale MariaDB | Standardmäßig deaktiviert. Bei `MF_DB_ENABLE=1` lokale Modul-ID, Exit-Code und Zeitstempel; Aufbewahrung standardmäßig 7 Tage (1–365 konfigurierbar), Bereinigung beim nächsten aktiven Start. Datenbankdateien bleiben sonst bestehen | Anwender; manuelle Löschung und Backups prüfen |
 | `--output`-Dateien | Bleiben am gewählten Speicherort | Anwender |
 | Umgeleitete Ausgaben (`>`, `tee`) | Bleiben bis zur manuellen Löschung | Anwender |
 | Shell-History | Abhängig von der verwendeten Shell und deren Einstellungen | Anwender |
 | Git-Commits / Pull Requests / Issues | Können langfristig erhalten bleiben, auch nach späterem Entfernen | Repository-Betreiber und Plattform |
 | DNS-/HTTP-/RDAP-Serverlogs | Außerhalb der Kontrolle des lokalen Programms | Betreiber des jeweiligen Dienstes |
 | Backups und Synchronisierung | Können zusätzliche Kopien enthalten | Anwender bzw. beauftragter Dienstleister |
+
+## Lokale MariaDB vollständig entfernen
+
+Bei deaktivierter Protokollierung werden vorhandene Daten **nicht** automatisch
+bereinigt. Zum Löschen MForce und MariaDB vollständig beenden, den tatsächlichen
+Pfad prüfen und das Verzeichnis `$XDG_STATE_HOME/mforce/mariadb` bzw.
+`$HOME/.local/state/mforce/mariadb` entfernen. Vorher sicherstellen,
+dass keine andere Installation dieses Verzeichnis verwendet. Auch Backups
+und Kopien separat prüfen. Bei aktivierter Datenbank entfernt der nächste
+Start außerdem alte Roh-Ausgaben aus früheren Versionen und Metadaten,
+die älter als `MF_DB_RETENTION_DAYS` sind (Standard: 7 Tage).
 
 ## Praktischer Löschablauf
 
