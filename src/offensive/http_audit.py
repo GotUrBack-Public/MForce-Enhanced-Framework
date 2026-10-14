@@ -77,8 +77,7 @@ def request(parsed, address, port, host_header, target, method, timeout, extra=N
                "Accept": "*/*", "Connection": "close"}
     headers.update(extra or {})
     try:
-        connection.request(method, target, headers=headers, skip_host=True,
-                           skip_accept_encoding=True)
+        connection.request(method, target, headers=headers)
         response = connection.getresponse()
         status = response.status
         headers_list = response.getheaders()
