@@ -33,15 +33,15 @@ den Zielsystemen, den Beteiligten und den verwendeten Dienstleistern ab.
   verarbeiten beim Abruf technische Verbindungsdaten; diese Verarbeitung
   liegt nicht vollständig in der Kontrolle des Quellcodes.
 - **Dauerhafte Dateien und lokale SQL-Datenbank:** Exporte (`--output`),
-  umgeleitete Terminal-Ausgaben, Shell-History, Screenshots, Backups,
-  Git-Commits und — wenn MariaDB installiert ist — Modulausgaben in
-  `mforce_logs.module_runs` werden nicht automatisch durch MForce gelöscht.
+  umgeleitete Terminal-Ausgaben, Shell-History, Screenshots, Backups und
+  Git-Commits können bestehen bleiben. MariaDB ist standardmäßig aus.
   Siehe [Löschung und Aufbewahrung](LOESCHUNG_UND_AUFBEWAHRUNG.md).
-- **MariaDB-Protokollierung:** Beim regulären Programmstart wird ein lokaler
-  MariaDB-Server verwendet, sofern die benötigten Programme verfügbar sind
-  und `MF_DB_DISABLE=1` nicht gesetzt ist. Bis zu 1 MiB Ausgabe pro
-  Modulausführung kann dauerhaft gespeichert werden. Vor vertraulichen
-  Prüfungen `MF_DB_DISABLE=1 bash xrm742.sh` setzen.
+- **MariaDB-Protokollierung:** Nur bei `MF_DB_ENABLE=1` wird lokal
+  eine Datenbank gestartet (sofern installiert). Sie speichert nur Modul-ID,
+  Exit-Code und Zeitstempel, keine Modulausgaben. Beim nächsten aktivierten
+  Start werden frühere Rohdaten geleert und Metadaten älter als sieben Tage
+  gelöscht (über `MF_DB_RETENTION_DAYS` auf 1–365 Tage einstellbar).
+  `MF_DB_DISABLE=1` erzwingt die Deaktivierung; Backups separat prüfen.
 - **Kein automatischer Nachweis:** Die Software stellt weder eine
   Rechtsgrundlage noch eine Einwilligung noch eine Freigabe für Scans bereit.
 

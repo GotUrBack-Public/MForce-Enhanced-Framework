@@ -1,8 +1,10 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
 # Shared runtime; sourced by entry points, never a separate application.
+# shellcheck disable=SC2034 # Public variables consumed by sourced UI entrypoints.
 MF_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 for mf_lib in "$MF_ROOT"/classes{1..5}.lib; do
+    # shellcheck disable=SC1090 # Sources are a fixed set of local classes1..5.lib.
     source "$mf_lib" || return 1
 done
 unset mf_lib

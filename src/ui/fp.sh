@@ -6,7 +6,7 @@ source "$ROOT_DIR/src/core/mariadb.sh" || exit 1
 CATEGORY_ID="${1:-}" CATEGORY_NAME="${2:-Category}"
 FUNCTION_ID="${3:-}" FUNCTION_ENTRY="${4:-}" FUNCTION_NAME="${5:-Function}"
 ENTRY_FILE="$ROOT_DIR/src/functions/$FUNCTION_ENTRY"
-LIB_ID='' META_VERSION='' META_TYPE='' META_CATEGORY=''
+LIB_ID='' META_VERSION='' META_TYPE=''
 
 load_module() {
     mf_require_json "$ROOT_DIR/src/data/funcs.json" functions || exit 1
@@ -59,12 +59,10 @@ run_module() {
         return
     fi
     if [[ "${MF_DB_READY:-0}" == 1 ]]; then
-        local output_file status
-        output_file="$(mktemp)" || { bash "$ENTRY_FILE"; return; }
-        bash "$ENTRY_FILE" 2>&1 | tee "$output_file"
-        status=${PIPESTATUS[0]}
-        mf_db_record "$FUNCTION_ID" "$status" "$output_file"
-        rm -f "$output_file"
+        # Optional metadata-only audit; never persist or tee module output.
+        local status=0
+        bash "$ENTRY_FILE" || status=$?
+        mf_db_record "$FUNCTION_ID" "$status"
         exit "$status"
     fi
     exec bash "$ENTRY_FILE"

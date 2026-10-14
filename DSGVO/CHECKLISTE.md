@@ -21,9 +21,9 @@
 - [ ] Empfänger, Hosting, RDAP, DNS, GitHub und Drittlandtransfers
       einschließlich Art. 44 ff. bewertet.
 - [ ] Löschfristen und Verantwortliche für die Löschung festgelegt.
-- [ ] MariaDB-Rohprotokollierung bewertet: `MF_DB_DISABLE=1` verwenden,
-      wenn kein dokumentierter Bedarf besteht; sonst Speicherort,
-      Berechtigung, Löschung und Datensparsamkeit prüfen.
+- [ ] Lokale MariaDB ist standardmäßig aus. Falls ausdrücklich mit
+      `MF_DB_ENABLE=1` aktiviert: Speicherort, Berechtigungen, Retention,
+      manuelle Löschung und Backups prüfen. `MF_DB_DISABLE=1` erzwingt Opt-out.
 
 ## B. Während des Einsatzes
 

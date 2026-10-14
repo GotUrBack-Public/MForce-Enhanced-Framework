@@ -2,7 +2,7 @@
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 source "$ROOT_DIR/src/core/runtime.sh" || exit 1
 source "$ROOT_DIR/src/ui/theme.lib" || exit 1
-AUTH_DIR="$ROOT_DIR/src/auth" SESSION_DIR='' SESSION_FILE='' UI_PID=''
+SESSION_DIR='' SESSION_FILE='' UI_PID=''
 
 create_session() {
     local base="${TMPDIR:-${PREFIX:+$PREFIX/tmp}}"

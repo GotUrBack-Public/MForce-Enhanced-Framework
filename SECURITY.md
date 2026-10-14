@@ -39,6 +39,11 @@ Do not assume a public issue is confidential.
   session files use restricted permissions and are removed on normal exit
   or handled signals; forced termination can leave remnants.
 - The toolkit does not require root. Run trusted code as a regular user.
+- Local MariaDB audit logging is **disabled by default**. Opt in with
+  `MF_DB_ENABLE=1`; only module ID, exit status and timestamp are stored.
+  Raw module output is not captured. The default seven-day retention is
+  enforced on the next database-enabled start, not by a background timer.
+  Legacy raw output is cleared on that start; review local backups separately.
 - OSINT modules make real public-information network requests; RDAP
   forwards target details to `rdap.org`.
 - The TCP scanner makes real, bounded connections. The reflection

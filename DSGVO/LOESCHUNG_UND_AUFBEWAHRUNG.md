@@ -12,7 +12,7 @@ etwaiger gesetzlicher Pflichten festlegen.
 | Terminal-Ausgabe | Wird angezeigt, nicht als zentraler MForce-Bericht gespeichert | Anwender; Terminal-Scrollback und Aufzeichnung prüfen |
 | Temporäre Sitzungsdatei | Bei regulärem Beenden entfernt; Absturz/SIGKILL kann Reste hinterlassen | Lokale Installation |
 | `--output`-Dateien | Bleiben am gewählten Speicherort | Anwender |
-| Lokale MariaDB (`mforce_logs.module_runs`) | Speichert bei verfügbarer MariaDB bis zu 1 MiB Roh-Modulausgabe pro Aufruf dauerhaft; **keine automatische Löschung** | Anwender; Opt-out über `MF_DB_DISABLE=1`, manuelle Retention nach Freigabe |
+| Lokale MariaDB (`mforce_logs.module_runs`) | Standardmäßig aus; bei `MF_DB_ENABLE=1` nur Modul-ID, Exit-Code, Zeitstempel; frühere Rohdaten werden beim nächsten aktivierten Start geleert und Metadaten nach 7 Tagen (1–365 konfigurierbar) bereinigt | Anwender; `MF_DB_DISABLE=1` erzwingt Opt-out, manuelle Retention und Backups prüfen |
 | Umgeleitete Ausgaben (`>`, `tee`) | Bleiben bis zur manuellen Löschung | Anwender |
 | Shell-History | Abhängig von der verwendeten Shell und deren Einstellungen | Anwender |
 | Git-Commits / Pull Requests / Issues | Können langfristig erhalten bleiben, auch nach späterem Entfernen | Repository-Betreiber und Plattform |
@@ -21,11 +21,23 @@ etwaiger gesetzlicher Pflichten festlegen.
 
 ## MariaDB: Kontrolle und manuelle Bereinigung
 
-Wenn `mariadbd`, `mariadb` und `mariadb-install-db` verfügbar
-sind, startet MForce normalerweise einen lokalen, ausschließlich über
-Unix-Socket erreichbaren MariaDB-Server. Der persistente Datenordner
+MForce startet die lokale MariaDB **nur** mit `MF_DB_ENABLE=1` und
+vorhandenen `mariadbd`, `mariadb`, `mariadb-install-db`. Die Datenbank
+ist nur über Unix-Socket erreichbar. Der persistente Datenordner
 liegt unter `${XDG_STATE_HOME:-$HOME/.local/state}/mforce/mariadb/data`.
-Datenbank und Modulausgaben bleiben nach Programmende erhalten.
+Ab dieser Version werden keine Modulausgaben gespeichert, nur Modul-ID,
+Exit-Code und Zeitstempel. Frühere Rohdaten werden beim nächsten
+aktivierten Start geleert, Metadaten nach standardmäßig sieben Tagen
+bereinigt (`MF_DB_RETENTION_DAYS=1..365`). Ohne erneuten aktivierten
+Start werden Daten nicht automatisch gelöscht.
+
+**Protokollierung bei Bedarf ausdrücklich aktivieren:**
+
+```bash
+MF_DB_ENABLE=1 bash xrm742.sh
+# Optional: Metadaten 30 Tage aufbewahren
+MF_DB_ENABLE=1 MF_DB_RETENTION_DAYS=30 bash xrm742.sh
+```
 
 **Protokollierung für eine Sitzung deaktivieren:**
 
@@ -48,12 +60,11 @@ bash scripts/mariadb-retention.sh --days 30 --execute
 
 Der erste Aufruf ist ein Dry-Run. Der zweite entfernt ausschließlich
 Datenbankzeilen, deren `started_at` älter als die gewählte Zahl
-von Tagen ist. Die Funktion ist **nicht automatisch geplant** und
-löscht keine Backups, Shell-History oder exportierten Dateien.
-SQL-Löschung garantiert keine physische Überschreibung des
-Datenträgers. Für datenschutzkritische Nutzung ist der Opt-out
-vorzuziehen, bis eine geprüfte Minimierungs- und Löschstrategie
-in der eigentlichen Laufzeit implementiert wurde.
+von Tagen ist. Der manuelle Helfer ist **nicht automatisch geplant**. Bei
+`MF_DB_ENABLE=1` findet zusätzlich die oben beschriebene Bereinigung
+beim Datenbankstart statt. Keine dieser Maßnahmen löscht Backups,
+Shell-History oder Exporte. SQL-Löschung garantiert keine physische
+Überschreibung des Datenträgers.
 
 ## Praktischer Löschablauf
 

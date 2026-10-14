@@ -3,7 +3,7 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 source "$ROOT_DIR/src/core/runtime.sh" || exit 1
 source "$ROOT_DIR/src/ui/theme.lib" || exit 1
 CONFIG_FILE="$ROOT_DIR/cfg/zrk391.json"
-NAME='' VERSION='' LICENSE='' LANGUAGE='' PLATFORM='' REPOSITORY=''
+NAME='' VERSION='' LICENSE='' LANGUAGE='' REPOSITORY=''
 
 load_config() {
     mf_require_json "$CONFIG_FILE" project || exit 1
@@ -11,7 +11,6 @@ load_config() {
     VERSION="$(jq -r '.version // "unknown"' "$CONFIG_FILE")"
     LICENSE="$(jq -r '.license // "unknown"' "$CONFIG_FILE")"
     LANGUAGE="$(jq -r '.language // "unknown"' "$CONFIG_FILE")"
-    PLATFORM="$(jq -r '.platform // "unknown"' "$CONFIG_FILE")"
     REPOSITORY="$(jq -r '.repository // "unknown"' "$CONFIG_FILE")"
 }
 
