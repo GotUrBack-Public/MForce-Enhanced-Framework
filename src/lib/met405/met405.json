@@ -1,0 +1,10 @@
+{
+  "id": "met405",
+  "name": "HTTP Method Auditor",
+  "version": "1.0.0",
+  "type": "offensive",
+  "category": "offensive",
+  "entry": "met405.sh",
+  "enabled": true,
+  "library": "met405"
+}

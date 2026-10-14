@@ -1,0 +1,3 @@
+Authorized bounded exposure-path review. Sends five HEAD-only requests to fixed paths; never downloads file contents.
+Usage: bash src/functions/pth407.sh http://127.0.0.1:8000 --authorized --json
+Public targets also require --allow-public. HTTP 200 alone is not proof of exposure.

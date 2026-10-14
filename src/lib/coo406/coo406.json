@@ -1,0 +1,10 @@
+{
+  "id": "coo406",
+  "name": "Cookie Flag Auditor",
+  "version": "1.0.0",
+  "type": "offensive",
+  "category": "offensive",
+  "entry": "coo406.sh",
+  "enabled": true,
+  "library": "coo406"
+}

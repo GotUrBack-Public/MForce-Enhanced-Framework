@@ -1,0 +1,3 @@
+Authorized HTTP OPTIONS inspector. Sends one request; reports Allow and CORS method headers without executing risky methods.
+Usage: bash src/functions/met405.sh http://127.0.0.1:8000 --authorized --json
+Public targets also require --allow-public.

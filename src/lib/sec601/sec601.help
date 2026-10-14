@@ -1,0 +1,3 @@
+Offline local secret-pattern scanner. Scans up to 250 files (1 MiB each); reports only path, line number and rule name. No values or network traffic.
+Usage: bash src/functions/sec601.sh ./project --json
+Exit code 1 means possible matches; verify manually.
