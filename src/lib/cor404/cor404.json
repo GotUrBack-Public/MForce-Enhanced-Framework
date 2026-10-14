@@ -1,0 +1,10 @@
+{
+  "id": "cor404",
+  "name": "CORS Policy Auditor",
+  "version": "1.0.0",
+  "type": "offensive",
+  "category": "offensive",
+  "entry": "cor404.sh",
+  "enabled": true,
+  "library": "cor404"
+}

@@ -1,0 +1,10 @@
+{
+  "id": "sec601",
+  "name": "Local Secret Scanner",
+  "version": "1.0.0",
+  "type": "defensive",
+  "category": "defensive",
+  "entry": "sec601.sh",
+  "enabled": true,
+  "library": "sec601"
+}

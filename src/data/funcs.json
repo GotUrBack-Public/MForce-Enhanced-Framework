@@ -125,6 +125,41 @@
       "name": "HTTP Reflection Inspector",
       "category": "offensive",
       "enabled": true
+    },
+    {
+      "id": "sec601",
+      "entry": "sec601.sh",
+      "name": "Local Secret Scanner",
+      "category": "defensive",
+      "enabled": true
+    },
+    {
+      "id": "cor404",
+      "entry": "cor404.sh",
+      "name": "CORS Policy Auditor",
+      "category": "offensive",
+      "enabled": true
+    },
+    {
+      "id": "met405",
+      "entry": "met405.sh",
+      "name": "HTTP Method Auditor",
+      "category": "offensive",
+      "enabled": true
+    },
+    {
+      "id": "coo406",
+      "entry": "coo406.sh",
+      "name": "Cookie Flag Auditor",
+      "category": "offensive",
+      "enabled": true
+    },
+    {
+      "id": "pth407",
+      "entry": "pth407.sh",
+      "name": "Exposure Path Auditor",
+      "category": "offensive",
+      "enabled": true
     }
   ]
 }

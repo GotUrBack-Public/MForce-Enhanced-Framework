@@ -57,7 +57,7 @@ class DocumentationTests(unittest.TestCase):
         # The README is maintained independently; never assert on its wording.
         registry = json.loads((ROOT / "src/data/funcs.json").read_text(encoding="utf-8"))
         enabled = [x for x in registry["functions"] if x["enabled"]]
-        self.assertEqual(len(enabled), 16)
+        self.assertEqual(len(enabled), 21)
         self.assertEqual(len({item["id"] for item in enabled}), len(enabled))
         names = {item["name"] for item in enabled}
         for module in ("TCP Port Scanner", "XSS Payload Lab", "HTTP Reflection Inspector"):

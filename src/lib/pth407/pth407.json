@@ -1,0 +1,10 @@
+{
+  "id": "pth407",
+  "name": "Exposure Path Auditor",
+  "version": "1.0.0",
+  "type": "offensive",
+  "category": "offensive",
+  "entry": "pth407.sh",
+  "enabled": true,
+  "library": "pth407"
+}
