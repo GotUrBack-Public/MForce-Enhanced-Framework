@@ -99,7 +99,10 @@ class AuditRegression(unittest.TestCase):
                 result = subprocess.run(['bash', '-n', str(path)], capture_output=True)
                 self.assertEqual(result.returncode, 0, str(path))
             if path.suffix == '.sh':
-                self.assertTrue(path.stat().st_mode & stat.S_IXUSR, str(path))
+                # Sourced-only libraries are not standalone entry points.
+                # All other shell scripts, including install.sh, must be executable.
+                if path.relative_to(self.root).as_posix() != 'src/core/mariadb.sh':
+                    self.assertTrue(path.stat().st_mode & stat.S_IXUSR, str(path))
             if path.suffix == '.json':
                 json.loads(path.read_text())
 
