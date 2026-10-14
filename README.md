@@ -11,6 +11,16 @@
 <img src="https://img.shields.io/github/issues-pr-closed/GotUrBack-Public/MForce-Enhanced-Framework" alt="Closed PRs">
 </p>
 <p align="center">
+<img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FGotUrBack-Public%2FMForce-Enhanced-Framework%2Frepo-stats%2Fcode-lines.json" alt="Code lines (automatically updated)">
+<img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FGotUrBack-Public%2FMForce-Enhanced-Framework%2Frepo-stats%2Ffiles.json" alt="Files (automatically updated)">
+<img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FGotUrBack-Public%2FMForce-Enhanced-Framework%2Frepo-stats%2Fdirectories.json" alt="Directories (automatically updated)">
+</p>
+<!-- Automatically refreshed on pushes to main via .github/workflows/repository-stats.yml.
+     Counts use Git-tracked files/directories and non-empty lines in source files
+     (.sh, .bash, .py, .js, .jsx, .ts, .tsx, .html, .css, .sql), including tests/comments.
+     Shields.io may cache values briefly. -->
+
+<p align="center">
 <img src="https://img.shields.io/badge/MariaDB-003545?logo=mariadb&logoColor=white" alt="MariaDB">
 <img src="https://img.shields.io/badge/SQL-4479A1?logo=serverfault&logoColor=white" alt="SQL server">
 <img src="https://img.shields.io/badge/Shell-4EAA25?logo=gnubash&logoColor=white" alt="Shell">
