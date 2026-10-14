@@ -17,6 +17,7 @@ Bewertung einzelner Einsätze.
 | TCP Port Scanner | Ziel-IP/Host, Ports, Verbindungsversuche | Zielsystem und dessen Netzwerklogs | Aktive TCP-Verbindungen, ausdrücklich nur mit Freigabe |
 | HTTP Reflection Inspector | URL, vorhandene Query-Werte, harmlose Testmarker | Autorisierter Webserver | Bis zu acht GET-Anfragen; URL-Query kann sensible Daten enthalten; Bericht blendet ursprüngliche Query-Werte aus |
 | XSS Payload Lab | Beispielpayloads, Suchbegriffe | Lokal | Keine Netzwerkübertragung durch das Modul; Export auf Wunsch |
+| Optionale MariaDB-Session-Protokollierung | Modul-ID, Exit-Code, Ausführungszeitpunkt und bis zu 1 MiB vollständige Modulausgabe je Aufruf | Lokale persistente Datenbank `mforce_logs.module_runs` unter `${XDG_STATE_HOME:-$HOME/.local/state}/mforce/mariadb/data` | Wird bei vorhandenen MariaDB-Programmen standardmäßig gestartet; `MF_DB_DISABLE=1` deaktiviert sie für den Start. Keine automatische Löschung implementiert; Rohdaten können personenbezogene Inhalte und Geheimnisse enthalten. |
 | Update Center | Git-Repository-Adresse, Fetch-Metadaten | GitHub / lokale Git-Objekte | Offizieller `main`-Branch, nur Fast-Forward |
 | Statische Website | IP-Adresse, Browser-/Verbindungsmetadaten beim Abruf | GitHub Pages und ggf. Netzbetreiber | Keine eigene Analytics-Integration im Projektcode; Hosting-Logs außerhalb des Repositorys |
 | GitHub-Links / README-Badges | Browser-/Request-Metadaten | GitHub, `img.shields.io` beim Badge-Abruf | Externe Ressourcen sind gesondert zu berücksichtigen |
@@ -35,6 +36,9 @@ Bewertung einzelner Einsätze.
   Git-Arbeitsbaum; sie lädt Updates von GitHub.
 - Temporäre Sitzungsdateien verwenden restriktive Dateirechte und
   werden bei regulärem Ende entfernt.
+- Die lokale MariaDB startet mit `--skip-networking` über einen
+  Unix-Socket und verwendet restriktive lokale Verzeichnisrechte.
+  **Das ist keine Anonymisierung und keine Löschregel.**
 
 ## Nicht abgedeckte Risiken
 
@@ -49,6 +53,10 @@ Bewertung einzelner Einsätze.
   Issues, Pull Requests, Exporte und KI-Dienste können Daten offenlegen.
 - **Kein zentraler Löschknopf:** MForce kann fremde Serverlogs,
   Git-History, Backups oder Nutzerdateien nicht vollständig entfernen.
+- **Persistente Rohdatenbank:** `sql/schema.sql` enthält derzeit keine
+  TTL, Anonymisierung oder automatische Bereinigung. Ein manueller
+  [lokaler Retention-Helfer](../scripts/mariadb-retention.sh) ist
+  verfügbar, aber nicht automatisch aktiviert.
 
 ## Prüfpunkte bei Codeänderungen
 

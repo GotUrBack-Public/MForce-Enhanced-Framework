@@ -32,9 +32,16 @@ den Zielsystemen, den Beteiligten und den verwendeten Dienstleistern ab.
   Analytics-Skript oder Formular-Backend. GitHub Pages und Browser
   verarbeiten beim Abruf technische Verbindungsdaten; diese Verarbeitung
   liegt nicht vollständig in der Kontrolle des Quellcodes.
-- **Dauerhafte Dateien:** Exporte (`--output`), umgeleitete Terminal-Ausgaben,
-  Shell-History, Screenshots, Backups und Git-Commits werden nicht
-  automatisch durch MForce gelöscht.
+- **Dauerhafte Dateien und lokale SQL-Datenbank:** Exporte (`--output`),
+  umgeleitete Terminal-Ausgaben, Shell-History, Screenshots, Backups,
+  Git-Commits und — wenn MariaDB installiert ist — Modulausgaben in
+  `mforce_logs.module_runs` werden nicht automatisch durch MForce gelöscht.
+  Siehe [Löschung und Aufbewahrung](LOESCHUNG_UND_AUFBEWAHRUNG.md).
+- **MariaDB-Protokollierung:** Beim regulären Programmstart wird ein lokaler
+  MariaDB-Server verwendet, sofern die benötigten Programme verfügbar sind
+  und `MF_DB_DISABLE=1` nicht gesetzt ist. Bis zu 1 MiB Ausgabe pro
+  Modulausführung kann dauerhaft gespeichert werden. Vor vertraulichen
+  Prüfungen `MF_DB_DISABLE=1 bash xrm742.sh` setzen.
 - **Kein automatischer Nachweis:** Die Software stellt weder eine
   Rechtsgrundlage noch eine Einwilligung noch eine Freigabe für Scans bereit.
 
