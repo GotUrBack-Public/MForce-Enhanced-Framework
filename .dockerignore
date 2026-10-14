@@ -1,0 +1,13 @@
+# Keep images small and prevent local/CI artifacts from leaking into the image.
+.git
+.github
+dist
+security-reports
+__pycache__
+*.pyc
+*.pyo
+*.log
+.env
+.env.*
+.venv
+venv
