@@ -167,7 +167,7 @@ class AuditRegression(unittest.TestCase):
         term.send('\n'); term.expect('FUNCTION SELECT')
         term.send('q'); term.expect('MAIN MENU')
         # Category Info resolves the last highlighted category (Settings).
-        term.send('\x1b[B' * 6 + '\n'); term.expect('CATEGORY INFO')
+        term.send('\x1b[B' * 7 + '\n'); term.expect('CATEGORY INFO')
         term.expect('Settings')
         term.send('q'); term.expect('MAIN MENU')
         term.send('\x1b[A\n'); term.expect('ABOUT')
