@@ -43,8 +43,8 @@ jobs:
           tar -czf "$dist/mforce-enhanced-framework-$short.tar.gz" -C "$stage" mforce-enhanced-framework
           (cd "$stage" && zip -q -r "$dist/mforce-enhanced-framework-$short.zip" mforce-enhanced-framework)
           (cd "$dist" && sha256sum *.tar.gz *.zip > SHA256SUMS && sha256sum --check SHA256SUMS)
-          tar -tzf "$dist/mforce-enhanced-framework-$short.tar.gz" | grep -q 'mforce-enhanced-framework/packaging/install-local.sh'
-          unzip -l "$dist/mforce-enhanced-framework-$short.zip" | grep -q 'mforce-enhanced-framework/xrm742.sh'
+          tar -tzf "$dist/mforce-enhanced-framework-$short.tar.gz" | grep -F 'mforce-enhanced-framework/packaging/install-local.sh' > /dev/null
+          unzip -l "$dist/mforce-enhanced-framework-$short.zip" | grep -F 'mforce-enhanced-framework/xrm742.sh' > /dev/null
 
       - name: Upload package artifacts
         uses: actions/upload-artifact@v4
