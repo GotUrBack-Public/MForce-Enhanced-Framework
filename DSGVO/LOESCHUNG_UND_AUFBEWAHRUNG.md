@@ -11,24 +11,60 @@ etwaiger gesetzlicher Pflichten festlegen.
 | --- | --- | --- |
 | Terminal-Ausgabe | Wird angezeigt, nicht als zentraler MForce-Bericht gespeichert | Anwender; Terminal-Scrollback und Aufzeichnung prüfen |
 | Temporäre Sitzungsdatei | Bei regulärem Beenden entfernt; Absturz/SIGKILL kann Reste hinterlassen | Lokale Installation |
-| Optionale MariaDB | Standardmäßig deaktiviert. Bei `MF_DB_ENABLE=1` lokale Modul-ID, Exit-Code und Zeitstempel; Aufbewahrung standardmäßig 7 Tage (1–365 konfigurierbar), Bereinigung beim nächsten aktiven Start. Datenbankdateien bleiben sonst bestehen | Anwender; manuelle Löschung und Backups prüfen |
 | `--output`-Dateien | Bleiben am gewählten Speicherort | Anwender |
+| Lokale MariaDB (`mforce_logs.module_runs`) | Standardmäßig aus; bei `MF_DB_ENABLE=1` nur Modul-ID, Exit-Code, Zeitstempel; frühere Rohdaten werden beim nächsten aktivierten Start geleert und Metadaten nach 7 Tagen (1–365 konfigurierbar) bereinigt | Anwender; `MF_DB_DISABLE=1` erzwingt Opt-out, manuelle Retention und Backups prüfen |
 | Umgeleitete Ausgaben (`>`, `tee`) | Bleiben bis zur manuellen Löschung | Anwender |
 | Shell-History | Abhängig von der verwendeten Shell und deren Einstellungen | Anwender |
 | Git-Commits / Pull Requests / Issues | Können langfristig erhalten bleiben, auch nach späterem Entfernen | Repository-Betreiber und Plattform |
 | DNS-/HTTP-/RDAP-Serverlogs | Außerhalb der Kontrolle des lokalen Programms | Betreiber des jeweiligen Dienstes |
 | Backups und Synchronisierung | Können zusätzliche Kopien enthalten | Anwender bzw. beauftragter Dienstleister |
 
-## Lokale MariaDB vollständig entfernen
+## MariaDB: Kontrolle und manuelle Bereinigung
 
-Bei deaktivierter Protokollierung werden vorhandene Daten **nicht** automatisch
-bereinigt. Zum Löschen MForce und MariaDB vollständig beenden, den tatsächlichen
-Pfad prüfen und das Verzeichnis `$XDG_STATE_HOME/mforce/mariadb` bzw.
-`$HOME/.local/state/mforce/mariadb` entfernen. Vorher sicherstellen,
-dass keine andere Installation dieses Verzeichnis verwendet. Auch Backups
-und Kopien separat prüfen. Bei aktivierter Datenbank entfernt der nächste
-Start außerdem alte Roh-Ausgaben aus früheren Versionen und Metadaten,
-die älter als `MF_DB_RETENTION_DAYS` sind (Standard: 7 Tage).
+MForce startet die lokale MariaDB **nur** mit `MF_DB_ENABLE=1` und
+vorhandenen `mariadbd`, `mariadb`, `mariadb-install-db`. Die Datenbank
+ist nur über Unix-Socket erreichbar. Der persistente Datenordner
+liegt unter `${XDG_STATE_HOME:-$HOME/.local/state}/mforce/mariadb/data`.
+Ab dieser Version werden keine Modulausgaben gespeichert, nur Modul-ID,
+Exit-Code und Zeitstempel. Frühere Rohdaten werden beim nächsten
+aktivierten Start geleert, Metadaten nach standardmäßig sieben Tagen
+bereinigt (`MF_DB_RETENTION_DAYS=1..365`). Ohne erneuten aktivierten
+Start werden Daten nicht automatisch gelöscht.
+
+**Protokollierung bei Bedarf ausdrücklich aktivieren:**
+
+```bash
+MF_DB_ENABLE=1 bash xrm742.sh
+# Optional: Metadaten 30 Tage aufbewahren
+MF_DB_ENABLE=1 MF_DB_RETENTION_DAYS=30 bash xrm742.sh
+```
+
+**Protokollierung für eine Sitzung deaktivieren:**
+
+```bash
+MF_DB_DISABLE=1 bash xrm742.sh
+# Bei Installation mit dem mforce-Launcher:
+MF_DB_DISABLE=1 mforce
+```
+
+**Alte Datensätze gezielt bereinigen:** Der MariaDB-Server muss
+laufen; ggf. MForce in einem anderen Terminal geöffnet halten.
+`--days` ist die zuvor intern festgelegte Aufbewahrungsdauer,
+hier **nur als Beispiel** 30 Tage.
+
+```bash
+bash scripts/mariadb-retention.sh --days 30
+# Erst nach Prüfung und Freigabe:
+bash scripts/mariadb-retention.sh --days 30 --execute
+```
+
+Der erste Aufruf ist ein Dry-Run. Der zweite entfernt ausschließlich
+Datenbankzeilen, deren `started_at` älter als die gewählte Zahl
+von Tagen ist. Der manuelle Helfer ist **nicht automatisch geplant**. Bei
+`MF_DB_ENABLE=1` findet zusätzlich die oben beschriebene Bereinigung
+beim Datenbankstart statt. Keine dieser Maßnahmen löscht Backups,
+Shell-History oder Exporte. SQL-Löschung garantiert keine physische
+Überschreibung des Datenträgers.
 
 ## Praktischer Löschablauf
 

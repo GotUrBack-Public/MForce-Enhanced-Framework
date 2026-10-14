@@ -17,10 +17,10 @@ Bewertung einzelner Einsätze.
 | TCP Port Scanner | Ziel-IP/Host, Ports, Verbindungsversuche | Zielsystem und dessen Netzwerklogs | Aktive TCP-Verbindungen, ausdrücklich nur mit Freigabe |
 | HTTP Reflection Inspector | URL, vorhandene Query-Werte, harmlose Testmarker | Autorisierter Webserver | Bis zu acht GET-Anfragen; URL-Query kann sensible Daten enthalten; Bericht blendet ursprüngliche Query-Werte aus |
 | XSS Payload Lab | Beispielpayloads, Suchbegriffe | Lokal | Keine Netzwerkübertragung durch das Modul; Export auf Wunsch |
+| Optionale MariaDB-Session-Protokollierung | Modul-ID, Exit-Code und Zeitstempel; keine Roh-Modulausgaben | Lokale persistente Datenbank `mforce_logs.module_runs` unter `${XDG_STATE_HOME:-$HOME/.local/state}/mforce/mariadb/data` | Standardmäßig aus, nur `MF_DB_ENABLE=1` aktiviert sie; `MF_DB_DISABLE=1` erzwingt Opt-out. Legacy-Rohdaten werden beim nächsten aktivierten Start geleert; Metadaten älter als `MF_DB_RETENTION_DAYS` (Standard 7 Tage, 1–365) dann gelöscht. Ohne Start keine automatische Bereinigung. |
 | Update Center | Git-Repository-Adresse, Fetch-Metadaten | GitHub / lokale Git-Objekte | Offizieller `main`-Branch, nur Fast-Forward |
 | Statische Website | IP-Adresse, Browser-/Verbindungsmetadaten beim Abruf | GitHub Pages und ggf. Netzbetreiber | Keine eigene Analytics-Integration im Projektcode; Hosting-Logs außerhalb des Repositorys |
 | GitHub-Links / README-Badges | Browser-/Request-Metadaten | GitHub, `img.shields.io` beim Badge-Abruf | Externe Ressourcen sind gesondert zu berücksichtigen |
-| Optionale lokale MariaDB (`MF_DB_ENABLE=1`) | Modul-ID, Exit-Code, Zeitstempel; keine Roh-Ausgabe ab diesem Patch | `~/.local/state/mforce/mariadb` oder `$XDG_STATE_HOME/mforce/mariadb` | Standardmäßig aus; nur Unix-Socket, keine Netzwerkverbindung; Löschung nach sieben Tagen beim nächsten aktiven Start (1–365 konfigurierbar); alte Ausgabedaten werden bei diesem Start geleert |
 | Manuelle Exporte / Screenshots | Scanergebnisse, URLs, IPs, ggf. personenbezogene Angaben | Vom Nutzer gewähltes Dateisystem, Backups oder geteilte Dienste | Nutzer verwaltet Zugriff, Speicherfrist und Löschung |
 
 ## Technische Schutzmaßnahmen im aktuellen Code
@@ -34,13 +34,11 @@ Bewertung einzelner Einsätze.
 - Die XSS-Beispielbibliothek arbeitet offline.
 - Die Update-Funktion prüft den offiziellen Remote und den sauberen
   Git-Arbeitsbaum; sie lädt Updates von GitHub.
-- MariaDB ist opt-in (`MF_DB_ENABLE=1`); sie speichert ausschließlich
-  Modul-ID, Exit-Code und Zeitstempel, keine Roh-Ausgaben. Beim Start mit
-  aktivierter Datenbank werden frühere Ausgaben auf NULL gesetzt und
-  abgelaufene Metadaten entfernt. Es erfolgt keine Bereinigung, solange
-  die Datenbank nicht erneut gestartet wird.
 - Temporäre Sitzungsdateien verwenden restriktive Dateirechte und
   werden bei regulärem Ende entfernt.
+- Die lokale MariaDB startet mit `--skip-networking` über einen
+  Unix-Socket und verwendet restriktive lokale Verzeichnisrechte.
+  **Das ist keine Anonymisierung und keine Löschregel.**
 
 ## Nicht abgedeckte Risiken
 
@@ -55,6 +53,11 @@ Bewertung einzelner Einsätze.
   Issues, Pull Requests, Exporte und KI-Dienste können Daten offenlegen.
 - **Kein zentraler Löschknopf:** MForce kann fremde Serverlogs,
   Git-History, Backups oder Nutzerdateien nicht vollständig entfernen.
+- **Persistente lokale Datenbank:** Neue Modul-Rohdaten werden nicht
+  gespeichert. Altbestände werden beim nächsten Start mit `MF_DB_ENABLE=1`
+  geleert und abgelaufene Metadaten gelöscht; bei deaktivierter Datenbank
+  findet keine Bereinigung statt. Der manuelle
+  [lokale Retention-Helfer](../scripts/mariadb-retention.sh) bleibt verfügbar.
 
 ## Prüfpunkte bei Codeänderungen
 

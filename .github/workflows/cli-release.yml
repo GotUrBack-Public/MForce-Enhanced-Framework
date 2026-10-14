@@ -7,34 +7,41 @@ on:
       - 'v*'
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  package:
+  verify:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: read
     steps:
       - name: Checkout release source
-        uses: actions/checkout@v7
+        uses: actions/checkout@v4
         with:
           persist-credentials: false
-      - name: Install test dependencies
-        run: sudo apt-get update && sudo apt-get install -y jq python3
-      - name: Validate release version against project configuration
+      - name: Install verification dependencies
+        run: sudo apt-get update && sudo apt-get install -y jq python3 shellcheck
+      - name: Run complete regression suite
+        run: python3 -m unittest discover -s tests -v
+      - name: Run ShellCheck
+        run: bash .github/scripts/check-shell.sh
+      - name: Validate release tag matches project version
         if: github.ref_type == 'tag'
-        shell: bash
         run: |
           set -euo pipefail
-          declared="$(jq -r '.version' cfg/zrk391.json)"
-          if [[ "$GITHUB_REF_NAME" != "$declared" ]]; then
-            printf 'Tag %s does not match configured version %s\n' "$GITHUB_REF_NAME" "$declared" >&2
+          version="$(jq -r '.version' cfg/zrk391.json)"
+          test "$GITHUB_REF_NAME" = "$version" || {
+            printf 'Release tag %s does not match cfg version %s\\n' "$GITHUB_REF_NAME" "$version" >&2
             exit 1
-          fi
-      - name: Run complete regression suite before packaging
-        run: |
-          bash -n xrm742.sh install.sh
-          python3 -m unittest discover -s tests -v
+          }
+  package:
+    needs: verify
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout release source
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - name: Create versioned archive
         shell: bash
         run: |
@@ -46,7 +53,7 @@ jobs:
           mkdir -p dist
           tar --exclude=.git --exclude=dist --exclude=security-reports \
             -czf "dist/mforce-enhanced-framework-${version}.tar.gz" .
-          (cd dist && sha256sum *.tar.gz > SHA256SUMS)
+          (cd dist && sha256sum *.tar.gz > SHA256SUMS && sha256sum --check SHA256SUMS)
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
