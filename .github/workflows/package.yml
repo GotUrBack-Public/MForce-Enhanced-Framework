@@ -1,0 +1,73 @@
+name: Build installable MForce packages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: mforce-package-main
+  cancel-in-progress: false
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Install verification tools
+        run: sudo apt-get update && sudo apt-get install -y jq shellcheck zip
+
+      - name: Run complete regression suite
+        run: python3 -m unittest discover -s tests -v
+
+      - name: Run ShellCheck
+        run: bash .github/scripts/check-shell.sh
+
+      - name: Build ZIP and tar.gz packages from tracked files
+        shell: bash
+        run: |
+          set -euo pipefail
+          short="${GITHUB_SHA:0:12}"
+          stage="$RUNNER_TEMP/mforce-package"
+          dist="$(pwd)/dist"
+          mkdir -p "$stage/mforce-enhanced-framework" "$dist"
+          git archive HEAD | tar -x -C "$stage/mforce-enhanced-framework"
+          printf 'Commit: %s\nBuilt from: main\n' "$GITHUB_SHA" > "$stage/mforce-enhanced-framework/PACKAGE_BUILD.txt"
+          tar -czf "$dist/mforce-enhanced-framework-$short.tar.gz" -C "$stage" mforce-enhanced-framework
+          (cd "$stage" && zip -q -r "$dist/mforce-enhanced-framework-$short.zip" mforce-enhanced-framework)
+          (cd "$dist" && sha256sum *.tar.gz *.zip > SHA256SUMS && sha256sum --check SHA256SUMS)
+          tar -tzf "$dist/mforce-enhanced-framework-$short.tar.gz" | grep -F 'mforce-enhanced-framework/packaging/install-local.sh' > /dev/null
+          unzip -l "$dist/mforce-enhanced-framework-$short.zip" | grep -F 'mforce-enhanced-framework/xrm742.sh' > /dev/null
+
+      - name: Upload package artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: mforce-installable-packages
+          path: dist/
+          retention-days: 90
+          if-no-files-found: error
+
+      - name: Publish public GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          short="${GITHUB_SHA:0:12}"
+          tag="package-$short"
+          if gh release view "$tag" >/dev/null 2>&1; then
+            gh release upload "$tag" dist/* --clobber
+          else
+            gh release create "$tag" dist/* \
+              --target "$GITHUB_SHA" \
+              --title "MForce Enhanced Framework — package $short" \
+              --notes "Automatically built from main at commit $GITHUB_SHA. Includes ZIP and tar.gz packages, SHA256SUMS and the offline installer packaging/install-local.sh. Extract, then run bash packaging/install-local.sh. Existing installations are never overwritten." \
+              --latest
+          fi
