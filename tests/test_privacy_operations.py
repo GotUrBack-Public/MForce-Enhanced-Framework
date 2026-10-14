@@ -44,12 +44,16 @@ class PrivacyOperationsTests(unittest.TestCase):
             sql_log = root / "queries.txt"
             fake_cli = root / "mariadb"
             fake_cli.write_text(
-                "#!/usr/bin/env python3\\n"
-                "import os, sys\\n"
-                "from pathlib import Path\\n"
-                "query = sys.argv[-1]\\n"
-                "with Path(os.environ['MOCK_SQL_LOG']).open('a') as f: f.write(query + '\\\\n')\\n"
-                "if query.startswith('SELECT'): print('4')\\n",
+                """#!/usr/bin/env python3
+import os
+import sys
+from pathlib import Path
+query = sys.argv[-1]
+with Path(os.environ['MOCK_SQL_LOG']).open('a') as f:
+    f.write(query + '\\n')
+if query.startswith('SELECT'):
+    print('4')
+""",
                 encoding="utf-8",
             )
             fake_cli.chmod(0o755)
