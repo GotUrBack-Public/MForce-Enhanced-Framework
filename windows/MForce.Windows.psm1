@@ -3,6 +3,7 @@
 Set-StrictMode -Version Latest
 $script:engineMap = @{
     frc386='native-network';sys193='native-system';upd501='native-update'
+    frc742='disabled';osn521='disabled'
     dns211='osint:dns';ipa212='osint:ip';tls213='osint:tls';hdr214='osint:headers'
     web311='osint:web';api312='osint:api';rat313='osint:rate';jsn314='osint:js'
     rob315='osint:robots';rdp316='osint:rdap'
@@ -133,6 +134,9 @@ function Invoke-MForceWindowsModule {
     }
     if ($Id -in $script:targetRequired -and [string]::IsNullOrWhiteSpace($Target)) {
         throw "$Id requires -Target (URL, host, IP or local path)."
+    }
+    if (@($ModuleArgs | Where-Object { $_ -in @('--authorized','--allow-public') }).Count -gt 0) {
+        throw 'Pass -Authorized and -AllowPublic as PowerShell switches, not in -ModuleArgs.'
     }
     $argsList = [System.Collections.Generic.List[string]]::new()
     switch -Wildcard ($engine) {
