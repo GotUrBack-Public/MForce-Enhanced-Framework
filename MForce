@@ -134,7 +134,9 @@ def invoke(item):
     if not script.is_file():
         print("Missing engine:", script.relative_to(ROOT))
         return
-    subprocess.run([sys.executable, str(script), *args], cwd=str(ROOT), check=False)
+    result = subprocess.run([sys.executable, str(script), *args], cwd=str(ROOT), check=False)
+    if result.returncode:
+        print("Engine exit status:", result.returncode)
 
 
 def main():
