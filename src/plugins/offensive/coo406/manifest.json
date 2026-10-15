@@ -1,0 +1,11 @@
+{
+  "id": "coo406",
+  "name": "Cookie Flag Auditor",
+  "category": "offensive",
+  "entry": "coo406.sh",
+  "enabled": true,
+  "version": "1.0.0",
+  "interface": "legacy-shell-v1",
+  "permission": "authorized-network",
+  "description": "Review cookie security attributes without exposing cookie names or values."
+}

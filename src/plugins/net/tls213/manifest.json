@@ -1,0 +1,11 @@
+{
+  "id": "tls213",
+  "name": "TLS Certificate",
+  "category": "net",
+  "entry": "tls213.sh",
+  "enabled": true,
+  "version": "1.0.0",
+  "interface": "legacy-shell-v1",
+  "permission": "passive-network",
+  "description": "Inspect public TLS certificate information."
+}

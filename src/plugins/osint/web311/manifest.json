@@ -1,0 +1,11 @@
+{
+  "id": "web311",
+  "name": "Website Inspector",
+  "category": "osint",
+  "entry": "web311.sh",
+  "enabled": true,
+  "version": "1.0.0",
+  "interface": "legacy-shell-v1",
+  "permission": "passive-network",
+  "description": "Inspect publicly accessible website metadata."
+}

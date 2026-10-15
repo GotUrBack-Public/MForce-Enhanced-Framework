@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MForce plugin manifest v1",
+  "type": "object",
+  "required": [
+    "id",
+    "name",
+    "category",
+    "entry",
+    "enabled",
+    "version",
+    "interface",
+    "permission",
+    "description"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z]{3}[0-9]{3}$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "category": {
+      "type": "string",
+      "minLength": 1
+    },
+    "entry": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]+[.]sh$"
+    },
+    "enabled": {
+      "type": "boolean"
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "interface": {
+      "const": "legacy-shell-v1"
+    },
+    "permission": {
+      "enum": [
+        "local",
+        "passive-network",
+        "authorized-network",
+        "maintenance"
+      ]
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "additionalProperties": false
+}

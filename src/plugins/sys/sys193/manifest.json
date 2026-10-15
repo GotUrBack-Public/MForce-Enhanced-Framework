@@ -1,0 +1,11 @@
+{
+  "id": "sys193",
+  "name": "System Information",
+  "category": "sys",
+  "entry": "vkn193.sh",
+  "enabled": true,
+  "version": "1.0.0",
+  "interface": "legacy-shell-v1",
+  "permission": "local",
+  "description": "Report local system environment and platform information."
+}

@@ -1,0 +1,11 @@
+{
+  "id": "xss402",
+  "name": "XSS Payload Lab",
+  "category": "offensive",
+  "entry": "xss402.sh",
+  "enabled": true,
+  "version": "1.0.0",
+  "interface": "legacy-shell-v1",
+  "permission": "local",
+  "description": "Generate and inspect local XSS test payloads without targeting live services."
+}

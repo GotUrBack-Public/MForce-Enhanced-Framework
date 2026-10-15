@@ -1,0 +1,11 @@
+{
+  "id": "jsn314",
+  "name": "JavaScript DOM Review",
+  "category": "osint",
+  "entry": "jsn314.sh",
+  "enabled": true,
+  "version": "1.0.0",
+  "interface": "legacy-shell-v1",
+  "permission": "passive-network",
+  "description": "Review JavaScript and DOM metadata for publicly accessible pages."
+}

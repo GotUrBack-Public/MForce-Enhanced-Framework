@@ -1,0 +1,11 @@
+{
+  "id": "frc742",
+  "name": "Connection Test",
+  "category": "net",
+  "entry": "qtx742.sh",
+  "enabled": false,
+  "version": "1.0.0",
+  "interface": "legacy-shell-v1",
+  "permission": "passive-network",
+  "description": "Reserved connection-test module; currently disabled in the legacy registry."
+}

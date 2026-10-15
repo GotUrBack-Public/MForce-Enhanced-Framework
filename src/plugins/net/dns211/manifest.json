@@ -1,0 +1,11 @@
+{
+  "id": "dns211",
+  "name": "DNS Records",
+  "category": "net",
+  "entry": "dns211.sh",
+  "enabled": true,
+  "version": "1.0.0",
+  "interface": "legacy-shell-v1",
+  "permission": "passive-network",
+  "description": "Inspect DNS records for a specified domain."
+}

@@ -1,0 +1,11 @@
+{
+  "id": "rdp316",
+  "name": "RDAP Registration",
+  "category": "osint",
+  "entry": "rdp316.sh",
+  "enabled": true,
+  "version": "1.0.0",
+  "interface": "legacy-shell-v1",
+  "permission": "passive-network",
+  "description": "Review registration metadata from RDAP services."
+}

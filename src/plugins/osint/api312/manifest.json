@@ -1,0 +1,11 @@
+{
+  "id": "api312",
+  "name": "API Metadata",
+  "category": "osint",
+  "entry": "api312.sh",
+  "enabled": true,
+  "version": "1.0.0",
+  "interface": "legacy-shell-v1",
+  "permission": "passive-network",
+  "description": "Inspect API metadata without modifying remote resources."
+}
