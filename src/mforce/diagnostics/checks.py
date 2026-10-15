@@ -23,10 +23,10 @@ def doctor(root, runtime=False):
             return []
     categories = read("src/data/cats.json", "categories")
     registry_entries = read("src/data/funcs.json", "functions")
-    category_ids = [c.get("id") for c in categories if isinstance(c, dict)]
+    category_ids = [c["id"] for c in categories if isinstance(c, dict) and isinstance(c.get("id"), str)]
     if len(category_ids) != len(set(category_ids)):
         add("duplicate-category", "src/data/cats.json", "duplicate category IDs")
-    ids = [m.get("id") for m in registry_entries if isinstance(m, dict)]
+    ids = [m["id"] for m in registry_entries if isinstance(m, dict) and isinstance(m.get("id"), str)]
     if len(ids) != len(set(ids)):
         add("duplicate-module", "src/data/funcs.json", "duplicate module IDs")
     registry = {m["id"]: m for m in registry_entries if isinstance(m, dict) and isinstance(m.get("id"), str)}
