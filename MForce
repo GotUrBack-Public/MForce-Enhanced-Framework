@@ -136,6 +136,53 @@ def confirm(prompt):
     return input(prompt + " Type YES: ").strip() == "YES"
 
 
+def update_checkout():
+    """Safely fast-forward only the Windows branch; never overwrite local edits."""
+    expected = "platform/windows11-powershell"
+    def git(*args):
+        return subprocess.run(
+            ["git", "-C", str(ROOT), *args],
+            text=True, capture_output=True, encoding="utf-8",
+            errors="replace", timeout=90, check=False,
+        )
+
+    try:
+        branch = git("branch", "--show-current")
+        if branch.returncode or branch.stdout.strip() != expected:
+            print("Update aborted: checkout must be on", expected)
+            return
+        changes = git("status", "--porcelain", "--untracked-files=normal")
+        if changes.returncode or changes.stdout.strip():
+            print("Update aborted: local changes or untracked files detected.")
+            print("Save or commit your changes before updating.")
+            return
+        upstream = git("rev-parse", "--abbrev-ref", "--symbolic-full-name", "@{upstream}")
+        if upstream.returncode or upstream.stdout.strip() != "origin/" + expected:
+            print("Update aborted: upstream must be origin/" + expected)
+            return
+        before = git("rev-parse", "HEAD")
+        if before.returncode:
+            print("Update aborted: cannot read current revision.")
+            return
+        print("Checking GitHub for updates...")
+        result = git("pull", "--ff-only", "origin", expected)
+        if result.stdout.strip():
+            print(result.stdout.strip())
+        if result.returncode:
+            print("Update failed:", result.stderr.strip() or "git pull exited with an error")
+            return
+        after = git("rev-parse", "HEAD")
+        if after.returncode or before.stdout.strip() == after.stdout.strip():
+            print("MForce is already up to date.")
+            return
+        print("Update successful:", after.stdout.strip()[:12])
+        if input("Restart MForce now? [y/N]: ").strip().lower() in ("y", "yes", "j", "ja"):
+            os.execv(sys.executable, [sys.executable, str(ROOT / "MForce")])
+        print("Restart later using: python MForce")
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        print("Update failed:", exc)
+
+
 def invoke(item):
     ident = item["id"]
     target = ""
@@ -165,8 +212,7 @@ def invoke(item):
             except OSError as exc:
                 print("Address lookup unavailable:", exc)
         else:
-            print("Git checkout status (no automatic changes):")
-            subprocess.run(["git", "-C", str(ROOT), "status", "--short", "--branch"], check=False)
+            update_checkout()
         return
     if kind == "osint":
         script = ROOT / "src/osint/inspect.py"
