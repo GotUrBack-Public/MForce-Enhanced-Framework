@@ -15,7 +15,7 @@ class ModularDoctorTests(unittest.TestCase):
     def test_real_repository_passes_integrity_checks(self):
         report = doctor(ROOT)
         self.assertTrue(report["ok"], report["issues"])
-        self.assertEqual(report["checked_modules"], 23)
+        self.assertEqual(report["checked_modules"], len(json.loads((ROOT / "src/data/funcs.json").read_text())["functions"]))
 
     def test_mismatch_and_missing_wrapper_are_detected(self):
         with tempfile.TemporaryDirectory() as temp:
