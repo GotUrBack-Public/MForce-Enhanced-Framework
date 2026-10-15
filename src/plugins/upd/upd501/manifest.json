@@ -1,0 +1,11 @@
+{
+  "id": "upd501",
+  "name": "Update MForce",
+  "category": "upd",
+  "entry": "upd501.sh",
+  "enabled": true,
+  "version": "1.0.0",
+  "interface": "legacy-shell-v1",
+  "permission": "maintenance",
+  "description": "Run the existing MForce update workflow."
+}

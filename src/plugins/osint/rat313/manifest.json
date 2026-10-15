@@ -1,0 +1,11 @@
+{
+  "id": "rat313",
+  "name": "Rate Limit Signals",
+  "category": "osint",
+  "entry": "rat313.sh",
+  "enabled": true,
+  "version": "1.0.0",
+  "interface": "legacy-shell-v1",
+  "permission": "passive-network",
+  "description": "Report observed rate-limit signals in HTTP responses."
+}

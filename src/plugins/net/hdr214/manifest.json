@@ -1,0 +1,11 @@
+{
+  "id": "hdr214",
+  "name": "HTTP Headers",
+  "category": "net",
+  "entry": "hdr214.sh",
+  "enabled": true,
+  "version": "1.0.0",
+  "interface": "legacy-shell-v1",
+  "permission": "passive-network",
+  "description": "Review HTTP response headers and their security-relevant properties."
+}

@@ -1,0 +1,11 @@
+{
+  "id": "sec601",
+  "name": "Local Secret Scanner",
+  "category": "defensive",
+  "entry": "sec601.sh",
+  "enabled": true,
+  "version": "1.0.0",
+  "interface": "legacy-shell-v1",
+  "permission": "local",
+  "description": "Scan local files for possible credential patterns without revealing secret values."
+}

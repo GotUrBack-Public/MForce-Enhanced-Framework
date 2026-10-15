@@ -1,0 +1,11 @@
+{
+  "id": "pth407",
+  "name": "Exposure Path Auditor",
+  "category": "offensive",
+  "entry": "pth407.sh",
+  "enabled": true,
+  "version": "1.0.0",
+  "interface": "legacy-shell-v1",
+  "permission": "authorized-network",
+  "description": "Inspect five fixed exposure paths using HEAD requests only."
+}

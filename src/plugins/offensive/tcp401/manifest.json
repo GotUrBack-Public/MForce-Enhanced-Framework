@@ -1,0 +1,11 @@
+{
+  "id": "tcp401",
+  "name": "TCP Port Scanner",
+  "category": "offensive",
+  "entry": "tcp401.sh",
+  "enabled": true,
+  "version": "1.0.0",
+  "interface": "legacy-shell-v1",
+  "permission": "authorized-network",
+  "description": "Perform bounded TCP reachability checks for explicitly authorized targets."
+}

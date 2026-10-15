@@ -1,0 +1,11 @@
+{
+  "id": "met405",
+  "name": "HTTP Method Auditor",
+  "category": "offensive",
+  "entry": "met405.sh",
+  "enabled": true,
+  "version": "1.0.0",
+  "interface": "legacy-shell-v1",
+  "permission": "authorized-network",
+  "description": "Inspect advertised HTTP methods with an OPTIONS request."
+}

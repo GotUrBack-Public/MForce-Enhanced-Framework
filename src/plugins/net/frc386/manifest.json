@@ -1,0 +1,11 @@
+{
+  "id": "frc386",
+  "name": "Network Information",
+  "category": "net",
+  "entry": "lar386.sh",
+  "enabled": true,
+  "version": "1.0.0",
+  "interface": "legacy-shell-v1",
+  "permission": "passive-network",
+  "description": "Summarize local network interfaces and connectivity context."
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ref403",
+  "name": "HTTP Reflection Inspector",
+  "category": "offensive",
+  "entry": "ref403.sh",
+  "enabled": true,
+  "version": "1.0.0",
+  "interface": "legacy-shell-v1",
+  "permission": "authorized-network",
+  "description": "Inspect HTTP reflection behavior on explicitly authorized targets."
+}

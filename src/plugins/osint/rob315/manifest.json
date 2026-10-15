@@ -1,0 +1,11 @@
+{
+  "id": "rob315",
+  "name": "Robots & Sitemap",
+  "category": "osint",
+  "entry": "rob315.sh",
+  "enabled": true,
+  "version": "1.0.0",
+  "interface": "legacy-shell-v1",
+  "permission": "passive-network",
+  "description": "Inspect robots.txt and sitemap discovery metadata."
+}

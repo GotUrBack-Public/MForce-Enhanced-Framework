@@ -1,0 +1,11 @@
+{
+  "id": "ipa212",
+  "name": "IP Intelligence",
+  "category": "net",
+  "entry": "ipa212.sh",
+  "enabled": true,
+  "version": "1.0.0",
+  "interface": "legacy-shell-v1",
+  "permission": "passive-network",
+  "description": "Review IP address metadata and network ownership context."
+}

@@ -1,0 +1,11 @@
+{
+  "id": "osn521",
+  "name": "OSINT Search",
+  "category": "osint",
+  "entry": "rpx521.sh",
+  "enabled": false,
+  "version": "1.0.0",
+  "interface": "legacy-shell-v1",
+  "permission": "passive-network",
+  "description": "Reserved OSINT search module; currently disabled in the legacy registry."
+}
