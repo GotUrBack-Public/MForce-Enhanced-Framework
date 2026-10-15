@@ -89,14 +89,14 @@ function Invoke-MForcePython {
     if (-not $python) { throw 'Python 3.10+ required. Install from python.org and reopen PowerShell.' }
     $full = Join-Path $Root $Script
     if (-not (Test-Path -LiteralPath $full -PathType Leaf)) { throw "Missing Python module: $Script" }
-    & $python $full @Arguments
+    & $python $full @Arguments | Out-Host
     return [int]$LASTEXITCODE
 }
 function Show-MForceNetwork {
     if (-not $IsWindows) { throw 'Windows network inventory requires Windows 11.' }
     Write-Host '  NETWORK INFORMATION / WINDOWS' -ForegroundColor Cyan
-    Get-NetAdapter -ErrorAction Stop | Select-Object Name,Status,LinkSpeed,InterfaceDescription | Format-Table -AutoSize
-    Get-NetIPConfiguration -ErrorAction Stop | Select-Object InterfaceAlias,IPv4Address,IPv6Address,IPv4DefaultGateway,DNSServer | Format-List
+    Get-NetAdapter -ErrorAction Stop | Select-Object Name,Status,LinkSpeed,InterfaceDescription | Format-Table -AutoSize | Out-Host
+    Get-NetIPConfiguration -ErrorAction Stop | Select-Object InterfaceAlias,IPv4Address,IPv6Address,IPv4DefaultGateway,DNSServer | Format-List | Out-Host
     return 0
 }
 function Show-MForceSystem {
@@ -108,7 +108,7 @@ function Show-MForceSystem {
         PowerShell=$PSVersionTable.PSVersion.ToString(); CPU=$cpu.Name
         RAMGiB=[math]::Round($os.TotalVisibleMemorySize / 1MB, 2)
         Uptime=((Get-Date) - $os.LastBootUpTime).ToString()
-    } | Format-List
+    } | Format-List | Out-Host
     return 0
 }
 function Invoke-MForceUpdate {
@@ -119,8 +119,8 @@ function Invoke-MForceUpdate {
     if ($Arguments.Count -gt 1 -or ($Arguments.Count -eq 1 -and $Arguments[0] -ne '--apply')) {
         throw 'Update accepts only --apply; without it no changes are made.'
     }
-    if ($Arguments.Count -eq 0) { & $git.Source -C $Root status --short --branch }
-    else { & $git.Source -C $Root pull --ff-only }
+    if ($Arguments.Count -eq 0) { & $git.Source -C $Root status --short --branch | Out-Host }
+    else { & $git.Source -C $Root pull --ff-only | Out-Host }
     return [int]$LASTEXITCODE
 }
 function Invoke-MForceWindowsModule {
