@@ -257,70 +257,9 @@
   });
   render();
 
-  // Future training roadmap: informative previews, not enrollment or a live course.
-  const tracks = {
-    foundation: {
-      title: 'Terminal Foundations',
-      summary: 'An introductory path for the MForce terminal environment.',
-      topics: ['Terminal navigation and Bash essentials', 'Termux vs. Linux environments', 'Installing and updating MForce']
-    },
-    osint: {
-      title: 'OSINT Methodology',
-      summary: 'A proposed framework for repeatable, low-impact public-data research.',
-      topics: ['DNS, IP and website evidence', 'Understanding rate-limit and DOM signals', 'Source verification and uncertainty']
-    },
-    security: {
-      title: 'Authorized Security',
-      summary: 'Proposed foundations for scoped, accountable security assessment.',
-      topics: ['Authorization and scope definition', 'Bounded TCP port checks and interpretation', 'Safe reporting and responsible disclosure']
-    },
-    privacy: {
-      title: 'Reporting & Privacy',
-      summary: 'Planned guidance for responsible handling of technical findings.',
-      topics: ['Clear findings and evidence quality', 'Data minimization and retention', 'GDPR / DSGVO principles and legal basis']
-    }
-  };
-  const trackButtons = $$('[data-track]');
-  const detailNumber = $('#academy-detail-number');
-  const detailTitle = $('#academy-detail-title');
-  const detailSummary = $('#academy-detail-summary');
-  const topics = $('#academy-topics');
-  const chooseTrack = name => {
-    const track = tracks[name];
-    if (!track) return;
-    trackButtons.forEach((button, index) => {
-      const selected = button.dataset.track === name;
-      button.setAttribute('aria-pressed', String(selected));
-      if (selected && detailNumber) detailNumber.textContent = two(index + 1) + ' / FUTURE CURRICULUM';
-    });
-    if (detailTitle) detailTitle.textContent = track.title;
-    if (detailSummary) detailSummary.textContent = track.summary;
-    if (topics) {
-      topics.replaceChildren(...track.topics.map(topic => {
-        const item = document.createElement('li');
-        item.textContent = topic;
-        return item;
-      }));
-    }
-  };
-  trackButtons.forEach((button, index) => {
-    button.addEventListener('click', () => chooseTrack(button.dataset.track));
-    button.addEventListener('keydown', event => {
-      const nextIndex = event.key === 'ArrowRight' || event.key === 'ArrowDown' ? (index + 1) % trackButtons.length :
-        event.key === 'ArrowLeft' || event.key === 'ArrowUp' ? (index + trackButtons.length - 1) % trackButtons.length :
-        event.key === 'Home' ? 0 : event.key === 'End' ? trackButtons.length - 1 : -1;
-      if (nextIndex >= 0) {
-        event.preventDefault();
-        trackButtons[nextIndex].focus();
-        chooseTrack(trackButtons[nextIndex].dataset.track);
-      }
-    });
-  });
-  chooseTrack('foundation');
-
   // Animate only visible elements; never hide content if IntersectionObserver is missing.
   if (!reducedMotion() && 'IntersectionObserver' in window) {
-    const targets = $$('.tutorial-shell, .tutorial-below, .academy-top > div, .academy-roadmap, .academy-disclaimer');
+    const targets = $$('.tutorial-shell, .tutorial-below');
     const observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
         if (!entry.isIntersecting) return;

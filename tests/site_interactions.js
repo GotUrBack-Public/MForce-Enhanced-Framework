@@ -119,9 +119,6 @@ function testTutorialAndAcademy() {
   assert.match(env.at('tutorial-code').textContent, /git clone/);
   env.groups['[data-tutorial]'][3].click();
   assert.match(env.at('tutorial-code').textContent, /tcp401/);
-  env.groups['[data-track]'][2].click();
-  assert.equal(env.at('academy-detail-title').textContent, 'Authorized Security');
-  assert.equal(env.at('academy-topics').children.length, 3);
 }
 
 function testPaletteEmptyState() {
