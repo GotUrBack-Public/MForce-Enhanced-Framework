@@ -55,7 +55,7 @@ jobs:
             -czf "dist/mforce-enhanced-framework-${version}.tar.gz" .
           (cd dist && sha256sum *.tar.gz > SHA256SUMS && sha256sum --check SHA256SUMS)
       - name: Upload build artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: mforce-cli-archive
           path: dist/

@@ -47,7 +47,7 @@ jobs:
           unzip -l "$dist/mforce-enhanced-framework-$short.zip" | grep -F 'mforce-enhanced-framework/xrm742.sh' > /dev/null
 
       - name: Upload package artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: mforce-installable-packages
           path: dist/
