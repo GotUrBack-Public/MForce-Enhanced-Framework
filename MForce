@@ -54,7 +54,54 @@ def clear():
         print("\\033[2J\\033[H", end="", flush=True)
 
 
-def choose(title, entries):
+def inventory(groups):
+    """Compute truthful counts from enabled registry entries and local lab library."""
+    enabled = [item for items in groups.values() for item in items]
+    counts = {
+        "modules": len(enabled),
+        "osint": sum(item["category"] == "osint" for item in enabled),
+        "network": sum(item["category"] == "net" for item in enabled),
+        "security": sum(item["category"] in ("offensive", "defensive") for item in enabled),
+        "exploits": 0,
+        "zero_days": 0,
+        "payloads": None,
+    }
+    if any(item["id"] == "xss402" for item in enabled):
+        script = ROOT / "src/offensive/xss_lab.py"
+        try:
+            result = subprocess.run(
+                [sys.executable, str(script), "--format", "json"],
+                cwd=str(ROOT), capture_output=True, text=True,
+                encoding="utf-8", timeout=8, check=True,
+            )
+            data = json.loads(result.stdout)
+            if isinstance(data.get("payloads"), list):
+                counts["payloads"] = len(data["payloads"])
+        except (OSError, subprocess.SubprocessError, ValueError, KeyError):
+            pass
+    return counts
+
+
+def banner(counts):
+    payloads = str(counts["payloads"]) if counts["payloads"] is not None else "n/a"
+    print(r"""
+  __  __ _____ ___  ____   ____ _____
+ |  \\/  |  ___/ _ \\|  _ \\ / ___| ____|
+ | |\\/| | |_ | | | | |_) | |   |  _|
+ | |  | |  _|| |_| |  _ <| |___| |___
+ |_|  |_|_|   \\___/|_| \\_\\____|_____|
+    """.rstrip())
+    print("  +---------------------------------------------------+")
+    print("  |  E N H A N C E D   F R A M E W O R K             |")
+    print("  |  NATIVE WINDOWS / PYTHON / AUTHORIZED USE ONLY   |")
+    print("  +---------------------------------------------------+")
+    print("  Modules: {modules:<3} | OSINT: {osint:<3} | Network: {network:<3} | Security: {security:<3}".format(**counts))
+    print("  Exploits: {exploits} | Zero-days: {zero_days} | XSS lab payloads: {0}".format(payloads, **counts))
+    print("  (No exploit database or verified zero-days included.)")
+    print()
+
+
+def choose(title, entries, counts):
     """Read arrows directly from Windows console, no external packages."""
     if os.name != "nt":
         raise RuntimeError("Interactive launcher requires Windows 11 PowerShell/Terminal.")
@@ -62,7 +109,7 @@ def choose(title, entries):
     selected = 0
     while True:
         clear()
-        print("  MFORCE / ENHANCED FRAMEWORK — WINDOWS 11")
+        banner(counts)
         print("  " + title + "\n")
         for i, label in enumerate(entries):
             print(("  > " if i == selected else "    ") + label)
@@ -149,15 +196,16 @@ def main():
         return 1
     groups = catalog()
     labels = list(groups)
+    counts = inventory(groups)
     while True:
-        group = choose("CATEGORIES", labels)
+        group = choose("CATEGORIES", labels, counts)
         if group == -2:
             return 0
         if group == -1:
             continue
         entries = groups[labels[group]]
         while True:
-            selected = choose(labels[group].upper(), [i["name"] + "  [" + i["id"] + "]" for i in entries])
+            selected = choose(labels[group].upper(), [i["name"] + "  [" + i["id"] + "]" for i in entries], counts)
             if selected == -2:
                 return 0
             if selected == -1:
