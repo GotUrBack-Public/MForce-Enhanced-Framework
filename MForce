@@ -1,0 +1,174 @@
+#!/usr/bin/env python3
+"""MForce Windows 11 launcher. Start with: python MForce"""
+from __future__ import annotations
+
+import ctypes
+import json
+import os
+from pathlib import Path
+import platform
+import socket
+import subprocess
+import sys
+
+ROOT = Path(__file__).resolve().parent
+ENGINES = {
+    "frc386": ("native", "network"), "sys193": ("native", "system"),
+    "upd501": ("native", "update"),
+    "dns211": ("osint", "dns"), "ipa212": ("osint", "ip"),
+    "tls213": ("osint", "tls"), "hdr214": ("osint", "headers"),
+    "web311": ("osint", "web"), "api312": ("osint", "api"),
+    "rat313": ("osint", "rate"), "jsn314": ("osint", "js"),
+    "rob315": ("osint", "robots"), "rdp316": ("osint", "rdap"),
+    "tcp401": ("script", "src/offensive/tcp_scan.py"),
+    "xss402": ("script", "src/offensive/xss_lab.py"),
+    "ref403": ("script", "src/offensive/reflection.py"),
+    "sec601": ("script", "src/defensive/secrets_audit.py"),
+    "cor404": ("audit", "cors"), "met405": ("audit", "methods"),
+    "coo406": ("audit", "cookies"), "pth407": ("audit", "paths"),
+}
+TARGETS = set("dns211 ipa212 tls213 hdr214 web311 api312 rat313 jsn314 rob315 rdp316 tcp401 ref403 sec601 cor404 met405 coo406 pth407".split())
+ACTIVE = set("tcp401 ref403 cor404 met405 coo406 pth407".split())
+
+
+def catalog():
+    funcs = json.loads((ROOT / "src/data/funcs.json").read_text(encoding="utf-8"))["functions"]
+    cats = json.loads((ROOT / "src/data/cats.json").read_text(encoding="utf-8"))["categories"]
+    names = {c["id"]: c["name"] for c in cats if c["enabled"]}
+    groups = {}
+    for item in funcs:
+        if item["enabled"] and item["category"] in names:
+            if item["id"] not in ENGINES:
+                raise RuntimeError("Unmapped enabled module: " + item["id"])
+            groups.setdefault(names[item["category"]], []).append(item)
+    return groups
+
+
+def clear():
+    if os.name == "nt":
+        ctypes.windll.kernel32.SetConsoleTitleW("MForce Enhanced Framework")
+    print("\n" * 2)
+
+
+def choose(title, entries):
+    """Read arrows directly from Windows console, no external packages."""
+    if os.name != "nt":
+        raise RuntimeError("Interactive launcher requires Windows 11 PowerShell/Terminal.")
+    import msvcrt
+    selected = 0
+    while True:
+        clear()
+        print("  MFORCE / ENHANCED FRAMEWORK — WINDOWS 11")
+        print("  " + title + "\n")
+        for i, label in enumerate(entries):
+            print(("  > " if i == selected else "    ") + label)
+        print("\n  Up/Down: select   Enter: open   Esc: back   Q: quit")
+        key = msvcrt.getwch()
+        if key in ("\x00", "\xe0"):
+            code = msvcrt.getwch()
+            if code == "H":
+                selected = (selected - 1) % len(entries)
+            elif code == "P":
+                selected = (selected + 1) % len(entries)
+            elif code == "K":
+                return -1
+        elif key == "\r":
+            return selected
+        elif key == "\x1b":
+            return -1
+        elif key.lower() == "q":
+            return -2
+
+
+def confirm(prompt):
+    return input(prompt + " Type YES: ").strip() == "YES"
+
+
+def invoke(item):
+    ident = item["id"]
+    target = ""
+    if ident in TARGETS:
+        target = input("Target (URL, host, IP or local path): ").strip()
+        if not target:
+            print("Target is required.")
+            return
+    authorized = False
+    public = False
+    if ident in ACTIVE:
+        authorized = confirm("Do you have explicit permission to test this target?")
+        if not authorized:
+            print("Authorization required.")
+            return
+        public = confirm("Is this an explicitly authorized PUBLIC target?")
+    kind, value = ENGINES[ident]
+    if kind == "native":
+        if value == "system":
+            print("OS:", platform.platform())
+            print("Computer:", socket.gethostname())
+            print("Python:", sys.version.split()[0])
+        elif value == "network":
+            print("Computer:", socket.gethostname())
+            try:
+                print("Resolved addresses:", ", ".join(sorted({x[4][0] for x in socket.getaddrinfo(socket.gethostname(), None)})))
+            except OSError as exc:
+                print("Address lookup unavailable:", exc)
+        else:
+            print("Git checkout status (no automatic changes):")
+            subprocess.run(["git", "-C", str(ROOT), "status", "--short", "--branch"], check=False)
+        return
+    if kind == "osint":
+        script = ROOT / "src/osint/inspect.py"
+        args = [value, target]
+    elif kind == "audit":
+        script = ROOT / "src/offensive/http_audit.py"
+        args = [value, target, "--authorized"]
+        if public:
+            args.append("--allow-public")
+    else:
+        script = ROOT / value
+        args = [target] if ident in TARGETS else []
+        if authorized:
+            args.append("--authorized")
+            if public:
+                args.append("--allow-public")
+    if not script.is_file():
+        print("Missing engine:", script.relative_to(ROOT))
+        return
+    subprocess.run([sys.executable, str(script), *args], cwd=str(ROOT), check=False)
+
+
+def main():
+    if os.name != "nt":
+        print("This entry point targets native Windows 11. No WSL required.", file=sys.stderr)
+        return 1
+    groups = catalog()
+    labels = list(groups)
+    while True:
+        group = choose("CATEGORIES", labels)
+        if group == -2:
+            return 0
+        if group == -1:
+            continue
+        entries = groups[labels[group]]
+        while True:
+            selected = choose(labels[group].upper(), [i["name"] + "  [" + i["id"] + "]" for i in entries])
+            if selected == -2:
+                return 0
+            if selected == -1:
+                break
+            clear()
+            try:
+                invoke(entries[selected])
+            except (OSError, RuntimeError, ValueError) as exc:
+                print("Error:", exc)
+            except KeyboardInterrupt:
+                print("\nCancelled.")
+            input("\nPress Enter to return to menu...")
+
+
+if __name__ == "__main__":
+    try:
+        sys.exit(main())
+    except (OSError, RuntimeError, ValueError) as exc:
+        print("MForce:", exc, file=sys.stderr)
+        sys.exit(1)
