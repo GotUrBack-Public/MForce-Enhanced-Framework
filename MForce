@@ -82,23 +82,52 @@ def inventory(groups):
     return counts
 
 
+def terminal_colors():
+    """Enable ANSI colors in Windows PowerShell 5.1 and Windows Terminal."""
+    if os.environ.get("NO_COLOR") is not None or not sys.stdout.isatty():
+        return False
+    if os.name != "nt":
+        return True
+    try:
+        kernel = ctypes.windll.kernel32
+        handle = kernel.GetStdHandle(-11)
+        mode = ctypes.c_ulong()
+        if not kernel.GetConsoleMode(handle, ctypes.byref(mode)):
+            return False
+        return bool(kernel.SetConsoleMode(handle, mode.value | 0x0004))
+    except (AttributeError, OSError, ValueError):
+        return False
+
+
+COLORS = terminal_colors()
+
+
+def paint(value, code):
+    return "\033[" + code + "m" + value + "\033[0m" if COLORS else value
+
+
 def banner(counts):
     payloads = str(counts["payloads"]) if counts["payloads"] is not None else "n/a"
-    print(r"""
-  __  __ _____ ___  ____   ____ _____
- |  \\/  |  ___/ _ \\|  _ \\ / ___| ____|
- | |\\/| | |_ | | | | |_) | |   |  _|
- | |  | |  _|| |_| |  _ <| |___| |___
- |_|  |_|_|   \\___/|_| \\_\\____|_____|
-    """.rstrip())
-    print("  +---------------------------------------------------+")
-    print("  |  E N H A N C E D   F R A M E W O R K             |")
-    print("  |  NATIVE WINDOWS / PYTHON / AUTHORIZED USE ONLY   |")
-    print("  +---------------------------------------------------+")
-    print("  Creator: Damian Proksch  |  GitHub: GotUrBack-Public")
-    print("  Modules: {modules:<3} | OSINT: {osint:<3} | Network: {network:<3} | Security: {security:<3}".format(**counts))
-    print("  Exploits: {exploits} | Zero-days: {zero_days} | XSS lab payloads: {0}".format(payloads, **counts))
-    print("  (No exploit database or verified zero-days included.)")
+    cyan, green, muted = "96", "92", "90"
+    print()
+    print(paint("  __  __  _____  ___   ____   ____ _____", cyan))
+    print(paint(r" |  \/  ||  ___|/ _ \ |  _ \ / ___| ____|", cyan))
+    print(paint(r" | |\/| || |_  | | | || |_) | |   |  _|", cyan))
+    print(paint(r" | |  | ||  _| | |_| ||  _ <| |___| |___", cyan))
+    print(paint(r" |_|  |_||_|    \___/ |_| \_\\____|_____|", cyan))
+    print()
+    print("  " + paint("ENHANCED FRAMEWORK", green) + paint("  /  WINDOWS 11", muted))
+    print("  " + paint("Creator", muted) + " Damian Proksch"
+          + "   " + paint("GitHub", muted) + " GotUrBack-Public")
+    print("  " + paint("-" * 54, muted))
+    print("  " + paint("MODULES", green) + " {:<4}  ".format(counts["modules"])
+          + paint("OSINT", green) + " {:<4}  ".format(counts["osint"])
+          + paint("NETWORK", green) + " {}".format(counts["network"]))
+    print("  " + paint("SECURITY", green) + " {:<3}  ".format(counts["security"])
+          + paint("EXPLOITS", green) + " {:<3}  ".format(counts["exploits"])
+          + paint("ZERO-DAYS", green) + " {}".format(counts["zero_days"]))
+    print("  " + paint("XSS LAB PAYLOADS", green) + " " + payloads)
+    print("  " + paint("Counts reflect available modules; no exploit database.", muted))
     print()
 
 
@@ -111,10 +140,18 @@ def choose(title, entries, counts):
     while True:
         clear()
         banner(counts)
-        print("  " + title + "\n")
+        print("  " + paint(title.upper(), "1;97"))
+        print("  " + paint("-" * 54, "90"))
         for i, label in enumerate(entries):
-            print(("  > " if i == selected else "    ") + label)
-        print("\n  Up/Down: select   Enter: open   Esc: back   Q: quit")
+            if i == selected:
+                print(paint("  > " + label, "1;96"))
+            else:
+                print("    " + label)
+        print()
+        print("  " + paint("[UP/DOWN]", "96") + " Select   "
+              + paint("[ENTER]", "96") + " Open   "
+              + paint("[ESC]", "96") + " Back   "
+              + paint("[Q]", "96") + " Quit")
         key = msvcrt.getwch()
         if key in ("\x00", "\xe0"):
             code = msvcrt.getwch()
