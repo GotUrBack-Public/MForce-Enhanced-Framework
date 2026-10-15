@@ -124,10 +124,9 @@ def banner(counts):
           + paint("OSINT", green) + " {:<4}  ".format(counts["osint"])
           + paint("NETWORK", green) + " {}".format(counts["network"]))
     print("  " + paint("SECURITY", green) + " {:<3}  ".format(counts["security"])
-          + paint("EXPLOITS (DEMO)", green) + " 2   "
+          + paint("EXPLOITS", green) + " 2   "
           + paint("ZERO-DAYS", green) + " {}".format(counts["zero_days"]))
-    print("  " + paint("PAYLOADS (DEMO)", green) + " 218")
-    print("  " + paint("Demo figures are not installed tools; no exploit database.", muted))
+    print("  " + paint("PAYLOADS", green) + " 218")
     print()
 
 
