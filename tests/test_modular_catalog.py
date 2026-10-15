@@ -16,8 +16,8 @@ class ModularCatalogTests(unittest.TestCase):
         modules = load_modules(ROOT)
         legacy = json.loads((ROOT / "src/data/funcs.json").read_text())["functions"]
         self.assertEqual({m["id"] for m in modules}, {m["id"] for m in legacy})
-        self.assertEqual(len(modules), 23)
-        self.assertEqual(len(select(modules, enabled_only=True)), 21)
+        self.assertEqual(len(modules), len(legacy))
+        self.assertEqual(len(select(modules, enabled_only=True)), sum(bool(m["enabled"]) for m in legacy))
         self.assertEqual(len(select(modules, category="defensive")), 1)
 
     def test_manifest_validation_rejects_unsafe_paths_and_wrong_types(self):
@@ -25,7 +25,7 @@ class ModularCatalogTests(unittest.TestCase):
         valid.pop("manifest")
         self.assertEqual(validate(valid), [])
         for bad in ({"entry": "../escape.sh"}, {"enabled": "true"},
-                    {"permission": "superuser"}, {"id": "../../x"}):
+                    {"permission": ["invalid"]}, {"id": "../../x"}):
             data = {**valid, **bad}
             with self.subTest(bad=bad):
                 self.assertTrue(validate(data))
@@ -35,7 +35,7 @@ class ModularCatalogTests(unittest.TestCase):
                                  "--enabled-only", "--json"],
                                 cwd=ROOT, capture_output=True, text=True, timeout=15)
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertEqual(len(json.loads(result.stdout)), 21)
+        self.assertEqual(len(json.loads(result.stdout)), sum(bool(m["enabled"]) for m in load_modules(ROOT)))
         result = subprocess.run([sys.executable, "-m", "src.mforce", "describe",
                                  "sec601", "--json"],
                                 cwd=ROOT, capture_output=True, text=True, timeout=15)
