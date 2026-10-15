@@ -44,7 +44,7 @@ def validate(data):
             errors.append(f"{key} must be nonempty text")
     if data.get("interface") != "legacy-shell-v1":
         errors.append("unsupported module interface")
-    if data.get("permission") not in PERMISSIONS:
+    if not isinstance(data.get("permission"), str) or data["permission"] not in PERMISSIONS:
         errors.append("invalid permission label")
     return errors
 
