@@ -68,12 +68,12 @@ class WebsiteTests(unittest.TestCase):
     def test_learning_experience_present(self):
         self.assertEqual(len(self.parser.tutorials), 5)
         self.assertEqual(len(set(self.parser.tutorials)), 5)
-        self.assertEqual(len(self.parser.tracks), 4)
-        self.assertEqual(len(set(self.parser.tracks)), 4)
+        self.assertEqual(len(self.parser.tracks), 0)
         self.assertIn("#tutorials", self.parser.hrefs)
-        self.assertIn("#schulung", self.parser.hrefs)
-        self.assertIn("ROADMAP PREVIEW ONLY", self.markup)
-        self.assertIn("not available yet", self.markup)
+        self.assertIn("../../academy/", self.parser.hrefs)
+        self.assertNotIn('id="schulung"', self.markup)
+        self.assertNotIn('class="section academy-section"', self.markup)
+        self.assertIn("enterprise.css?v=1", self.markup)
 
     def test_all_module_and_audit_tabs_registered(self):
         self.assertEqual(set(self.parser.module_tabs),

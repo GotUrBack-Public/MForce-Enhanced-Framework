@@ -18,6 +18,7 @@
   <link rel="stylesheet" href="../css/main.css?v=6">
   <link rel="stylesheet" href="../css/learn.css?v=6">
   <link rel="stylesheet" href="../css/glass.css?v=7">
+  <link rel="stylesheet" href="../css/enterprise.css?v=1">
   <script defer src="../js/global.js?v=6"></script>
   <script defer src="../js/main.js?v=6"></script>
   <script defer src="../js/learn.js?v=6"></script>
@@ -31,7 +32,7 @@
   <div class="container header-inner">
     <a class="brand" href="../../" aria-label="MForce home"><span class="brand-emblem" aria-hidden="true">M<span>/</span>F</span><span class="brand-words"><strong>MFORCE</strong><small>ENHANCED FRAMEWORK</small></span></a>
     <nav class="nav" id="navigation" aria-label="Main navigation">
-      <a href="#platform">Platform</a><a href="#modules">Modules</a><a href="#osint">OSINT</a><a href="#tutorials">Tutorials</a><a href="#schulung" class="nav-academy">Schulung <span aria-hidden="true">↗</span></a><a href="#security">Security</a><a href="#responsible-use">Responsible use</a>
+      <a href="#platform">Platform</a><a href="#modules">Modules</a><a href="#osint">OSINT</a><a href="#tutorials">Tutorials</a><a href="../../academy/" class="nav-academy">Academy <span aria-hidden="true">↗</span></a><a href="#security">Security</a><a href="#responsible-use">Responsible use</a>
       <a class="nav-github" href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
     </nav>
     <button class="command-trigger" type="button" data-command-open aria-label="Open quick navigation"><span>SEARCH</span><kbd>⌘ K</kbd></button>
@@ -65,7 +66,7 @@
     <div class="container hero-bottom"><span>01 — PLATFORM</span><span>SCROLL TO EXPLORE <span>↓</span></span></div>
   </section>
   <div class="facts"><div class="container facts-inner"><div class="fact"><strong data-count="14">14<span> / 16</span></strong><small>ACTIVE / REGISTERED MODULES</small></div><div class="fact"><strong data-count="100">100<span>%</span></strong><small>OPEN-SOURCE CODE</small></div><div class="fact"><strong data-count="1">01</strong><small>CONSISTENT TERMINAL INTERFACE</small></div><div class="fact"><strong>MIT</strong><small>LICENSE</small></div></div></div>
-  <nav class="explore-rail" aria-label="Explore MForce sections"><div class="container explore-rail-inner"><span class="explore-rail-label">EXPLORE <span aria-hidden="true">/</span></span><a href="#modules"><span>01</span> Tools</a><a href="#osint"><span>02</span> Intelligence</a><a href="#tutorials"><span>03</span> Tutorials</a><a href="#schulung"><span>04</span> Academy</a><a href="#install"><span>05</span> Setup</a><span class="explore-rail-end">SCROLL TO DISCOVER ↓</span></div></nav>
+  <nav class="explore-rail" aria-label="Explore MForce sections"><div class="container explore-rail-inner"><span class="explore-rail-label">EXPLORE <span aria-hidden="true">/</span></span><a href="#modules"><span>01</span> Tools</a><a href="#osint"><span>02</span> Intelligence</a><a href="#tutorials"><span>03</span> Tutorials</a><a href="../../academy/"><span>04</span> Academy</a><a href="#install"><span>05</span> Setup</a><span class="explore-rail-end">SCROLL TO DISCOVER ↓</span></div></nav>
   <div class="signal-band" aria-label="MForce — Bash runtime, terminal-first, open-source"><div class="signal-track" aria-hidden="true"><span>TERMINAL FIRST <b>✳</b> MODULAR CORE <b>✳</b> TERMUX + LINUX <b>✳</b> OPEN SOURCE <b>✳</b></span><span>TERMINAL FIRST <b>✳</b> MODULAR CORE <b>✳</b> TERMUX + LINUX <b>✳</b> OPEN SOURCE <b>✳</b></span></div></div>
   <section class="section modules-section" id="modules"><div class="container">
     <div class="section-intro"><div><p class="section-label">01 / CAPABILITIES</p><h2>Start with insight.<br><span>Go further from here.</span></h2></div><p class="section-lead">Explore five core workflows below, from system insight to authorized checks and safe updates. Every preview is illustrative; nothing is scanned from this website.</p></div>
@@ -153,22 +154,6 @@ pkg install git bash jq python coreutils ncurses-utils iproute2</code></pre></di
       <div class="tutorial-below"><span><i aria-hidden="true"></i> SAFE BY DESIGN</span><p>These are documented commands, not a remote shell. Replace example targets with systems you own or are explicitly authorized to inspect.</p><a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework#manuell--manual-commands" target="_blank" rel="noopener noreferrer">ALL MANUAL COMMANDS ↗</a></div>
     </div>
   </section>
-  <section class="section academy-section" id="schulung" aria-labelledby="academy-heading">
-    <div class="container">
-      <div class="academy-top"><div><p class="section-label">04 / SCHULUNG · MFORCE ACADEMY</p><h2 id="academy-heading">Knowledge is<br><span>the next module.</span></h2><p>We're shaping a future training area for structured, responsible learning. Explore the proposed curriculum below — courses, certificates and enrollments are <strong>not available yet.</strong></p><a class="quiet-link" href="#tutorials">Start with free tutorials ↗</a></div><div class="academy-visual" aria-hidden="true"><div class="academy-orbit academy-orbit-one"></div><div class="academy-orbit academy-orbit-two"></div><div class="academy-center">M<span>/</span>F<small>ACADEMY</small></div><span class="academy-visual-label label-a">LEARN / PRACTICE</span><span class="academy-visual-label label-b">RESPONSIBLE / SECURITY</span></div></div>
-      <div class="academy-roadmap">
-        <div class="academy-roadmap-header"><span>FUTURE TRAINING ROADMAP</span><span>04 TRACKS / PLANNED</span></div>
-        <div class="academy-grid">
-          <button type="button" class="academy-track" data-track="foundation" aria-pressed="true"><span class="academy-track-meta">TRACK 01 <b>PLANNED</b></span><strong>Terminal Foundations</strong><span>Bash, Termux, Linux and MForce workflows.</span><small>VIEW SYLLABUS ↗</small></button>
-          <button type="button" class="academy-track" data-track="osint" aria-pressed="false"><span class="academy-track-meta">TRACK 02 <b>PLANNED</b></span><strong>OSINT Methodology</strong><span>Public signals, verification and documentation.</span><small>VIEW SYLLABUS ↗</small></button>
-          <button type="button" class="academy-track" data-track="security" aria-pressed="false"><span class="academy-track-meta">TRACK 03 <b>PLANNED</b></span><strong>Authorized Security</strong><span>Scope, TCP checks and responsible disclosure.</span><small>VIEW SYLLABUS ↗</small></button>
-          <button type="button" class="academy-track" data-track="privacy" aria-pressed="false"><span class="academy-track-meta">TRACK 04 <b>PLANNED</b></span><strong>Reporting & Privacy</strong><span>Evidence, data minimization and GDPR basics.</span><small>VIEW SYLLABUS ↗</small></button>
-        </div>
-        <div class="academy-detail"><div class="academy-detail-left"><span id="academy-detail-number">01 / FUTURE CURRICULUM</span><h3 id="academy-detail-title" aria-live="polite">Terminal Foundations</h3><p id="academy-detail-summary">An introductory path for the MForce terminal environment.</p></div><div class="academy-detail-right"><span>PROPOSED TOPICS</span><ul id="academy-topics"><li>Terminal navigation and Bash essentials</li><li>Termux vs. Linux environments</li><li>Installing and updating MForce</li></ul></div></div>
-      </div>
-      <p class="academy-disclaimer">ROADMAP PREVIEW ONLY — no registration, certification, launch date or training service is currently offered.</p>
-    </div>
-  </section>
   <section class="section architecture-section" id="architecture"><div class="container architecture-grid">
     <div class="architecture-text"><p class="section-label">05 / ARCHITECTURE</p><h2>One framework.<br><span>Two environments.</span></h2><p>Run the same Bash-based framework in Termux or a compatible Linux environment. The modular runtime, user interface, and configuration remain yours to inspect and extend. Some device-specific information varies by platform.</p><div class="architecture-list"><div><b>01</b><span>Modular Bash entry points</span></div><div><b>02</b><span>Explicit JSON configuration</span></div><div><b>03</b><span>Keyboard-driven navigation</span></div></div><a class="quiet-link" href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework#architecture" target="_blank" rel="noopener noreferrer">Explore technical architecture ↗</a></div>
     <div class="console" id="install">
@@ -205,7 +190,7 @@ bash xrm742.sh</code></pre><div class="terminal-cursor" aria-hidden="true">▍</
     <a href="#modules" data-keywords="network system modules capabilities explorer">↗ <span>Explore modules</span><small>02</small></a>
     <a href="#osint" data-keywords="osint dns ip website api ratelimits innerhtml javascript">↗ <span>OSINT inspection tools</span><small>03</small></a>
     <a href="#tutorials" data-keywords="tutorials learn howto guide steps commands install update scan">↗ <span>Interactive tutorials</span><small>04</small></a>
-    <a href="#schulung" data-keywords="schulung academy education courses roadmap future training">↗ <span>Schulung / Academy roadmap</span><small>05</small></a>
+    <a href="../../academy/" data-keywords="schulung academy education courses roadmap future training">↗ <span>Academy / Kursübersicht</span><small>05</small></a>
     <a href="#responsible-use" data-keywords="educational professional gdpr dsgvo compliance privacy">↗ <span>Responsible usage & privacy</span><small>08</small></a>
     <a href="#install" data-keywords="installation setup commands termux linux">↗ <span>Installation & setup</span><small>06</small></a>
     <a href="#security" data-keywords="vulnerability disclosure policy security">↗ <span>Security & disclosures</span><small>07</small></a>
@@ -213,5 +198,5 @@ bash xrm742.sh</code></pre><div class="terminal-cursor" aria-hidden="true">▍</
     <p class="command-empty" id="command-empty" hidden>No matching destination. Try “tutorials” or “Schulung”.</p>
   </div><div class="command-dialog-foot">ESC TO CLOSE <span>↑ ↓ NAVIGATE · ENTER OPEN</span></div>
 </dialog>
-<footer class="site-footer"><div class="container footer-main"><div class="footer-wordmark">MFORCE<span> / ENHANCED FRAMEWORK</span></div><div class="footer-links"><a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework" target="_blank" rel="noopener noreferrer">GITHUB ↗</a><a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/issues" target="_blank" rel="noopener noreferrer">ISSUES ↗</a><a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">LICENSE ↗</a><a href="#tutorials">TUTORIALS ↗</a><a href="#schulung">SCHULUNG ↗</a><a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer">CONTRIBUTE ↗</a><a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/tree/main/DSGVO" target="_blank" rel="noopener noreferrer">DSGVO DOCS ↗</a><a href="#responsible-use">RESPONSIBLE USE ↗</a></div></div><div class="container footer-meta"><span>© <span id="year">2026</span> MFORCE ENHANCED FRAMEWORK</span><span>TERMUX + LINUX · EDUCATIONAL / PROFESSIONAL · MIT</span></div></footer>
+<footer class="site-footer"><div class="container footer-main"><div class="footer-wordmark">MFORCE<span> / ENHANCED FRAMEWORK</span></div><div class="footer-links"><a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework" target="_blank" rel="noopener noreferrer">GITHUB ↗</a><a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/issues" target="_blank" rel="noopener noreferrer">ISSUES ↗</a><a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">LICENSE ↗</a><a href="#tutorials">TUTORIALS ↗</a><a href="../../academy/">SCHULUNG ↗</a><a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer">CONTRIBUTE ↗</a><a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/tree/main/DSGVO" target="_blank" rel="noopener noreferrer">DSGVO DOCS ↗</a><a href="#responsible-use">RESPONSIBLE USE ↗</a></div></div><div class="container footer-meta"><span>© <span id="year">2026</span> MFORCE ENHANCED FRAMEWORK</span><span>TERMUX + LINUX · EDUCATIONAL / PROFESSIONAL · MIT</span></div></footer>
 </body></html>
