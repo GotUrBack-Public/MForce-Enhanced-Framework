@@ -1,0 +1,19 @@
+name: Modular architecture checks
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  modular-contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Verify manifest and legacy registry integrity
+        run: python3 -m src.mforce doctor --json
+      - name: Verify module discovery
+        run: python3 -m src.mforce catalog --enabled-only --json
+      - name: Report milestone progress
+        run: python3 -m src.mforce stats --json
+      - name: Run modular unit tests
+        run: python3 -m unittest discover -s tests -p 'test_modular_*.py' -v
