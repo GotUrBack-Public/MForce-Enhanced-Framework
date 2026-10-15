@@ -45,9 +45,13 @@ def catalog():
 
 
 def clear():
+    """Clear the actual Windows terminal viewport before each menu redraw."""
     if os.name == "nt":
         ctypes.windll.kernel32.SetConsoleTitleW("MForce Enhanced Framework")
-    print("\n" * 2)
+        # cls clears the active Windows console, rather than appending blank lines.
+        os.system("cls")
+    else:
+        print("\\033[2J\\033[H", end="", flush=True)
 
 
 def choose(title, entries):
