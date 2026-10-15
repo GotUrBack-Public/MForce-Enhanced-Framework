@@ -1,0 +1,34 @@
+name: Windows 11 PowerShell port
+on:
+  push:
+    branches:
+      - platform/windows11-powershell
+  pull_request:
+    paths:
+      - 'windows/**'
+      - 'src/data/funcs.json'
+      - 'src/data/cats.json'
+      - 'src/osint/**'
+      - 'src/offensive/**'
+      - 'src/defensive/**'
+      - 'tests/test_windows_port.py'
+      - '.github/workflows/windows-powershell.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  powershell-windows:
+    name: Native PowerShell + Python engine integration
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check Windows module parity and launcher
+        shell: pwsh
+        run: ./windows/tests/Windows.Tests.ps1
+      - name: Static Windows port regression
+        shell: pwsh
+        run: python -m unittest tests.test_windows_port -v
