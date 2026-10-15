@@ -95,6 +95,7 @@ def banner(counts):
     print("  |  E N H A N C E D   F R A M E W O R K             |")
     print("  |  NATIVE WINDOWS / PYTHON / AUTHORIZED USE ONLY   |")
     print("  +---------------------------------------------------+")
+    print("  Creator: Damian Proksch  |  GitHub: GotUrBack-Public")
     print("  Modules: {modules:<3} | OSINT: {osint:<3} | Network: {network:<3} | Security: {security:<3}".format(**counts))
     print("  Exploits: {exploits} | Zero-days: {zero_days} | XSS lab payloads: {0}".format(payloads, **counts))
     print("  (No exploit database or verified zero-days included.)")
