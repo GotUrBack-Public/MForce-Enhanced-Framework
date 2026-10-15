@@ -85,7 +85,7 @@ class DocumentationTests(unittest.TestCase):
         self.assertTrue((ROOT / ".github/ISSUE_TEMPLATE/config.yml").exists())
 
     def test_bounty_reward_limit_is_consistent(self):
-        scope = (ROOT / "Bug_Bounty/13.10.2026-10:00C/scope.txt").read_text(encoding="utf-8")
+        scope = (ROOT / "Bug_Bounty/13.10.2026-10-00C/scope.txt").read_text(encoding="utf-8")
         self.assertIn("€70", scope)
         self.assertNotIn("€100", scope)
         self.assertIn("No automatic payout", scope)
