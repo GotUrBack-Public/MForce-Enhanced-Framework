@@ -1,3 +1,4 @@
+"""Catch invalid registries, shell syntax and entry-point permissions."""
 import json
 import os
 import subprocess
@@ -84,7 +85,7 @@ def check_entrypoint_permissions(entrypoint_paths, git_root=None):
     """Check that all given entry points have executable file permissions and git mode."""
     issues = []
     for path in entrypoint_paths:
-        if not path.is_file():
+        if path.is_symlink() or not path.is_file():
             issues.append(f"{path}: not a regular file")
         elif not os.access(path, os.X_OK):
             issues.append(f"{path}: missing executable permissions (chmod +x required)")
@@ -92,19 +93,27 @@ def check_entrypoint_permissions(entrypoint_paths, git_root=None):
     if git_root and (Path(git_root) / ".git").exists():
         rel_paths = [str(p.relative_to(git_root)) for p in entrypoint_paths]
         result = subprocess.run(
-            ["git", "-C", str(git_root), "ls-files", "-s", *rel_paths],
+            ["git", "--literal-pathspecs", "-C", str(git_root),
+             "ls-files", "--stage", "-z", "--", *rel_paths],
             capture_output=True,
             text=True,
             check=True,
+            timeout=10,
         )
-        for line in result.stdout.strip().splitlines():
-            if not line:
+        tracked = set()
+        for record in result.stdout.split("\0"):
+            if not record:
                 continue
-            parts = line.split()
-            mode = parts[0]
-            rel_file = parts[3]
+            metadata, rel_file = record.split("\t", 1)
+            mode, _, stage = metadata.split()
+            tracked.add(rel_file)
+            if stage != "0":
+                issues.append(f"{rel_file}: unresolved git index stage {stage}")
             if mode != "100755":
                 issues.append(f"{rel_file}: git index mode is {mode}, expected 100755")
+        for rel_file in rel_paths:
+            if rel_file not in tracked:
+                issues.append(f"{rel_file}: missing from git index")
     return issues
 
 
@@ -187,6 +196,7 @@ class RegistryIntegrityTests(unittest.TestCase):
                     ["bash", "-n", str(path)],
                     capture_output=True,
                     text=True,
+                    timeout=10,
                 )
                 self.assertEqual(
                     result.returncode,
@@ -203,6 +213,7 @@ class RegistryIntegrityTests(unittest.TestCase):
                 ["bash", "-n", str(tmp_path)],
                 capture_output=True,
                 text=True,
+                timeout=10,
             )
             self.assertNotEqual(result.returncode, 0)
             self.assertTrue(result.stderr)
@@ -226,6 +237,46 @@ class RegistryIntegrityTests(unittest.TestCase):
             self.assertIn("missing executable permissions", issues[0])
         finally:
             tmp_path.unlink(missing_ok=True)
+
+    def test_entrypoint_git_index_modes_and_missing_files(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+
+            def git(*args):
+                return subprocess.run(
+                    ["git", "--literal-pathspecs", "-C", str(root), *args],
+                    check=True, capture_output=True, text=True, timeout=10,
+                )
+
+            git("init", "-q")
+            # Spaces, tabs and pathspec syntax must remain literal filenames.
+            paths = [root / name for name in
+                     ("good file.sh", "bad\tmode.sh", "untracked.sh", ":[literal].sh")]
+            for path in paths:
+                path.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
+                path.chmod(0o755)
+            good, bad, untracked, literal = paths
+            git("add", "--", good.name, bad.name, literal.name)
+            git("update-index", "--chmod=+x", "--", good.name, literal.name)
+            git("update-index", "--chmod=-x", "--", bad.name)
+            # The filesystem stays executable: the index alone is incorrect.
+            bad.chmod(0o755)
+            self.assertEqual(check_entrypoint_permissions([good, literal], root), [])
+            self.assertEqual(check_entrypoint_permissions(paths, root), [
+                f"{bad.name}: git index mode is 100644, expected 100755",
+                f"{untracked.name}: missing from git index",
+            ])
+
+    def test_entrypoint_symlink_is_not_a_regular_script(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            target = root / "target.sh"
+            target.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
+            target.chmod(0o755)
+            link = root / "link.sh"
+            link.symlink_to(target)
+            self.assertEqual(check_entrypoint_permissions([link]),
+                             [f"{link}: not a regular file"])
 
     def test_every_enabled_module_has_entry_and_category(self):
         categories = {item["id"] for item in strict_json(ROOT / "src/data/cats.json")["categories"]}

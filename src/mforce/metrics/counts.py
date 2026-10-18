@@ -11,11 +11,17 @@ def tracked(root):
     root = Path(root).resolve()
     if (root / ".git").exists():
         try:
+            top = subprocess.run(["git", "-C", str(root), "rev-parse", "--show-toplevel"],
+                                 check=True, capture_output=True, text=True, timeout=8)
+            # An invalid .git directory can make Git discover a parent checkout.
+            # Those paths belong to a different project, not this archive.
+            if Path(top.stdout.strip()).resolve() != root:
+                raise ValueError("Git discovered a different repository root")
             process = subprocess.run(["git", "-C", str(root), "ls-files", "--cached", "-z"],
                                      check=True, capture_output=True, timeout=8)
             return ([Path(x.decode("utf-8", "surrogateescape"))
                      for x in process.stdout.split(b"\0") if x], "git")
-        except (OSError, subprocess.CalledProcessError, subprocess.TimeoutExpired):
+        except (OSError, ValueError, subprocess.CalledProcessError, subprocess.TimeoutExpired):
             pass
     files = []
     for directory, folders, filenames in os.walk(root, followlinks=False):
