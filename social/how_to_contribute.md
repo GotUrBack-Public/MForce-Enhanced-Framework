@@ -53,6 +53,7 @@ Optional checks where installed:
 
 ```bash
 git diff --check
+bash -n src/functions/*.sh xrm742.sh install.sh
 find src -name '*.sh' -exec bash -n {} +
 node --check web/js/main.js
 ```

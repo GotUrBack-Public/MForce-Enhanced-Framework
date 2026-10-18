@@ -1,5 +1,7 @@
 """Catch silent JSON key collisions and broken MForce module registration."""
 import json
+import subprocess
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -147,6 +149,37 @@ class RegistryIntegrityTests(unittest.TestCase):
         self.assertEqual(len(errors), 2)
         self.assertIn("Module 'mod_orphan1' references nonexistent category 'ghost_category'", errors[0])
         self.assertIn("Module 'mod_orphan2' references nonexistent category None", errors[1])
+
+    def test_public_module_entrypoints_shell_syntax(self):
+        entrypoints = sorted((ROOT / "src/functions").glob("*.sh"))
+        self.assertGreater(len(entrypoints), 0)
+        for path in entrypoints:
+            with self.subTest(entrypoint=path.name):
+                result = subprocess.run(
+                    ["bash", "-n", str(path)],
+                    capture_output=True,
+                    text=True,
+                )
+                self.assertEqual(
+                    result.returncode,
+                    0,
+                    f"Shell syntax error in {path.name}: {result.stderr}",
+                )
+
+    def test_shell_syntax_check_detects_syntax_errors(self):
+        with tempfile.NamedTemporaryFile("w", suffix=".sh", delete=False) as tmp:
+            tmp.write("if true then echo bad fi\n")
+            tmp_path = Path(tmp.name)
+        try:
+            result = subprocess.run(
+                ["bash", "-n", str(tmp_path)],
+                capture_output=True,
+                text=True,
+            )
+            self.assertNotEqual(result.returncode, 0)
+            self.assertTrue(result.stderr)
+        finally:
+            tmp_path.unlink(missing_ok=True)
 
     def test_every_enabled_module_has_entry_and_category(self):
         categories = {item["id"] for item in strict_json(ROOT / "src/data/cats.json")["categories"]}
