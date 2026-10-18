@@ -23,6 +23,7 @@ class SiteParser(HTMLParser):
         self.tracks = []
         self.module_tabs = []
         self.audit_tabs = []
+        self.external_links = []
 
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
@@ -42,6 +43,11 @@ class SiteParser(HTMLParser):
             self.module_tabs.append(attrs["data-module"])
         if "data-audit" in attrs:
             self.audit_tabs.append(attrs["data-audit"])
+        if tag == "a" and attrs.get("target") == "_blank":
+            self.external_links.append({
+                "href": attrs.get("href", ""),
+                "rel": attrs.get("rel"),
+            })
 
 
 class WebsiteTests(unittest.TestCase):
@@ -50,6 +56,48 @@ class WebsiteTests(unittest.TestCase):
         cls.markup = HTML.read_text(encoding="utf-8")
         cls.parser = SiteParser()
         cls.parser.feed(cls.markup)
+
+    def test_target_blank_links_use_safe_rel_attributes(self):
+        for html_file in WEB.glob("**/*.html"):
+            parser = SiteParser()
+            parser.feed(html_file.read_text(encoding="utf-8"))
+            for link in parser.external_links:
+                href = link["href"]
+                rel = link["rel"]
+                with self.subTest(file=html_file.name, href=href):
+                    self.assertIsNotNone(
+                        rel,
+                        f"{html_file.name}: external link {href!r} missing rel attribute",
+                    )
+                    tokens = set(rel.lower().split())
+                    self.assertIn(
+                        "noopener",
+                        tokens,
+                        f"{html_file.name}: link {href!r} missing 'noopener' in rel: {rel!r}",
+                    )
+                    self.assertIn(
+                        "noreferrer",
+                        tokens,
+                        f"{html_file.name}: link {href!r} missing 'noreferrer' in rel: {rel!r}",
+                    )
+
+    def test_unsafe_target_blank_detection_fixture(self):
+        unsafe_samples = [
+            '<a href="https://example.com" target="_blank">Unsafe link</a>',
+            '<a href="https://example.com" target="_blank" rel="noopener">Missing noreferrer</a>',
+            '<a href="https://example.com" target="_blank" rel="noreferrer">Missing noopener</a>',
+        ]
+        for html_snippet in unsafe_samples:
+            with self.subTest(snippet=html_snippet):
+                parser = SiteParser()
+                parser.feed(html_snippet)
+                self.assertEqual(len(parser.external_links), 1)
+                rel = parser.external_links[0]["rel"] or ""
+                tokens = set(rel.lower().split())
+                self.assertFalse(
+                    "noopener" in tokens and "noreferrer" in tokens,
+                    f"Expected unsafe tokens in: {html_snippet}",
+                )
 
     def test_unique_ids_and_working_internal_links(self):
         ids = Counter(self.parser.ids)
