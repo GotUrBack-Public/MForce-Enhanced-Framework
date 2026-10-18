@@ -1,5 +1,5 @@
-"""Catch silent JSON key collisions and broken MForce module registration."""
 import json
+import os
 import subprocess
 import tempfile
 import unittest
@@ -78,6 +78,34 @@ def check_category_references(functions, categories):
         if category not in valid_categories:
             errors.append(f"Module {mod_id!r} references nonexistent category {category!r}")
     return errors
+
+
+def check_entrypoint_permissions(entrypoint_paths, git_root=None):
+    """Check that all given entry points have executable file permissions and git mode."""
+    issues = []
+    for path in entrypoint_paths:
+        if not path.is_file():
+            issues.append(f"{path}: not a regular file")
+        elif not os.access(path, os.X_OK):
+            issues.append(f"{path}: missing executable permissions (chmod +x required)")
+
+    if git_root and (Path(git_root) / ".git").exists():
+        rel_paths = [str(p.relative_to(git_root)) for p in entrypoint_paths]
+        result = subprocess.run(
+            ["git", "-C", str(git_root), "ls-files", "-s", *rel_paths],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        for line in result.stdout.strip().splitlines():
+            if not line:
+                continue
+            parts = line.split()
+            mode = parts[0]
+            rel_file = parts[3]
+            if mode != "100755":
+                issues.append(f"{rel_file}: git index mode is {mode}, expected 100755")
+    return issues
 
 
 class RegistryIntegrityTests(unittest.TestCase):
@@ -178,6 +206,24 @@ class RegistryIntegrityTests(unittest.TestCase):
             )
             self.assertNotEqual(result.returncode, 0)
             self.assertTrue(result.stderr)
+        finally:
+            tmp_path.unlink(missing_ok=True)
+
+    def test_public_shell_entrypoints_executable_mode(self):
+        entrypoints = sorted((ROOT / "src/functions").glob("*.sh"))
+        self.assertGreater(len(entrypoints), 0)
+        issues = check_entrypoint_permissions(entrypoints, git_root=ROOT)
+        self.assertEqual(issues, [], f"Public entrypoints with permission issues: {issues}")
+
+    def test_entrypoint_permissions_fixture_detects_non_executable(self):
+        with tempfile.NamedTemporaryFile("w", suffix=".sh", delete=False) as tmp:
+            tmp.write("#!/bin/sh\nexit 0\n")
+            tmp_path = Path(tmp.name)
+        try:
+            os.chmod(tmp_path, 0o644)
+            issues = check_entrypoint_permissions([tmp_path])
+            self.assertEqual(len(issues), 1)
+            self.assertIn("missing executable permissions", issues[0])
         finally:
             tmp_path.unlink(missing_ok=True)
 
