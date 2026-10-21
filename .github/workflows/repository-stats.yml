@@ -23,7 +23,7 @@ jobs:
       - name: Count tracked files, directories and code lines
         run: python3 scripts/repository_stats.py --output-dir "$RUNNER_TEMP/mforce-repo-stats"
       - name: Publish Shields endpoint JSON to repo-stats branch
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         env:
           BADGE_DIR: ${{ runner.temp }}/mforce-repo-stats
         with:
