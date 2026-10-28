@@ -2,6 +2,7 @@
 import re
 import shutil
 import subprocess
+import tempfile
 import unittest
 from collections import Counter
 from html.parser import HTMLParser
@@ -43,11 +44,27 @@ class SiteParser(HTMLParser):
             self.module_tabs.append(attrs["data-module"])
         if "data-audit" in attrs:
             self.audit_tabs.append(attrs["data-audit"])
-        if tag == "a" and attrs.get("target") == "_blank":
+        if tag == "a" and (attrs.get("target") or "").lower() == "_blank":
             self.external_links.append({
                 "href": attrs.get("href", ""),
                 "rel": attrs.get("rel"),
             })
+
+
+def public_html_files(root):
+    """Include root redirects, the main site and the standalone Academy."""
+    return sorted({*root.glob("*.html"),
+                   *(root / "web").rglob("*.html"),
+                   *(root / "academy").rglob("*.html")})
+
+
+def unsafe_blank_links(markup):
+    """Enforce the project's explicit noopener+noreferrer link policy."""
+    parser = SiteParser()
+    parser.feed(markup)
+    return [link for link in parser.external_links
+            if not {"noopener", "noreferrer"}.issubset(
+                (link["rel"] or "").lower().split())]
 
 
 class WebsiteTests(unittest.TestCase):
@@ -58,46 +75,46 @@ class WebsiteTests(unittest.TestCase):
         cls.parser.feed(cls.markup)
 
     def test_target_blank_links_use_safe_rel_attributes(self):
-        for html_file in WEB.glob("**/*.html"):
-            parser = SiteParser()
-            parser.feed(html_file.read_text(encoding="utf-8"))
-            for link in parser.external_links:
-                href = link["href"]
-                rel = link["rel"]
-                with self.subTest(file=html_file.name, href=href):
-                    self.assertIsNotNone(
-                        rel,
-                        f"{html_file.name}: external link {href!r} missing rel attribute",
-                    )
-                    tokens = set(rel.lower().split())
-                    self.assertIn(
-                        "noopener",
-                        tokens,
-                        f"{html_file.name}: link {href!r} missing 'noopener' in rel: {rel!r}",
-                    )
-                    self.assertIn(
-                        "noreferrer",
-                        tokens,
-                        f"{html_file.name}: link {href!r} missing 'noreferrer' in rel: {rel!r}",
-                    )
+        pages = public_html_files(ROOT)
+        self.assertTrue(pages, "No public HTML pages found")
+        for html_file in pages:
+            with self.subTest(file=str(html_file.relative_to(ROOT))):
+                self.assertEqual(
+                    unsafe_blank_links(html_file.read_text(encoding="utf-8")), [],
+                    f"{html_file}: target=_blank links require noopener noreferrer",
+                )
 
     def test_unsafe_target_blank_detection_fixture(self):
         unsafe_samples = [
             '<a href="https://example.com" target="_blank">Unsafe link</a>',
             '<a href="https://example.com" target="_blank" rel="noopener">Missing noreferrer</a>',
             '<a href="https://example.com" target="_blank" rel="noreferrer">Missing noopener</a>',
+            '<a href="https://example.com" target="_BLANK" rel="">Empty rel</a>',
         ]
         for html_snippet in unsafe_samples:
             with self.subTest(snippet=html_snippet):
-                parser = SiteParser()
-                parser.feed(html_snippet)
-                self.assertEqual(len(parser.external_links), 1)
-                rel = parser.external_links[0]["rel"] or ""
-                tokens = set(rel.lower().split())
-                self.assertFalse(
-                    "noopener" in tokens and "noreferrer" in tokens,
-                    f"Expected unsafe tokens in: {html_snippet}",
-                )
+                self.assertEqual(len(unsafe_blank_links(html_snippet)), 1)
+
+    def test_safe_target_blank_links(self):
+        for snippet in (
+            '<a href="https://example.com" target="_blank" rel="noopener noreferrer">OK</a>',
+            '<a target="_BLANK" rel="NOREFERRER nofollow NOOPENER">OK</a>',
+            '<a href="https://example.com">Same tab</a>',
+        ):
+            with self.subTest(snippet=snippet):
+                self.assertEqual(unsafe_blank_links(snippet), [])
+
+    def test_public_html_discovery_includes_academy_and_root(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            expected = [root / name for name in
+                        ("index.html", "web/html/main.html", "academy/course/index.html")]
+            for path in expected:
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text('<a target="_blank">Unsafe</a>', encoding="utf-8")
+            self.assertEqual(set(public_html_files(root)), set(expected))
+            for path in public_html_files(root):
+                self.assertEqual(len(unsafe_blank_links(path.read_text(encoding="utf-8"))), 1)
 
     def test_unique_ids_and_working_internal_links(self):
         ids = Counter(self.parser.ids)
