@@ -18,13 +18,13 @@ class RepositoryStatsTests(unittest.TestCase):
     def test_counts_are_based_on_tracked_files_only(self):
         with tempfile.TemporaryDirectory() as temp:
             repo = Path(temp)
-            subprocess.run(["git", "init", "-q", str(repo)], check=True)
+            subprocess.run(["git", "init", "-q", str(repo)], check=True, timeout=10)
             (repo / "src").mkdir()
             (repo / "src" / "app.py").write_text("print('a')\n\n# comment\n", encoding="utf-8")
             (repo / "src" / "style.css").write_text("a{}\n", encoding="utf-8")
             (repo / "README.md").write_text("text\n", encoding="utf-8")
             (repo / "untracked.js").write_text("doSomething();\n", encoding="utf-8")
-            subprocess.run(["git", "-C", str(repo), "add", "src", "README.md"], check=True)
+            subprocess.run(["git", "-C", str(repo), "add", "src", "README.md"], check=True, timeout=10)
             self.assertEqual(stats.calculate(repo), {
                 "code_lines": 3, "files": 3, "directories": 1
             })
@@ -32,11 +32,11 @@ class RepositoryStatsTests(unittest.TestCase):
     def test_nested_directories_are_counted_once(self):
         with tempfile.TemporaryDirectory() as temp:
             repo = Path(temp)
-            subprocess.run(["git", "init", "-q", str(repo)], check=True)
+            subprocess.run(["git", "init", "-q", str(repo)], check=True, timeout=10)
             (repo / "a" / "b").mkdir(parents=True)
             (repo / "a" / "b" / "x.sh").write_text("echo ok\n", encoding="utf-8")
             (repo / "a" / "b" / "y.py").write_text("\npass\n", encoding="utf-8")
-            subprocess.run(["git", "-C", str(repo), "add", "a"], check=True)
+            subprocess.run(["git", "-C", str(repo), "add", "a"], check=True, timeout=10)
             self.assertEqual(stats.calculate(repo), {
                 "code_lines": 2, "files": 2, "directories": 2
             })
@@ -98,9 +98,9 @@ class RepositoryStatsTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as repo_temp, tempfile.TemporaryDirectory() as out_temp:
             repo = Path(repo_temp)
             out_dir = Path(out_temp)
-            subprocess.run(["git", "init", "-q", str(repo)], check=True)
-            (repo / "test.py").write_text("print('test')\n", encoding="utf-8")
-            subprocess.run(["git", "-C", str(repo), "add", "test.py"], check=True)
+            subprocess.run(["git", "init", "-q", str(repo)], check=True, timeout=10)
+            (repo / "test.py").write_text("print('test')\n" * 1250, encoding="utf-8")
+            subprocess.run(["git", "-C", str(repo), "add", "test.py"], check=True, timeout=10)
 
             cmd = [
                 sys.executable,
@@ -108,20 +108,33 @@ class RepositoryStatsTests(unittest.TestCase):
                 "--repo", str(repo),
                 "--output-dir", str(out_dir),
             ]
-            result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+            result = subprocess.run(cmd, capture_output=True, text=True, check=True, timeout=10)
             self.assertEqual(result.returncode, 0)
 
             summary = json.loads(result.stdout.strip())
-            self.assertEqual(summary, {"code_lines": 1, "directories": 0, "files": 1})
+            self.assertEqual(summary, {"code_lines": 1250, "directories": 0, "files": 1})
 
-            for filename in ("code-lines.json", "files.json", "directories.json"):
-                badge_file = out_dir / filename
-                self.assertTrue(badge_file.is_file())
-                badge_data = json.loads(badge_file.read_text(encoding="utf-8"))
-                self.assertEqual(badge_data["schemaVersion"], 1)
-                self.assertIsInstance(badge_data["label"], str)
-                self.assertIsInstance(badge_data["message"], str)
-                self.assertIsInstance(badge_data["color"], str)
+            expected_badges = {
+                "code-lines.json": ("Code lines", "1,250", "blue"),
+                "files.json": ("Files", "1", "brightgreen"),
+                "directories.json": ("Directories", "0", "orange"),
+            }
+            self.assertEqual({p.name for p in out_dir.iterdir()}, set(expected_badges))
+            for filename, (label, message, color) in expected_badges.items():
+                with self.subTest(filename=filename):
+                    badge_file = out_dir / filename
+                    self.assertTrue(badge_file.is_file())
+                    content = badge_file.read_text(encoding="utf-8")
+                    self.assertTrue(content.endswith("\n"), "Missing final newline")
+                    badge_data = json.loads(content)
+                    # bool and float compare equal to 1, but are not schema integers.
+                    self.assertIs(type(badge_data["schemaVersion"]), int)
+                    self.assertEqual(badge_data, {
+                        "schemaVersion": 1,
+                        "label": label,
+                        "message": message,
+                        "color": color,
+                    })
 
 
 if __name__ == "__main__":
