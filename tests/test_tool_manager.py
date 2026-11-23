@@ -40,6 +40,28 @@ class ToolManagerTests(unittest.TestCase):
             )
             self.assertNotEqual(result.returncode, 0)
 
+    def test_catalog_loads_package_mappings_for_all_supported_systems(self):
+        result = self.run_bash(
+            'source src/core/runtime.sh && source src/core/tool_manager.lib && '
+            'mf_tools_load && printf "%s\\n" "${MF_TOOL_PACKAGES[0]}"'
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        packages = json.loads(result.stdout)
+        for manager in ("termux", "apt", "dnf", "zypper", "pacman", "apk"):
+            self.assertEqual(packages[manager], ["nmap"])
+
+    def test_catalog_rejects_shell_syntax_in_package_names(self):
+        with tempfile.TemporaryDirectory() as temp:
+            catalog = Path(temp) / "catalog.json"
+            catalog.write_text(json.dumps({"schema_version": 1, "tools": [{
+                "id": "bad_tool", "name": "Bad", "command": "badtool",
+                "category": "test", "description": "bad package", "enabled": True,
+                "packages": {"apt": ["nmap;touch /tmp/pwned"]}
+            }]}))
+            result = self.run_bash(
+                f'source src/core/runtime.sh && source src/core/tool_manager.lib && mf_tools_validate "{catalog}"'
+            )
+            self.assertNotEqual(result.returncode, 0)
     def test_registered_command_runs_without_shell_interpretation(self):
         with tempfile.TemporaryDirectory() as temp:
             bin_dir = Path(temp) / "bin"
