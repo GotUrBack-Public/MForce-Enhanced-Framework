@@ -1,0 +1,99 @@
+#!/usr/bin/env bash
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+source "$ROOT_DIR/src/core/runtime.sh" || exit 1
+source "$ROOT_DIR/src/ui/theme.lib" || exit 1
+source "$ROOT_DIR/src/core/tool_manager.lib" || exit 1
+
+SELECTED=0
+PAGE='catalog'
+MENU_ITEMS=()
+
+refresh_tools() {
+    mf_tools_load || return 1
+    MENU_ITEMS=()
+    local i
+    for i in "${!MF_TOOL_IDS[@]}"; do MENU_ITEMS+=("${MF_TOOL_NAMES[$i]}"); done
+    MENU_ITEMS+=('Refresh tool detection' 'Keyboard help' 'Exit MForce')
+    ((SELECTED < ${#MENU_ITEMS[@]})) || SELECTED=0
+}
+
+draw_catalog() {
+    local i status note
+    mf_ui_header 'TOOL MANAGER' "$(mf_ui_platform) / EXTERNAL TOOLS"
+    mf_ui_text 'MForce is the interface. External programs remain independent.' bright
+    mf_ui_gap
+    mf_ui_section 'REGISTERED TOOLS'
+    if (("${#MF_TOOL_IDS[@]}" == 0)); then
+        mf_ui_status 'No external tools registered yet.' warning
+        mf_ui_text 'The old built-in module list is no longer shown here.'
+        mf_ui_text 'New tools will be added through src/tools/catalog.json.'
+    else
+        for i in "${!MF_TOOL_IDS[@]}"; do
+            status='NOT INSTALLED'
+            note="${MF_TOOL_COMMANDS[$i]} / ${MF_TOOL_CATEGORIES[$i]}"
+            if [[ "${MF_TOOL_ENABLED[$i]}" != true ]]; then status='DISABLED'
+            elif mf_tool_available "${MF_TOOL_IDS[$i]}"; then status='READY'
+            fi
+            mf_ui_row "$((i+1))" "${MF_TOOL_NAMES[$i]}" "$status  |  $note" "$((SELECTED == i))"
+        done
+    fi
+    mf_ui_gap
+    mf_ui_section 'MANAGER'
+    local offset=${#MF_TOOL_IDS[@]}
+    mf_ui_row "$((offset+1))" 'Refresh tool detection' 'Recheck executable availability' "$((SELECTED == offset))"
+    mf_ui_row "$((offset+2))" 'Keyboard help' 'Navigation shortcuts' "$((SELECTED == offset+1))"
+    mf_ui_row "$((offset+3))" 'Exit MForce' 'Close the current session' "$((SELECTED == offset+2))"
+    mf_ui_footer 'ARROWS / J K  Navigate  |  ENTER  Select  |  Q  Exit' 'ARROWS  ENTER  Q EXIT'
+}
+
+show_tool_details() {
+    local index="$1" status='NOT INSTALLED'
+    mf_tool_available "${MF_TOOL_IDS[$index]}" && status='READY'
+    mf_ui_header 'TOOL DETAILS' "${MF_TOOL_NAMES[$index]}"
+    mf_ui_section 'REGISTRATION'
+    mf_ui_field 'Name' "${MF_TOOL_NAMES[$index]}"
+    mf_ui_field 'ID' "${MF_TOOL_IDS[$index]}"
+    mf_ui_field 'Program' "${MF_TOOL_COMMANDS[$index]}"
+    mf_ui_field 'Category' "${MF_TOOL_CATEGORIES[$index]}"
+    mf_ui_field 'Status' "$status"
+    mf_ui_gap
+    mf_ui_text "${MF_TOOL_DESCRIPTIONS[$index]}"
+    mf_ui_text 'Execution adapters and per-tool input forms will be added in the next stage.'
+    mf_ui_footer 'Q / ENTER  Back to tool manager' 'Q / ENTER  BACK'
+    while :; do
+        mf_read_key BACK
+        case "$MF_KEY" in BACK|ENTER|EOF) return 0;; HELP) mf_ui_help;; esac
+    done
+}
+
+main() {
+    refresh_tools || exit 1
+    hide_cursor
+    stty -echo -icanon min 1 time 0 2>/dev/null || :
+    while :; do
+        draw_catalog
+        mf_read_key QUIT
+        case "$MF_KEY" in
+            EOF|QUIT) break ;;
+            UP) ((SELECTED=(SELECTED+${#MENU_ITEMS[@]}-1)%${#MENU_ITEMS[@]})) ;;
+            DOWN) ((SELECTED=(SELECTED+1)%${#MENU_ITEMS[@]})) ;;
+            HOME) SELECTED=0 ;;
+            END) SELECTED=$((${#MENU_ITEMS[@]}-1)) ;;
+            HELP) mf_ui_help ;;
+            DIGIT_*) number=${MF_KEY#DIGIT_}; if ((number>=1 && number<=${#MENU_ITEMS[@]})); then SELECTED=$((number-1)); fi ;;
+            ENTER)
+                if ((SELECTED < ${#MF_TOOL_IDS[@]})); then
+                    show_tool_details "$SELECTED"
+                elif ((SELECTED == ${#MF_TOOL_IDS[@]})); then
+                    refresh_tools || exit 1
+                elif ((SELECTED == ${#MF_TOOL_IDS[@]}+1)); then
+                    mf_ui_help
+                else
+                    break
+                fi
+                ;;
+        esac
+    done
+    mf_restore_terminal
+}
+main "$@"

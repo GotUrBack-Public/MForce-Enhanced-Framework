@@ -38,7 +38,7 @@ main() {
     [[ -t 0 && -t 1 && "${MF_UI_REDUCED_MOTION:-0}" != 1 ]] && sleep 0.2
     stty echo icanon 2>/dev/null || :; show_cursor
     # Keep supervisor alive across UI exec transitions to clean up on all exits.
-    bash "$ROOT_DIR/src/ui/cs.sh" <&0 &
+    bash "$ROOT_DIR/src/ui/tool_manager.lib" <&0 &
     UI_PID=$!
     local status=0
     wait "$UI_PID" || status=$?

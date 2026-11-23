@@ -136,44 +136,29 @@ class AuditRegression(unittest.TestCase):
         result = self.run_bash('bash xrm742.sh')
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertNotIn('STARTUP VERIFICATION', result.stdout)
-        self.assertIn('MAIN MENU', result.stdout)
+        self.assertIn('TOOL MANAGER', result.stdout)
         self.assertEqual(list((self.root / 'tmp').iterdir()), [])
 
     def test_key_handling(self):
         for data, expected in [('', 'EOF'), ('\n', 'ENTER'), ('q', 'BACK'), ('\x1b[A', 'UP'), ('\x1b', 'IGNORE')]:
-            result = self.run_bash('source src/core/runtime.sh; mf_read_key; printf \'%s\\n\' "$MF_KEY"', data)
+            result = self.run_bash('source src/core/runtime.sh; mf_read_key; printf \'%s\n\' "$MF_KEY"', data)
             self.assertEqual(result.stdout.strip(), expected)
 
-    def test_startup_navigation_and_modules(self):
+    def test_startup_tool_manager_keyboard_navigation(self):
         term = self.terminal()
         term.expect('STARTUP VERIFICATION')
         code = term.expect(r'([A-Z2-9]{3}-[A-Z2-9]{3})').group(1)
         term.send(code.lower() + '\n')
-        term.expect('MAIN MENU')
-        # Network: category -> function list -> preview -> module -> return.
-        term.send('\n'); term.expect('CATEGORY INFO')
-        term.send('\n'); term.expect('FUNCTION SELECT')
-        term.send('\n'); term.expect('FUNCTION PREVIEW')
-        term.send('\n'); term.expect('NETWORK INFORMATION')
-        term.expect('Press ENTER to return')
-        term.send('\n'); term.expect('FUNCTION SELECT')
-        term.send('q'); term.expect('MAIN MENU')
-        # System module retains its original navigation and output.
-        term.send('\x1b[B\n'); term.expect('CATEGORY INFO')
-        term.send('\n'); term.expect('FUNCTION SELECT')
-        term.send('\n'); term.expect('FUNCTION PREVIEW')
-        term.send('\n'); term.expect('SYSTEM INFORMATION')
-        term.expect('Press ENTER to return')
-        term.send('\n'); term.expect('FUNCTION SELECT')
-        term.send('q'); term.expect('MAIN MENU')
-        # Category Info resolves the last highlighted category (Settings).
-        term.send('\x1b[B' * 7 + '\n'); term.expect('CATEGORY INFO')
-        term.expect('Settings')
-        term.send('q'); term.expect('MAIN MENU')
-        term.send('\x1b[A\n'); term.expect('ABOUT')
-        term.expect('v0.01.2')
-        term.send('\n'); term.expect('MAIN MENU')
-        term.send('q'); term.finish()
+        term.expect('TOOL MANAGER')
+        term.expect('No external tools registered yet')
+        # Down selects the keyboard guide; Enter opens it.
+        term.send('\x1b[B\n')
+        term.expect('KEYBOARD GUIDE')
+        term.send('q')
+        term.expect('TOOL MANAGER')
+        # Exit is the third manager action when the catalog is empty.
+        term.send('\x1b[B\n')
+        term.finish()
         self.assertEqual(list((self.root / 'tmp').iterdir()), [])
 
     def test_configurable_code_and_case(self):
@@ -184,7 +169,7 @@ class AuditRegression(unittest.TestCase):
         term.expect('Invalid verification code')
         code = term.expect(r'([A-Z2-9]{3}-[A-Z2-9]{6})').group(1)
         term.send(code + '\n')
-        term.expect('MAIN MENU'); term.send('q'); term.finish()
+        term.expect('TOOL MANAGER'); term.send('q'); term.finish()
         # Deterministically exercise lowercase against an uppercase code.
         script = (self.root / 'src/auth/lgn.sh').read_text()
         definitions = script[:script.rfind('\nmain')]
@@ -197,8 +182,8 @@ class AuditRegression(unittest.TestCase):
 
     def test_session_isolation_and_signal_cleanup(self):
         self.config(enabled=False)
-        first = self.terminal('src/auth/lgn.sh'); first.expect('MAIN MENU')
-        second = self.terminal('src/auth/lgn.sh'); second.expect('MAIN MENU')
+        first = self.terminal('src/auth/lgn.sh'); first.expect('TOOL MANAGER')
+        second = self.terminal('src/auth/lgn.sh'); second.expect('TOOL MANAGER')
         dirs = list((self.root / 'tmp').iterdir())
         self.assertEqual(len(dirs), 2)
         for directory in dirs:
