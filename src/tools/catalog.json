@@ -1,4 +1,13 @@
 {
   "schema_version": 1,
-  "tools": []
+  "tools": [
+    {
+      "id": "nmap",
+      "name": "Nmap",
+      "command": "nmap",
+      "category": "network",
+      "description": "Guided host discovery and bounded TCP port/service checks for systems you are authorized to assess.",
+      "enabled": true
+    }
+  ]
 }
