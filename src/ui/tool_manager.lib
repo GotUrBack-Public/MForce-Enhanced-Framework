@@ -89,6 +89,7 @@ run_nmap_profile() {
         mf_tool_ui_raw
         return 0
     fi
+    mf_tool_ui_raw
     mf_ui_header 'NMAP' 'AUTHORIZED USE ONLY'
     mf_ui_field 'Target' "$target"
     mf_ui_field 'Profile' "$profile"
