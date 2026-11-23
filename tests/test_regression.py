@@ -150,14 +150,14 @@ class AuditRegression(unittest.TestCase):
         code = term.expect(r'([A-Z2-9]{3}-[A-Z2-9]{3})').group(1)
         term.send(code.lower() + '\n')
         term.expect('TOOL MANAGER')
-        term.expect('No external tools registered yet')
-        # Down selects the keyboard guide; Enter opens it.
-        term.send('\x1b[B\n')
+        term.expect('Nmap')
+        # Move past Nmap and refresh to the keyboard guide.
+        term.send('\x1b[B\x1b[B\n')
         term.expect('KEYBOARD GUIDE')
         term.send('q')
         term.expect('TOOL MANAGER')
-        # Exit is the third manager action when the catalog is empty.
-        term.send('\x1b[B\n')
+        # End selects Exit MForce.
+        term.send('\x1b[F\n')
         term.finish()
         self.assertEqual(list((self.root / 'tmp').iterdir()), [])
 
