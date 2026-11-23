@@ -7,7 +7,7 @@ MForce's terminal interface is a control layer for separately installed command-
 - The new interface is launched after the existing local session check.
 - The old built-in module list is no longer displayed by the active interface.
 - External programs are described in `src/tools/catalog.json`.
-- The catalog starts empty intentionally; no external program is silently installed or launched.
+- Nmap is registered as the first external tool. It is detected on `PATH` and is never silently installed.
 - The manager detects whether a registered executable is available on `PATH`.
 - Navigation supports Up/Down, J/K, Home/End, Enter, Q and the existing keyboard help.
 
@@ -43,6 +43,10 @@ Example (documentation only):
 ## Process boundary
 
 The shared adapter `mf_tool_run ID ARG...` accepts only a registered, enabled tool. It checks the executable and invokes it as an argument array. It does not use `eval`, construct a shell command, or interpret a command string. Tool-specific argument forms, authorization checks, output handling, and cancellation will be implemented in each adapter before a tool is exposed for execution.
+
+## First integrated tool: Nmap
+
+See [NMAP.md](NMAP.md) for the arrow-key workflow, fixed scan profiles, target validation, and installation instructions. The interface accepts only one IP address or hostname and does not accept arbitrary command flags.
 
 ## Add a tool
 
