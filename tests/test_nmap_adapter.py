@@ -41,6 +41,12 @@ class NmapAdapterTests(unittest.TestCase):
         self.assertIn("-sT -F -T3", result.stdout)
         self.assertIn("-sT -sV --top-ports 100", result.stdout)
 
+    def test_nmap_is_registered_in_tool_catalog(self):
+        import json
+        catalog = json.loads((ROOT / "src/tools/catalog.json").read_text())
+        self.assertEqual([item["id"] for item in catalog["tools"]], ["nmap"])
+        self.assertEqual(catalog["tools"][0]["command"], "nmap")
+
     def test_unknown_profile_is_rejected(self):
         result = self.run_bash(
             'source src/tools/nmap.lib && mf_nmap_profile arbitrary'
