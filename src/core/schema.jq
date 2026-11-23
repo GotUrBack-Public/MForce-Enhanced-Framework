@@ -23,6 +23,17 @@ type == "object" and (
   elif $kind == "metadata" then
     (.id | ident) and (.name | text) and (.version | text) and (.type | text) and
     (.category | ident) and (.entry | entry) and (.library | ident) and (.enabled | type == "boolean")
+  elif $kind == "tools" then
+    (.schema_version == 1) and
+    (.tools | type == "array" and unique_ids and
+      all(.[]; type == "object" and
+        (.id | type == "string" and test("^[a-z][a-z0-9_-]{1,39}$")) and
+        (.name | text and length <= 80) and
+        (.command | type == "string" and test("^[A-Za-z0-9_.+-]+$")) and
+        (.category | text and length <= 40) and
+        (.description | type == "string" and length <= 240 and
+          (test("[\\u0000-\\u001f\\u007f]") | not)) and
+        (.enabled | type == "boolean")))
   elif $kind == "colors" then
     all(.reset, .bold, .dim, .black, .red, .green, .yellow, .blue, .magenta, .cyan,
         .white, .gray, .bright_red, .bright_green, .bright_yellow, .bright_blue,
