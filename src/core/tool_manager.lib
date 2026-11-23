@@ -21,7 +21,8 @@ mf_tools_validate() {
         (.command | type == "string" and test("^[A-Za-z0-9_.+-]+$")) and
         (.category | type == "string" and length > 0 and length <= 40) and
         (.description | type == "string" and length <= 240) and
-        (.enabled | type == "boolean")
+        (.enabled | type == "boolean") and
+        ((.packages // {}) | type == "object" and all(.[]; type == "array" and all(.[]; type == "string" and test("^[A-Za-z0-9][A-Za-z0-9+_.-]*$"))))
       )] | length) == (.tools | length) and
       ([.tools[].id] | length == (unique | length))
     ' "$file" >/dev/null 2>&1 || {
@@ -111,7 +112,7 @@ mf_tools_sync_dependencies() {
     fi
     printf 'Checking/updating dependencies for all enabled tools using %s...\n' "$manager"
     case "$manager" in
-        termux) pkg update -y && pkg install -y "${packages[@]}" ;;
+        termux) pkg update -y && pkg upgrade -y && pkg install -y "${packages[@]}" ;;
         apt) $privilege apt-get update || return 1; if ((${#missing[@]})); then $privilege apt-get install -y "${packages[@]}"; else $privilege apt-get install -y --only-upgrade "${packages[@]}"; fi ;;
         dnf) if ((${#missing[@]})); then $privilege dnf install -y "${packages[@]}"; else $privilege dnf upgrade -y "${packages[@]}"; fi ;;
         zypper) $privilege zypper --non-interactive refresh || return 1; if ((${#missing[@]})); then $privilege zypper --non-interactive install "${packages[@]}"; else $privilege zypper --non-interactive update "${packages[@]}"; fi ;;
