@@ -141,23 +141,23 @@ class AuditRegression(unittest.TestCase):
 
     def test_key_handling(self):
         for data, expected in [('', 'EOF'), ('\n', 'ENTER'), ('q', 'BACK'), ('\x1b[A', 'UP'), ('\x1b', 'IGNORE')]:
-            result = self.run_bash('source src/core/runtime.sh; mf_read_key; printf \'%s\\n\' "$MF_KEY"', data)
+            result = self.run_bash('source src/core/runtime.sh; mf_read_key; printf \'%s\n\' "$MF_KEY"', data)
             self.assertEqual(result.stdout.strip(), expected)
 
     def test_startup_tool_manager_keyboard_navigation(self):
         term = self.terminal()
         term.expect('STARTUP VERIFICATION')
         code = term.expect(r'([A-Z2-9]{3}-[A-Z2-9]{3})').group(1)
-        term.send(code.lower() + '\\n')
+        term.send(code.lower() + '\n')
         term.expect('TOOL MANAGER')
         term.expect('No external tools registered yet')
         # Down selects the keyboard guide; Enter opens it.
-        term.send('\\x1b[B\\n')
+        term.send('\x1b[B\n')
         term.expect('KEYBOARD GUIDE')
         term.send('q')
         term.expect('TOOL MANAGER')
         # Exit is the third manager action when the catalog is empty.
-        term.send('\\x1b[B\\n')
+        term.send('\x1b[B\n')
         term.finish()
         self.assertEqual(list((self.root / 'tmp').iterdir()), [])
 
