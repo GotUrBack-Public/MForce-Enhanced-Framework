@@ -2,56 +2,41 @@
 
 MForce's terminal interface is a control layer for separately installed command-line programs. Tool implementations do not belong in the menu code.
 
-## Current state
+## Startup dependency management
 
-- The new interface is launched after the existing local session check.
-- The old built-in module list is no longer displayed by the active interface.
-- External programs are described in `src/tools/catalog.json`.
-- Nmap is registered as the first external tool. It is detected on `PATH` and is never silently installed.
-- The manager detects whether a registered executable is available on `PATH`.
-- Navigation supports Up/Down, J/K, Home/End, Enter, Q and the existing keyboard help.
+When the tool manager starts, it checks every enabled tool registered in `src/tools/catalog.json`. Each entry declares its required package names for supported package managers. MForce refreshes package metadata, installs missing packages, and upgrades configured packages before showing the menu.
 
-## Catalog format
+Supported managers: Termux `pkg`, Debian-family `apt`, Fedora-family `dnf`, openSUSE `zypper`, Arch-family `pacman`, and Alpine `apk`. Linux package operations require root or `sudo`. Arch uses a full system upgrade because partial upgrades are unsupported. Termux refreshes and upgrades its package environment. If dependency management fails, MForce reports the error and still opens the manager.
 
-Each tool entry has these fields:
-
-- `id`: unique lowercase identifier.
-- `name`: display name.
-- `command`: executable name only (no path, shell syntax or arguments).
-- `category`: grouping label.
-- `description`: short purpose.
-- `enabled`: whether the manager may expose the tool.
-
-Example (documentation only):
+Package mappings are arrays so a tool can declare multiple dependencies:
 
 ```json
-{
-  "schema_version": 1,
-  "tools": [
-    {
-      "id": "nmap",
-      "name": "Nmap",
-      "command": "nmap",
-      "category": "network",
-      "description": "Network discovery and security auditing for authorized systems.",
-      "enabled": true
-    }
-  ]
+"packages": {
+  "termux": ["nmap", "python"],
+  "apt": ["nmap", "python3"],
+  "dnf": ["nmap", "python3"],
+  "zypper": ["nmap", "python3"],
+  "pacman": ["nmap", "python"],
+  "apk": ["nmap", "python3"]
 }
 ```
 
+Package names are restricted by catalog validation and are never accepted from user input. Every new tool must include package mappings for the systems it supports.
+
+## Current state
+
+- External programs are described in `src/tools/catalog.json`.
+- Nmap is registered as the first external tool.
+- The manager detects whether a registered executable is available on `PATH`.
+- Navigation supports Up/Down, J/K, Home/End, Enter, Q and keyboard help.
+
 ## Process boundary
 
-The shared adapter `mf_tool_run ID ARG...` accepts only a registered, enabled tool. It checks the executable and invokes it as an argument array. It does not use `eval`, construct a shell command, or interpret a command string. Tool-specific argument forms, authorization checks, output handling, and cancellation will be implemented in each adapter before a tool is exposed for execution.
-
-## First integrated tool: Nmap
-
-See [NMAP.md](NMAP.md) for the arrow-key workflow, fixed scan profiles, target validation, and installation instructions. The interface accepts only one IP address or hostname and does not accept arbitrary command flags.
+The shared adapter `mf_tool_run ID ARG...` accepts only a registered, enabled tool. It checks the executable and invokes it as an argument array. It does not use `eval` or interpret a command string.
 
 ## Add a tool
 
-1. Install the program separately using its official distribution instructions.
-2. Add a validated entry to `src/tools/catalog.json`.
-3. Implement a dedicated adapter that validates user input and constructs a safe argument array.
-4. Add tests for missing executables, malformed catalog entries, argument handling and cancellation.
-5. Only then expose the launch action in the UI.
+1. Add a validated entry to `src/tools/catalog.json`, including package arrays for supported systems.
+2. Implement a dedicated adapter that validates user input and constructs a safe argument array.
+3. Add tests for missing executables, malformed catalog entries, dependency metadata, argument handling and cancellation.
+4. Only then expose the launch action in the UI.
