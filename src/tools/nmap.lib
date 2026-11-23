@@ -39,3 +39,45 @@ mf_nmap_run() {
     mf_nmap_profile "$profile" || return 2
     mf_tool_run nmap "${MF_NMAP_ARGS[@]}" "$target"
 }
+# Detect a supported package manager and refresh/install Nmap to the repository version.
+mf_nmap_package_manager() {
+    if [[ -n "${PREFIX:-}" && -x "${PREFIX}/bin/pkg" ]]; then printf 'termux'
+    elif command -v apt-get >/dev/null 2>&1; then printf 'apt'
+    elif command -v dnf >/dev/null 2>&1; then printf 'dnf'
+    elif command -v zypper >/dev/null 2>&1; then printf 'zypper'
+    elif command -v pacman >/dev/null 2>&1; then printf 'pacman'
+    elif command -v apk >/dev/null 2>&1; then printf 'apk'
+    else return 1; fi
+}
+
+mf_nmap_install_or_update() {
+    local manager privilege=''
+    manager="$(mf_nmap_package_manager)" || {
+        printf 'ERROR: No supported package manager found (pkg, apt, dnf, zypper, pacman, apk).\n' >&2
+        return 1
+    }
+    if [[ "$manager" != termux && "$EUID" -ne 0 ]]; then
+        command -v sudo >/dev/null 2>&1 || { printf 'ERROR: Administrator rights required; sudo not found.\n' >&2; return 1; }
+        privilege='sudo'
+    fi
+    printf 'Updating Nmap using %s...\n' "$manager"
+    case "$manager" in
+        termux) pkg update -y && pkg install -y nmap ;;
+        apt) $privilege apt-get update && { $privilege apt-get install -y --only-upgrade nmap || $privilege apt-get install -y nmap; } ;;
+        dnf) $privilege dnf upgrade -y nmap || $privilege dnf install -y nmap ;;
+        zypper) $privilege zypper --non-interactive refresh && { $privilege zypper --non-interactive update nmap || $privilege zypper --non-interactive install nmap; } ;;
+        pacman) $privilege pacman -Syu --noconfirm --needed nmap ;;
+        apk) $privilege apk update && { $privilege apk upgrade nmap || $privilege apk add nmap; } ;;
+    esac
+}
+
+mf_nmap_ensure_ready() {
+    local installed_version=''
+    if command -v nmap >/dev/null 2>&1; then
+        installed_version="$(nmap --version 2>/dev/null | sed -n '1s/^Nmap version //p')"
+        printf 'Detected Nmap version: %s\n' "${installed_version:-unknown}"
+    else printf 'Nmap is not installed.\n'; fi
+    mf_nmap_install_or_update || return 1
+    command -v nmap >/dev/null 2>&1 || { printf 'ERROR: Nmap is still unavailable after package operation.\n' >&2; return 1; }
+    nmap --version | sed -n '1p'
+}
