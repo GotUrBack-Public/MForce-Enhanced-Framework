@@ -1,4 +1,4 @@
-          (test("[\u0000-\u001f\u007f]") | not)) and
+def text: type == "string" and length > 0 and (test("[\u0000-\u001f\u007f]") | not);
 def ident: type == "string" and test("^[A-Za-z0-9_-]+$");
 def entry: type == "string" and test("^[A-Za-z0-9_-]+[.]sh$");
 def integer_between($lo; $hi): type == "number" and floor == . and . >= $lo and . <= $hi;
@@ -32,7 +32,7 @@ type == "object" and (
         (.command | type == "string" and test("^[A-Za-z0-9_.+-]+$")) and
         (.category | text and length <= 40) and
         (.description | type == "string" and length <= 240 and
-          (test("[\\u0000-\\u001f\\u007f]") | not)) and
+          (test("[\u0000-\u001f\u007f]") | not)) and
         (.enabled | type == "boolean")))
   elif $kind == "colors" then
     all(.reset, .bold, .dim, .black, .red, .green, .yellow, .blue, .magenta, .cyan,
