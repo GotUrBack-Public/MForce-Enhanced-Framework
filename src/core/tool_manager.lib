@@ -91,18 +91,27 @@ mf_tool_package_manager() {
     elif command -v apk >/dev/null 2>&1; then printf 'apk'
     else return 1; fi
 }
+mf_package_is_installed() {
+    local manager="$1" package="$2"
+    case "$manager" in
+        termux|apt) dpkg-query -W -f='${Status}' "$package" 2>/dev/null | grep -q 'install ok installed' ;;
+        dnf|zypper) rpm -q "$package" >/dev/null 2>&1 ;;
+        pacman) pacman -Q "$package" >/dev/null 2>&1 ;;
+        apk) apk info -e "$package" >/dev/null 2>&1 ;;
+        *) return 1 ;;
+    esac
+}
 mf_tools_sync_dependencies() {
-    local manager privilege='' i package command_name package_json
+    local manager privilege='' i package package_json
     local -a packages=() missing=()
     manager="$(mf_tool_package_manager)" || { printf 'No supported package manager detected.\n' >&2; return 1; }
     for i in "${!MF_TOOL_IDS[@]}"; do
         [[ "${MF_TOOL_ENABLED[$i]}" == true ]] || continue
         package_json="${MF_TOOL_PACKAGES[$i]:-{}}"
-        command_name="${MF_TOOL_COMMANDS[$i]}"
         while IFS= read -r package; do
             [[ -n "$package" ]] || continue
             packages+=("$package")
-            type -P -- "$command_name" >/dev/null 2>&1 || missing+=("$package")
+            mf_package_is_installed "$manager" "$package" || missing+=("$package")
         done < <(jq -r --arg manager "$manager" '.[$manager] // [] | .[]' <<< "$package_json")
     done
     ((${#packages[@]})) || { printf 'No package mappings configured for %s.\n' "$manager"; return 0; }
