@@ -22,7 +22,7 @@ class ToolManagerTests(unittest.TestCase):
             catalog.write_text(json.dumps({"schema_version": 1, "tools": []}))
             result = self.run_bash(
                 'source src/core/runtime.sh && source src/core/tool_manager.lib && '
-                f'mf_tools_load "{catalog}" && printf "%s" "${#MF_TOOL_IDS[@]}"'
+                'mf_tools_load "' + str(catalog) + '" && printf "%s" "${#MF_TOOL_IDS[@]}"'
             )
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertEqual(result.stdout, "0")
