@@ -63,11 +63,11 @@ mf_nmap_install_or_update() {
     printf 'Updating Nmap using %s...\n' "$manager"
     case "$manager" in
         termux) pkg update -y && pkg install -y nmap ;;
-        apt) $privilege apt-get update && { $privilege apt-get install -y --only-upgrade nmap || $privilege apt-get install -y nmap; } ;;
+        apt) $privilege apt-get update && if command -v nmap >/dev/null 2>&1; then $privilege apt-get install -y --only-upgrade nmap; else $privilege apt-get install -y nmap; fi ;;
         dnf) $privilege dnf upgrade -y nmap || $privilege dnf install -y nmap ;;
         zypper) $privilege zypper --non-interactive refresh && { $privilege zypper --non-interactive update nmap || $privilege zypper --non-interactive install nmap; } ;;
         pacman) $privilege pacman -Syu --noconfirm --needed nmap ;;
-        apk) $privilege apk update && { $privilege apk upgrade nmap || $privilege apk add nmap; } ;;
+        apk) $privilege apk update && if command -v nmap >/dev/null 2>&1; then $privilege apk upgrade nmap; else $privilege apk add nmap; fi ;;
     esac
 }
 
