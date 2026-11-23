@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+# Nmap adapter: fixed profiles, one validated host target, no shell command input.
+
+mf_nmap_validate_target() {
+    local target="${1:-}"
+    [[ -n "$target" && ${#target} -le 253 && "$target" != -* ]] || return 1
+    python3 - "$target" <<'PY'
+import ipaddress
+import re
+import sys
+
+target = sys.argv[1]
+try:
+    ipaddress.ip_address(target)
+except ValueError:
+    label = r"[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?"
+    if not re.fullmatch(rf"{label}(?:\.{label})*\.?", target):
+        raise SystemExit(1)
+PY
+}
+
+mf_nmap_profile() {
+    local profile="${1:-}"
+    MF_NMAP_ARGS=()
+    case "$profile" in
+        discovery) MF_NMAP_ARGS=(-sn -T3 --reason --host-timeout 2m) ;;
+        quick) MF_NMAP_ARGS=(-sT -F -T3 --reason --host-timeout 3m) ;;
+        services) MF_NMAP_ARGS=(-sT -sV --top-ports 100 -T3 --reason --host-timeout 5m) ;;
+        *) printf 'ERROR: Unknown Nmap profile: %s\n' "$profile" >&2; return 1 ;;
+    esac
+}
+
+mf_nmap_run() {
+    local profile="${1:-}" target="${2:-}"
+    mf_nmap_validate_target "$target" || {
+        printf 'ERROR: Enter one valid IP address or hostname (no CIDR/range).\n' >&2
+        return 2
+    }
+    mf_nmap_profile "$profile" || return 2
+    mf_tool_run nmap "${MF_NMAP_ARGS[@]}" "$target"
+}

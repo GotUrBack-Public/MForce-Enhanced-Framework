@@ -17,12 +17,15 @@ class ToolManagerTests(unittest.TestCase):
         )
 
     def test_empty_catalog_loads(self):
-        result = self.run_bash(
-            'source src/core/runtime.sh && source src/core/tool_manager.lib && '
-            'mf_tools_load && printf "%s" "${#MF_TOOL_IDS[@]}"'
-        )
-        self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertEqual(result.stdout, "0")
+        with tempfile.TemporaryDirectory() as temp:
+            catalog = Path(temp) / "empty.json"
+            catalog.write_text(json.dumps({"schema_version": 1, "tools": []}))
+            result = self.run_bash(
+                'source src/core/runtime.sh && source src/core/tool_manager.lib && '
+                'mf_tools_load "' + str(catalog) + '" && printf "%s" "${#MF_TOOL_IDS[@]}"'
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(result.stdout, "0")
 
     def test_catalog_rejects_shell_syntax_in_command(self):
         with tempfile.TemporaryDirectory() as temp:
