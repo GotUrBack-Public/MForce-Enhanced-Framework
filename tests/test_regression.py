@@ -169,7 +169,7 @@ class AuditRegression(unittest.TestCase):
         term.expect('Invalid verification code')
         code = term.expect(r'([A-Z2-9]{3}-[A-Z2-9]{6})').group(1)
         term.send(code + '\n')
-        term.expect('MAIN MENU'); term.send('q'); term.finish()
+        term.expect('TOOL MANAGER'); term.send('q'); term.finish()
         # Deterministically exercise lowercase against an uppercase code.
         script = (self.root / 'src/auth/lgn.sh').read_text()
         definitions = script[:script.rfind('\nmain')]
@@ -182,8 +182,8 @@ class AuditRegression(unittest.TestCase):
 
     def test_session_isolation_and_signal_cleanup(self):
         self.config(enabled=False)
-        first = self.terminal('src/auth/lgn.sh'); first.expect('MAIN MENU')
-        second = self.terminal('src/auth/lgn.sh'); second.expect('MAIN MENU')
+        first = self.terminal('src/auth/lgn.sh'); first.expect('TOOL MANAGER')
+        second = self.terminal('src/auth/lgn.sh'); second.expect('TOOL MANAGER')
         dirs = list((self.root / 'tmp').iterdir())
         self.assertEqual(len(dirs), 2)
         for directory in dirs:
