@@ -78,7 +78,7 @@ main() {
             UP) ((SELECTED=(SELECTED+${#MENU_ITEMS[@]}-1)%${#MENU_ITEMS[@]})) ;;
             DOWN) ((SELECTED=(SELECTED+1)%${#MENU_ITEMS[@]})) ;;
             HOME) SELECTED=0 ;;
-            END) SELECTED=$(("${#MENU_ITEMS[@]}"-1)) ;;
+            END) SELECTED=$((${#MENU_ITEMS[@]}-1)) ;;
             HELP) mf_ui_help ;;
             DIGIT_*) number=${MF_KEY#DIGIT_}; if ((number>=1 && number<=${#MENU_ITEMS[@]})); then SELECTED=$((number-1)); fi ;;
             ENTER)
