@@ -32,9 +32,9 @@ class NmapAdapterTests(unittest.TestCase):
     def test_profiles_are_fixed_and_bounded(self):
         result = self.run_bash(
             'source src/tools/nmap.lib && '
-            'mf_nmap_profile discovery && printf "%s\\n" "\${MF_NMAP_ARGS[*]}" && '
-            'mf_nmap_profile quick && printf "%s\\n" "\${MF_NMAP_ARGS[*]}" && '
-            'mf_nmap_profile services && printf "%s\\n" "\${MF_NMAP_ARGS[*]}"'
+            'mf_nmap_profile discovery && printf "%s\\n" "${MF_NMAP_ARGS[*]}" && '
+            'mf_nmap_profile quick && printf "%s\\n" "${MF_NMAP_ARGS[*]}" && '
+            'mf_nmap_profile services && printf "%s\\n" "${MF_NMAP_ARGS[*]}"'
         )
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("-sn -T3", result.stdout)
