@@ -50,7 +50,7 @@ mf_tool_available() {
     for i in "${!MF_TOOL_IDS[@]}"; do
         if [[ "${MF_TOOL_IDS[$i]}" == "$tool_id" ]]; then
             [[ "${MF_TOOL_ENABLED[$i]}" == true ]] || return 1
-            command -v -- "${MF_TOOL_COMMANDS[$i]}" >/dev/null 2>&1
+            type -P -- "${MF_TOOL_COMMANDS[$i]}" >/dev/null 2>&1
             return $?
         fi
     done
@@ -60,7 +60,7 @@ mf_tool_available() {
 # Invoke only a registered, enabled executable. Arguments remain an argv array;
 # no eval, command-string parsing, or implicit shell expansion is performed.
 mf_tool_run() {
-    local tool_id="$1" i binary
+    local tool_id="$1" i binary executable
     shift
     for i in "${!MF_TOOL_IDS[@]}"; do
         [[ "${MF_TOOL_IDS[$i]}" == "$tool_id" ]] || continue
@@ -68,10 +68,11 @@ mf_tool_run() {
             printf 'ERROR: Tool is disabled: %s\n' "$tool_id" >&2; return 1;
         }
         binary="${MF_TOOL_COMMANDS[$i]}"
-        command -v -- "$binary" >/dev/null 2>&1 || {
+        executable="$(type -P -- "$binary")" || executable=''
+        [[ -n "$executable" ]] || {
             printf 'ERROR: Required program is not installed: %s\n' "$binary" >&2; return 127;
         }
-        "$binary" "$@"
+        "$executable" "$@"
         return $?
     done
     printf 'ERROR: Tool is not registered: %s\n' "$tool_id" >&2
