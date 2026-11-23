@@ -18,7 +18,7 @@ class ToolManagerTests(unittest.TestCase):
 
     def test_empty_catalog_loads(self):
         result = self.run_bash(
-            'source src/core/runtime.sh && source src/core/tool_manager.sh && '
+            'source src/core/runtime.sh && source src/core/tool_manager.lib && '
             'mf_tools_load && printf "%s" "${#MF_TOOL_IDS[@]}"'
         )
         self.assertEqual(result.returncode, 0, result.stderr)
@@ -32,7 +32,7 @@ class ToolManagerTests(unittest.TestCase):
                 "category": "test", "description": "invalid command", "enabled": True
             }]}))
             result = self.run_bash(
-                'source src/core/runtime.sh && source src/core/tool_manager.sh && '
+                'source src/core/runtime.sh && source src/core/tool_manager.lib && '
                 f'mf_tools_validate "{catalog}"'
             )
             self.assertNotEqual(result.returncode, 0)
@@ -51,7 +51,7 @@ class ToolManagerTests(unittest.TestCase):
                 "category": "test", "description": "test adapter", "enabled": True
             }]}))
             result = self.run_bash(
-                f'source src/core/runtime.sh && source src/core/tool_manager.sh && '
+                f'source src/core/runtime.sh && source src/core/tool_manager.lib && '
                 f'mf_tools_load "{catalog}" && mf_tool_run test_tool "literal;touch {marker}"',
                 {"PATH": f"{bin_dir}:{os.environ.get('PATH', '')}"},
             )
@@ -67,7 +67,7 @@ class ToolManagerTests(unittest.TestCase):
                 "category": "test", "description": "disabled", "enabled": False
             }]}))
             result = self.run_bash(
-                f'source src/core/runtime.sh && source src/core/tool_manager.sh && '
+                f'source src/core/runtime.sh && source src/core/tool_manager.lib && '
                 f'mf_tools_load "{catalog}" && mf_tool_run off_tool'
             )
             self.assertNotEqual(result.returncode, 0)
@@ -75,7 +75,7 @@ class ToolManagerTests(unittest.TestCase):
 
     def test_unknown_tool_does_not_run(self):
         result = self.run_bash(
-            'source src/core/runtime.sh && source src/core/tool_manager.sh && '
+            'source src/core/runtime.sh && source src/core/tool_manager.lib && '
             'mf_tools_load && mf_tool_run not_registered'
         )
         self.assertNotEqual(result.returncode, 0)
