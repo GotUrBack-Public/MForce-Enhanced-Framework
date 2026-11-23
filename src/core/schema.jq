@@ -1,4 +1,4 @@
-def text: type == "string" and length > 0 and (test("[\u0000-\u001f\u007f]") | not);
+          (test("[\u0000-\u001f\u007f]") | not)) and
 def ident: type == "string" and test("^[A-Za-z0-9_-]+$");
 def entry: type == "string" and test("^[A-Za-z0-9_-]+[.]sh$");
 def integer_between($lo; $hi): type == "number" and floor == . and . >= $lo and . <= $hi;
