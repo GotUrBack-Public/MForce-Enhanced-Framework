@@ -120,17 +120,10 @@ run_nmap_profile() {
 
 show_nmap_profiles() {
     local selected=0 status
-    # Package managers need a normal terminal for progress and password prompts.
-    mf_restore_terminal
-    printf '\nChecking and updating Nmap to the latest version in this system\'s package repositories...\n'
-    if ! mf_nmap_ensure_ready; then
-        printf '\nNmap could not be installed or updated. Check the error above.\n'
-        printf 'Press Enter to return to the tool manager...'
-        IFS= read -r _
-        mf_tool_ui_raw
+    if ! mf_tool_available nmap; then
+        show_nmap_missing
         return 0
     fi
-    mf_tool_ui_raw
     while :; do
         mf_ui_header 'NMAP' 'SCAN PROFILE'
         mf_ui_text 'Select a fixed scan profile. No command flags need to be typed.' bright
@@ -167,6 +160,14 @@ show_tool_details() {
 }
 
 main() {
+    refresh_tools || exit 1
+    mf_restore_terminal
+    printf '\nChecking dependencies for all registered tools...\n'
+    if ! mf_tools_sync_dependencies; then
+        printf '\nSome dependency checks could not be completed. See messages above.\n'
+        printf 'Press Enter to open the tool manager anyway...'
+        IFS= read -r _
+    fi
     refresh_tools || exit 1
     mf_tool_ui_raw
     while :; do
