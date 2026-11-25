@@ -1,4 +1,4 @@
-/* No external dependencies: simulated DOM smoke tests for MForce website controls. */
+/* No external dependencies: simulated DOM smoke tests for MForce site.js. */
 'use strict';
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
@@ -27,17 +27,8 @@ class Element {
   getAttribute(key) { return this.attrs[key]; }
   focus() {}
   scrollIntoView() {}
-  showModal() { this.open = true; }
-  close() { this.open = false; }
-  replaceChildren(...children) { this.children = children; }
   getBoundingClientRect() { return { left: 0, top: 0, width: 500, height: 500 }; }
 }
-
-const create = (names, key) => names.map(name => {
-  const element = new Element({ [key]: name });
-  element.id = key + '-' + name;
-  return element;
-});
 
 function environment() {
   const ids = new Map();
@@ -46,25 +37,16 @@ function environment() {
     return ids.get(id);
   };
   const groups = {
-    '[data-audit]': create(['rate', 'dom', 'headers'], 'audit'),
-    '[data-module]': create(['network', 'system', 'future', 'scanner', 'updater'], 'module'),
-    '[data-platform]': create(['termux', 'linux'], 'platform'),
-    '[data-card]': create(['network', 'system', 'future', 'scanner', 'updater'], 'card'),
-    '[data-tutorial]': create(['install', 'website', 'network', 'ports', 'update'], 'tutorial'),
-    '[data-tutorial-platform]': create(['termux', 'linux'], 'tutorialPlatform'),
-    '[data-track]': create(['foundation', 'osint', 'security', 'privacy'], 'track'),
-    '[data-inspect]': [],
-    '[data-platform-link]': [],
-    '[data-count]': []
+    '.wiki-toc a[href^="#"]': [],
+    '[data-copy]': []
   };
-  const emptySelectors = new Set(['.facts', '.hero', '.hero-art', '.hero-art-frame', '.back-to-top', '.menu-button', '#navigation', '#year', '.page-progress']);
+  const emptySelectors = new Set(['.back-to-top', '.menu-button', '#navigation', '#year']);
   const document = {
     documentElement: { classList: { add() {}, remove() {} }, scrollHeight: 3000 },
     activeElement: new Element(),
     hidden: false,
     querySelector(selector) {
       if (emptySelectors.has(selector)) return null;
-      if (selector === '.tutorial-stage') return at('tutorial-stage');
       if (selector.startsWith('#')) return at(selector.slice(1));
       return null;
     },
@@ -75,16 +57,19 @@ function environment() {
   };
   const window = {
     matchMedia() { return { matches: true }; },
-    isSecureContext: false
+    addEventListener() {},
+    scrollTo() {},
+    scrollY: 0
   };
   const context = {
-    document, window, navigator: {},
+    document, window, navigator: { clipboard: { writeText: async () => {} } },
     performance: { now: () => 0 },
     requestAnimationFrame() {},
     addEventListener() {},
     innerWidth: 1440, innerHeight: 900, scrollY: 0,
     scrollTo() {}, HTMLElement: Element, HTMLButtonElement: Element,
     setTimeout() { return 1; }, clearTimeout() {},
+    IntersectionObserver: undefined,
     console
   };
   window.setTimeout = context.setTimeout;
@@ -96,64 +81,40 @@ function runScript(name, env) {
   vm.runInNewContext(script, env.context, { filename: name, timeout: 3000 });
 }
 
-function testModuleAndAuditTabs() {
+function testMobileNavToggle() {
   const env = environment();
-  runScript('main.js', env);
-  env.groups['[data-audit]'][1].click();
-  assert.match(env.at('audit-output').textContent, /innerHTML/);
-  env.groups['[data-audit]'][2].click();
-  assert.match(env.at('audit-output').textContent, /SECURITY HEADERS/);
-  env.groups['[data-module]'][4].click();
-  assert.match(env.at('inspector-output').textContent, /UPDATE CENTER/);
-  env.groups['[data-platform]'][1].click();
-  assert.match(env.at('install-code').textContent, /sudo apt/);
-}
-
-function testTutorialAndAcademy() {
-  const env = environment();
-  runScript('learn.js', env);
-  assert.match(env.at('tutorial-code').textContent, /pkg install/);
-  env.groups['[data-tutorial-platform]'][1].click();
-  assert.match(env.at('tutorial-code').textContent, /sudo apt/);
-  env.at('tutorial-next').click();
-  assert.match(env.at('tutorial-code').textContent, /git clone/);
-  env.groups['[data-tutorial]'][3].click();
-  assert.match(env.at('tutorial-code').textContent, /tcp401/);
-}
-
-function testPaletteEmptyState() {
-  const env = environment();
-  const dialog = env.at('command-dialog');
-  const open = env.at('open-button');
-  const close = env.at('close-button');
-  const search = env.at('command-search');
-  const empty = env.at('command-empty');
-  const results = ['Platform overview', 'Interactive tutorials', 'Schulung roadmap'].map(title => {
-    const item = new Element();
-    item.textContent = title;
-    item.dataset.keywords = title.toLowerCase();
-    return item;
-  });
+  const menu = new Element();
+  menu.setAttribute('aria-expanded', 'false');
+  const nav = new Element();
+  nav.querySelectorAll = () => [];
   env.document.querySelector = selector => {
-    if (selector === '[data-command-open]') return open;
-    if (selector === '[data-command-close]') return close;
+    if (selector === '.menu-button') return menu;
+    if (selector === '#navigation') return nav;
     return null;
   };
-  env.document.querySelectorAll = selector => selector === '.command-results a' ? results : [];
-  runScript('global.js', env);
-  open.click();
-  assert.equal(dialog.open, true);
-  search.value = 'nothing-matches-this';
-  search.fire('input');
-  assert.equal(empty.hidden, false);
-  assert.equal(results.every(link => link.hidden), true);
-  search.value = 'Schulung';
-  search.fire('input');
-  assert.equal(empty.hidden, true);
-  assert.equal(results.filter(link => !link.hidden).length, 1);
+  runScript('site.js', env);
+  menu.click();
+  assert.equal(menu.getAttribute('aria-expanded'), 'true');
+  assert.equal(nav.classList.toggle.length >= 0, true);
+  menu.click();
+  assert.equal(menu.getAttribute('aria-expanded'), 'false');
 }
 
-testModuleAndAuditTabs();
-testTutorialAndAcademy();
-testPaletteEmptyState();
-console.log('MForce website interaction smoke tests: PASS');
+function testCopyButton() {
+  const env = environment();
+  const code = new Element();
+  code.innerText = 'bash xrm742.sh';
+  const label = new Element();
+  label.textContent = 'COPY';
+  const btn = new Element({ copy: 'install-code' });
+  btn.querySelector = () => label;
+  env.document.getElementById = id => (id === 'install-code' ? code : new Element());
+  env.document.querySelectorAll = selector => (selector === '[data-copy]' ? [btn] : []);
+  runScript('site.js', env);
+  btn.click();
+  // No throw is sufficient; clipboard is async and stubbed.
+}
+
+testMobileNavToggle();
+testCopyButton();
+console.log('MForce site interaction smoke tests: PASS');

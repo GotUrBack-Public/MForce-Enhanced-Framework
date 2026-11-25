@@ -1,0 +1,83 @@
+/* MForce Enhanced Framework — shared site interactions.
+   No network requests, no tracking. Progressive enhancement only. */
+(() => {
+  'use strict';
+
+  // Mobile navigation toggle.
+  const menu = document.querySelector('.menu-button');
+  const nav = document.querySelector('#navigation');
+  if (menu && nav) {
+    const close = () => {
+      nav.classList.remove('open');
+      menu.setAttribute('aria-expanded', 'false');
+      menu.setAttribute('aria-label', 'Open navigation');
+    };
+    menu.addEventListener('click', () => {
+      const open = menu.getAttribute('aria-expanded') !== 'true';
+      nav.classList.toggle('open', open);
+      menu.setAttribute('aria-expanded', String(open));
+      menu.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
+    });
+    nav.querySelectorAll('a').forEach((a) => a.addEventListener('click', close));
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+    document.addEventListener('click', (e) => {
+      if (!menu.contains(e.target) && !nav.contains(e.target)) close();
+    });
+  }
+
+  // Footer year.
+  const year = document.querySelector('#year');
+  if (year) year.textContent = String(new Date().getFullYear());
+
+  // Back-to-top button.
+  const top = document.querySelector('.back-to-top');
+  if (top) {
+    let ticking = false;
+    const update = () => {
+      top.classList.toggle('show', window.scrollY > 640);
+      ticking = false;
+    };
+    window.addEventListener('scroll', () => {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }, { passive: true });
+    update();
+    top.addEventListener('click', () => {
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      window.scrollTo({ top: 0, behavior: reduce ? 'instant' : 'smooth' });
+    });
+  }
+
+  // Wiki table-of-contents scroll-spy.
+  const tocLinks = [...document.querySelectorAll('.wiki-toc a[href^="#"]')];
+  if (tocLinks.length && 'IntersectionObserver' in window) {
+    const map = new Map(tocLinks.map((l) => [l.getAttribute('href').slice(1), l]));
+    const obs = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          tocLinks.forEach((l) => l.classList.remove('active'));
+          const link = map.get(entry.target.id);
+          if (link) link.classList.add('active');
+        }
+      }
+    }, { rootMargin: '-20% 0px -70% 0px' });
+    document.querySelectorAll('.wiki-content section[id]').forEach((s) => obs.observe(s));
+  }
+
+  // Copy buttons for code blocks (data-copy attribute holds the target id).
+  document.querySelectorAll('[data-copy]').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const target = document.getElementById(btn.getAttribute('data-copy'));
+      if (!target) return;
+      const text = target.innerText;
+      try {
+        await navigator.clipboard.writeText(text);
+        const label = btn.querySelector('span');
+        if (label) {
+          const prev = label.textContent;
+          label.textContent = 'COPIED';
+          setTimeout(() => { label.textContent = prev; }, 1600);
+        }
+      } catch (_) { /* clipboard unavailable; ignore */ }
+    });
+  });
+})();

@@ -1,10 +1,10 @@
 # Accessibility
 
 MForce Enhanced Framework is a terminal (Termux/Linux) security toolkit with a
-companion static website and a standalone Academy page. Accessibility matters
-because security and learning tools should be usable by people who rely on
-keyboards, screen readers, high-contrast modes or reduced-motion settings,
-regardless of experience or ability.
+companion static website. Accessibility matters because security and learning
+tools should be usable by people who rely on keyboards, screen readers,
+high-contrast modes or reduced-motion settings, regardless of experience or
+ability.
 
 This document describes our accessibility commitments, what contributors should
 verify, and how to report a barrier.
@@ -15,8 +15,8 @@ verify, and how to report a barrier.
   (arrow keys, J/K, Home/End, Enter, Q) without a mouse.
 - **Readable output.** The interface remains usable on narrow terminals and
   when color is disabled; status is never conveyed by color alone.
-- **Reduced motion.** The website and Academy respect `prefers-reduced-motion`.
-- **Semantic, labeled content.** The website and Academy use semantic HTML,
+- **Reduced motion.** The website respects `prefers-reduced-motion`.
+- **Semantic, labeled content.** The website uses semantic HTML,
   accessible labels, visible focus and sufficient color contrast.
 - **Plain language.** Documentation aims to describe real user experience
   rather than relying on jargon.
@@ -78,7 +78,7 @@ project maintainership.
 
 - **Termux** on Android (ARM) and **Linux** distributions (x86_64), including
   Debian, Ubuntu and Kali Linux, via the terminal UI.
-- Modern desktop and mobile browsers for the static website and Academy.
+- Modern desktop and mobile browsers for the static website.
 
 Specific versions and assistive-technology combinations are not exhaustively
 evaluated; partial support is possible.
@@ -88,7 +88,6 @@ evaluated; partial support is possible.
 - The interactive CLI has not been evaluated with every screen reader; terminal
   output is text-based but not formally audited.
 - No automated accessibility test suite or third-party audit has been run.
-- The Academy is a preview with no published courses yet.
 
 ## Feedback and improvements
 

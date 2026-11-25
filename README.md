@@ -202,7 +202,7 @@ MForce-Enhanced-Framework/
 ├── docs/                     # Architecture, module authoring, NMAP, OSINT, etc.
 ├── .github/                  # CI workflows, issue & PR templates, Dependabot
 ├── cfg/                      # zrk391.json (name/version/license/platform)
-└── web/, academy/, social/   # Web portal, academy content, community docs
+└── web/, social/            # Multi-page website, community docs
 ```
 
 ## 🚀 Installation
@@ -286,7 +286,7 @@ python3 -m src.mforce stats
 python3 -m unittest discover -s tests -v
 ```
 
-The suite covers the modular catalog, doctor/metrics, registry integrity, TCP scanning, XSS/reflection, the updater, MariaDB privacy, the Nmap adapter, the website/academy portals and more.
+The suite covers the modular catalog, doctor/metrics, registry integrity, TCP scanning, XSS/reflection, the updater, MariaDB privacy, the Nmap adapter, the website and more.
 
 ## 🗺️ Roadmap
 
@@ -296,7 +296,7 @@ See `docs/BIG_UPDATE_ROADMAP.md` for the full plan. Highlights:
 - Grow the OSINT and defensive-security module families.
 - Improve accessibility and reduced-motion TUI behavior.
 - Broaden automated test coverage and CI hardening.
-- Publish additional documentation and academy material.
+- Publish additional documentation and tutorial material.
 
 ## 🤝 Contributing
 

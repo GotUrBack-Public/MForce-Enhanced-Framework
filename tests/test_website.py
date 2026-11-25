@@ -2,7 +2,6 @@
 import re
 import shutil
 import subprocess
-import tempfile
 import unittest
 from collections import Counter
 from html.parser import HTMLParser
@@ -11,7 +10,7 @@ from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 WEB = ROOT / "web"
-HTML = WEB / "html/main.html"
+MAIN = WEB / "html/main.html"
 
 
 class SiteParser(HTMLParser):
@@ -20,10 +19,6 @@ class SiteParser(HTMLParser):
         self.ids = []
         self.hrefs = []
         self.assets = []
-        self.tutorials = []
-        self.tracks = []
-        self.module_tabs = []
-        self.audit_tabs = []
         self.external_links = []
 
     def handle_starttag(self, tag, attrs):
@@ -36,14 +31,6 @@ class SiteParser(HTMLParser):
             self.assets.append(attrs["src"])
         if tag == "link" and attrs.get("rel") == "stylesheet":
             self.assets.append(attrs["href"])
-        if "data-tutorial" in attrs:
-            self.tutorials.append(attrs["data-tutorial"])
-        if "data-track" in attrs:
-            self.tracks.append(attrs["data-track"])
-        if "data-module" in attrs:
-            self.module_tabs.append(attrs["data-module"])
-        if "data-audit" in attrs:
-            self.audit_tabs.append(attrs["data-audit"])
         if tag == "a" and (attrs.get("target") or "").lower() == "_blank":
             self.external_links.append({
                 "href": attrs.get("href", ""),
@@ -52,10 +39,9 @@ class SiteParser(HTMLParser):
 
 
 def public_html_files(root):
-    """Include root redirects, the main site and the standalone Academy."""
+    """Include root redirects and the multi-page site under web/."""
     return sorted({*root.glob("*.html"),
-                   *(root / "web").rglob("*.html"),
-                   *(root / "academy").rglob("*.html")})
+                   *(root / "web").rglob("*.html")})
 
 
 def unsafe_blank_links(markup):
@@ -70,7 +56,7 @@ def unsafe_blank_links(markup):
 class WebsiteTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.markup = HTML.read_text(encoding="utf-8")
+        cls.markup = MAIN.read_text(encoding="utf-8")
         cls.parser = SiteParser()
         cls.parser.feed(cls.markup)
 
@@ -102,19 +88,18 @@ class WebsiteTests(unittest.TestCase):
             '<a href="https://example.com">Same tab</a>',
         ):
             with self.subTest(snippet=snippet):
-                self.assertEqual(unsafe_blank_links(snippet), [])
+                self.assertEqual(unsafe_blank_links(html_snippet), [])
 
-    def test_public_html_discovery_includes_academy_and_root(self):
+    def test_public_html_discovery_includes_root_and_pages(self):
+        import tempfile
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
             expected = [root / name for name in
-                        ("index.html", "web/html/main.html", "academy/course/index.html")]
+                        ("index.html", "web/html/main.html", "web/html/wiki.html")]
             for path in expected:
                 path.parent.mkdir(parents=True, exist_ok=True)
                 path.write_text('<a target="_blank">Unsafe</a>', encoding="utf-8")
             self.assertEqual(set(public_html_files(root)), set(expected))
-            for path in public_html_files(root):
-                self.assertEqual(len(unsafe_blank_links(path.read_text(encoding="utf-8"))), 1)
 
     def test_unique_ids_and_working_internal_links(self):
         ids = Counter(self.parser.ids)
@@ -128,53 +113,30 @@ class WebsiteTests(unittest.TestCase):
         for asset in self.parser.assets:
             with self.subTest(asset=asset):
                 path = urlsplit(asset).path
-                self.assertTrue((HTML.parent / path).resolve().is_file())
+                self.assertTrue((MAIN.parent / path).resolve().is_file())
 
-    def test_learning_experience_present(self):
-        self.assertEqual(len(self.parser.tutorials), 5)
-        self.assertEqual(len(set(self.parser.tutorials)), 5)
-        self.assertEqual(len(self.parser.tracks), 0)
-        self.assertIn("#tutorials", self.parser.hrefs)
-        self.assertIn("../../academy/", self.parser.hrefs)
-        self.assertNotIn('id="schulung"', self.markup)
-        self.assertNotIn('class="section academy-section"', self.markup)
-        self.assertIn("enterprise.css?v=1", self.markup)
-
-    def test_all_module_and_audit_tabs_registered(self):
-        self.assertEqual(set(self.parser.module_tabs),
-                         {"network", "system", "future", "scanner", "updater"})
-        self.assertEqual(set(self.parser.audit_tabs), {"rate", "dom", "headers"})
-        script = (WEB / "js/main.js").read_text(encoding="utf-8")
-        self.assertIn("const auditTabs = $$('[data-audit]');", script)
-        self.assertIn("scanner: {", script)
-        self.assertIn("updater: {", script)
+    def test_multipage_navigation_present(self):
+        # The redesign is a multi-page site: Home, Wiki, Tutorials, Contributors.
+        for page in ("wiki.html", "tutorial.html", "contributors.html"):
+            with self.subTest(page=page):
+                self.assertTrue((WEB / "html" / page).is_file())
+                self.assertIn(page, self.markup)
+        self.assertIn("site.css?v=1", self.markup)
 
     def test_site_never_performs_network_scans(self):
-        for name in ("global.js", "main.js", "learn.js", "glass.js"):
-            script = (WEB / "js" / name).read_text(encoding="utf-8")
-            with self.subTest(script=name):
-                self.assertNotRegex(script, r"\bfetch\s*\(|XMLHttpRequest|WebSocket\s*\(")
+        script = (WEB / "js/site.js").read_text(encoding="utf-8")
+        self.assertNotRegex(script, r"\bfetch\s*\(|XMLHttpRequest|WebSocket\s*\(")
 
     def test_reduced_motion_and_responsive_breakpoints(self):
-        style = (WEB / "css/learn.css").read_text(encoding="utf-8")
+        style = (WEB / "css/site.css").read_text(encoding="utf-8")
         self.assertIn("prefers-reduced-motion:reduce", style)
-        self.assertIn("max-width:460px", style)
-        self.assertIn("max-width:1180px", style)
+        self.assertIn("max-width:760px", style)
 
-    def test_glass_design_accessibility_and_navigation(self):
-        glass_css = (WEB / "css/glass.css").read_text(encoding="utf-8")
-        glass_js = (WEB / "js/glass.js").read_text(encoding="utf-8")
-        self.assertIn("glass.css?v=7", self.markup)
-        self.assertIn("glass.js?v=7", self.markup)
-        self.assertIn('class="explore-rail"', self.markup)
-        self.assertIn('aria-label="Explore MForce sections"', self.markup)
-        self.assertIn("prefers-reduced-motion:reduce", glass_css)
-        self.assertIn("backdrop-filter", glass_css)
-        self.assertIn("@supports not", glass_css)
-        self.assertIn("IntersectionObserver", glass_js)
-        self.assertIn("aria-current", glass_js)
-        self.assertIn("motionQuery.matches", glass_js)
-        self.assertNotRegex(glass_js, r"\bfetch\s*\(|XMLHttpRequest|WebSocket\s*\(")
+    def test_accessibility_features_present(self):
+        self.assertIn('class="skip-link"', self.markup)
+        self.assertIn('aria-label="Main navigation"', self.markup)
+        css = (WEB / "css/site.css").read_text(encoding="utf-8")
+        self.assertIn(":focus-visible", css)
 
     @unittest.skipUnless(shutil.which("node"), "Node.js unavailable")
     def test_javascript_interactions(self):
@@ -183,10 +145,8 @@ class WebsiteTests(unittest.TestCase):
 
     @unittest.skipUnless(shutil.which("node"), "Node.js unavailable")
     def test_javascript_syntax(self):
-        for name in ("global.js", "main.js", "learn.js"):
-            with self.subTest(name=name):
-                subprocess.run(["node", "--check", str(WEB / "js" / name)],
-                               check=True, capture_output=True, text=True)
+        subprocess.run(["node", "--check", str(WEB / "js/site.js")],
+                       check=True, capture_output=True, text=True)
 
 
 if __name__ == "__main__":

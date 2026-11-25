@@ -47,7 +47,6 @@ committee, SLA or compliance certification.
 The Update Center performs Git fast-forward updates from official
 `main`; it is not a signed release verification mechanism.
 The static website previews are illustrative, not live security scans.
-MForce Academy remains a roadmap, not an accredited training program.
 The project's MIT license includes warranty limitations.
 
 ## Support and communication
