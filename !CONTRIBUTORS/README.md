@@ -66,4 +66,4 @@ does not imply upstream maintenance or endorsement of MForce Enhanced Framework.
 - Keep human contributions, automation and AI assistance clearly attributed.
 - Do not publish private contact details.
 
-See [CONTRIBUTING.md](../CONTRIBUTING.md) to participate.
+See [CONTRIBUTING.md](../CONTRIBUTING.md) to participate. 
