@@ -227,6 +227,20 @@ $("[data-google]").addEventListener("click", async () => {
   }
 });
 
+/* ---- simple success banner for auth feedback ---- */
+const successBanner = document.createElement("div");
+successBanner.className = "auth-success-banner";
+successBanner.setAttribute("role", "status");
+successBanner.style.cssText = "position:fixed;top:calc(var(--header-h) + 10px);left:50%;transform:translateX(-50%);z-index:350;padding:12px 20px;border-radius:8px;background:var(--panel);border:1px solid var(--line);color:var(--ink);font-size:13px;box-shadow:var(--shadow-sm);opacity:0;pointer-events:none;transition:opacity .25s;";
+document.body.appendChild(successBanner);
+
+function showAuthSuccess(message) {
+  successBanner.textContent = message;
+  successBanner.style.opacity = "1";
+  successBanner.style.pointerEvents = "auto";
+  setTimeout(() => { successBanner.style.opacity = "0"; }, 4500);
+}
+
 /* ---- email / password ---- */
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -239,6 +253,7 @@ form.addEventListener("submit", async (e) => {
     const authMod = await import("https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js");
     if (mode === "reset") {
       await authMod.sendPasswordReset(firebaseAuth, email);
+      showAuthSuccess("Passwort-Reset-E-Mail wurde gesendet.");
       closeModal();
       return;
     }
@@ -247,9 +262,11 @@ form.addEventListener("submit", async (e) => {
       const cred = await authMod.createUserWithEmailAndPassword(firebaseAuth, email, password);
       if (name) await authMod.updateProfile(cred.user, { displayName: name });
       await authMod.sendEmailVerification(cred.user).catch(() => {});
-    } else {
-      await authMod.signInWithEmailAndPassword(firebaseAuth, email, password);
+      showAuthSuccess("Konto erstellt. Eine Bestätigungs-E-Mail wurde an Ihre Adresse gesendet. Sie können sich jetzt anmelden.");
+      closeModal();
+      return;
     }
+    await authMod.signInWithEmailAndPassword(firebaseAuth, email, password);
     closeModal();
   } catch (error) {
     showError(error);
@@ -326,13 +343,14 @@ function initials(name) {
 
 // Expose a lightweight auth shim so site.js can read currentUser without Firebase
 window.auth = {
-  get currentUser() { return null; },
+  currentUser: null,
 };
 // If Firebase loads successfully, wire up the real observer.
 loadFirebase().then((f) => {
   const authMod = import("https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js");
   authMod.then((m) => {
     m.onAuthStateChanged(f.auth, (user) => {
+      window.auth.currentUser = user;
       document.querySelectorAll("[data-auth-toggle]").forEach((btn) => {
         if (user) {
           const name = user.displayName || user.email || user.phoneNumber || "Account";
