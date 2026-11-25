@@ -84,10 +84,10 @@ class OsintTests(unittest.TestCase):
             self.assertEqual(metadata['entry'],id+'.sh')
             self.assertEqual(metadata['library'],id)
         html=(ROOT/'web/html/main.html').read_text()
-        self.assertIn('responsible-use',html)
-        self.assertIn('data-audit="dom"',html)
-        self.assertRegex(html, r'global\.css\?v=\d+')
-        self.assertRegex(html, r'main\.js\?v=\d+')
+        self.assertIn('wiki.html',html)
+        self.assertIn('Responsible use',html)
+        self.assertRegex(html, r'site\.css\?v=\d+')
+        self.assertRegex(html, r'site\.js\?v=\d+')
         self.assertIn('mf_ui_logo', (ROOT/'src/ui/theme.lib').read_text())
 
     def test_sanitized_output(self):
