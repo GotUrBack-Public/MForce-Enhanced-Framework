@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0a0b0d">
+  <meta name="theme-color" content="#08090b">
   <meta name="color-scheme" content="dark">
   <meta name="description" content="MForce Enhanced Framework — a modular, open-source penetration testing and OSINT toolkit for Termux and Linux. Wiki, tutorials and contributors.">
   <meta property="og:type" content="website">
@@ -13,13 +13,23 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="canonical" href="https://goturback-public.github.io/MForce-Enhanced-Framework/">
   <link rel="icon" type="image/png" href="../../assets/banners/logo.png">
+
+  <!-- External assets: fonts, icons, animation, syntax highlighting -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/styles/github-dark.min.css">
+
   <title>MForce Enhanced Framework — Security &amp; OSINT Toolkit</title>
-  <link rel="stylesheet" href="../css/site.css?v=2">
-  <script defer src="../js/site.js?v=2"></script>
-  <script type="module" src="../js/auth.js?v=2"></script>
+  <link rel="stylesheet" href="../css/site.css?v=3">
+  <script defer src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script defer src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/highlight.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/languages/bash.min.js"></script>
+  <script defer src="../js/site.js?v=3"></script>
+  <script type="module" src="../js/auth.js?v=3"></script>
+
   <!-- Google AdSense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7992830461968868" crossorigin="anonymous"></script>
 </head>
@@ -36,7 +46,7 @@
       <a href="wiki.html">Wiki</a>
       <a href="tutorial.html">Tutorials</a>
       <a href="contributors.html">Contributors</a>
-      <a class="nav-cta" href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+      <a class="nav-cta" href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework" target="_blank" rel="noopener noreferrer">GitHub <i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
     </nav>
     <button class="account-btn" type="button" data-auth-toggle aria-label="Sign in">Sign in</button>
     <button class="menu-button" type="button" aria-expanded="false" aria-controls="navigation" aria-label="Open navigation"><span></span><span></span><span></span></button>
@@ -47,78 +57,78 @@
   <section class="hero">
     <div class="container hero-grid">
       <div class="hero-content">
-        <span class="eyebrow"><span class="tick" aria-hidden="true"></span> Open source <span aria-hidden="true">·</span> v0.01.2 <span aria-hidden="true">·</span> MIT</span>
-        <h1>Security &amp; OSINT.<br><span class="accent">One modular framework.</span></h1>
-        <p class="hero-lead">MForce is an open-source penetration testing and reconnaissance toolkit for <strong>Termux and Linux</strong> — automated reconnaissance, vulnerability assessment, OSINT and red-team workflows behind a single, menu-driven interface.</p>
-        <div class="hero-actions">
-          <a class="btn btn-primary" href="wiki.html">Read the wiki</a>
-          <a class="btn btn-ghost" href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework" target="_blank" rel="noopener noreferrer">View source ↗</a>
+        <span class="eyebrow" data-aos="fade"><span class="tick" aria-hidden="true"></span> Open source <span aria-hidden="true">·</span> v0.01.2 <span aria-hidden="true">·</span> MIT <span class="live" aria-hidden="true"></span></span>
+        <h1 data-aos="fade-up">Security &amp; OSINT.<br><span class="accent">One modular framework.</span></h1>
+        <p class="hero-lead" data-aos="fade-up" data-aos-delay="80">MForce is an open-source penetration testing and reconnaissance toolkit for <strong>Termux and Linux</strong> — automated reconnaissance, vulnerability assessment, OSINT and red-team workflows behind a single, menu-driven interface.</p>
+        <div class="hero-actions" data-aos="fade-up" data-aos-delay="140">
+          <a class="btn btn-primary" href="wiki.html">Read the wiki <i data-lucide="arrow-right" aria-hidden="true"></i></a>
+          <a class="btn btn-ghost" href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework" target="_blank" rel="noopener noreferrer"><i data-lucide="github" aria-hidden="true"></i> View source</a>
         </div>
-        <div class="hero-meta">
+        <div class="hero-meta" data-aos="fade-up" data-aos-delay="200">
           <div><strong>21</strong><span>ENABLED MODULES</span></div>
           <div><strong>9</strong><span>CATEGORIES</span></div>
           <div><strong>100%</strong><span>OPEN SOURCE</span></div>
         </div>
       </div>
-      <div class="hero-panel" aria-label="MForce terminal preview">
+      <div class="hero-panel" data-aos="fade-left" data-aos-delay="120" aria-label="MForce terminal preview">
         <div class="hero-panel-bar"><span><span class="lights"><i></i><i></i><i></i></span> mforce — session</span><span>TERMUX + LINUX</span></div>
-<pre><span class="c"># Install and launch</span>
-<span class="p">$</span> git clone https://github.com/GotUrBack-Public/MForce-Enhanced-Framework.git
-<span class="p">$</span> cd MForce-Enhanced-Framework
-<span class="p">$</span> bash xrm742.sh
+<pre><code class="language-bash"># Install and launch
+git clone https://github.com/GotUrBack-Public/MForce-Enhanced-Framework.git
+cd MForce-Enhanced-Framework
+bash xrm742.sh
 
-<span class="c"># Authorized DNS reconnaissance</span>
-<span class="p">$</span> bash src/functions/dns211.sh <span class="s">example.org</span>
+# Authorized DNS reconnaissance
+bash src/functions/dns211.sh example.org
 
-<span class="c"># Local offline secret scan</span>
-<span class="p">$</span> bash src/functions/sec601.sh <span class="s">./project</span> --json</pre>
+# Local offline secret scan
+bash src/functions/sec601.sh ./project --json</code></pre>
       </div>
     </div>
   </section>
 
   <section class="section">
     <div class="container">
-      <div class="section-head">
+      <div class="section-head" data-aos="fade-up">
         <span class="section-kicker">Capabilities</span>
         <h2>Everything for authorized assessments.</h2>
         <p>Nine categories of tooling, from passive reconnaissance to defensive auditing — every check bounded, low-impact and audit-friendly.</p>
       </div>
       <div class="grid grid-3">
-        <article class="card">
-          <span class="card-num">01</span>
+        <article class="card" data-aos="fade-up">
+          <span class="icon-chip"><i data-lucide="radar" aria-hidden="true"></i></span>
           <h3>Automated Reconnaissance</h3>
           <p>DNS records, IP intelligence, TLS certificates, HTTP headers and RDAP registration data in one pass.</p>
-          <a class="card-link" href="wiki.html#recon">Read more →</a>
+          <a class="card-link" href="wiki.html#recon">Read more <i data-lucide="arrow-right" aria-hidden="true"></i></a>
         </article>
-        <article class="card">
-          <span class="card-num">02</span>
+        <article class="card" data-aos="fade-up" data-aos-delay="60">
+          <span class="icon-chip"><i data-lucide="shield-alert" aria-hidden="true"></i></span>
           <h3>Vulnerability Assessment</h3>
           <p>CORS, HTTP method, cookie flag and exposure-path auditors plus a bounded reflection inspector.</p>
-          <a class="card-link" href="wiki.html#assessment">Read more →</a>
+          <a class="card-link" href="wiki.html#assessment">Read more <i data-lucide="arrow-right" aria-hidden="true"></i></a>
         </article>
-        <article class="card">
-          <span class="card-num">03</span>
+        <article class="card" data-aos="fade-up" data-aos-delay="120">
+          <span class="icon-chip"><i data-lucide="scan-search" aria-hidden="true"></i></span>
           <h3>OSINT &amp; Web Intelligence</h3>
           <p>Website inspector, API metadata, JavaScript DOM review, robots/sitemap parsing and rate-limit signals.</p>
-          <a class="card-link" href="wiki.html#osint">Read more →</a>
+          <a class="card-link" href="wiki.html#osint">Read more <i data-lucide="arrow-right" aria-hidden="true"></i></a>
         </article>
-        <article class="card">
-          <span class="card-num">04</span>
+        <article class="card" data-aos="fade-up">
+          <span class="icon-chip"><i data-lucide="crosshair" aria-hidden="true"></i></span>
           <h3>Offensive Security Labs</h3>
           <p>A bounded TCP port scanner and a 100-example XSS payload lab that never auto-injects.</p>
-          <a class="card-link" href="wiki.html#offensive">Read more →</a>
+          <a class="card-link" href="wiki.html#offensive">Read more <i data-lucide="arrow-right" aria-hidden="true"></i></a>
         </article>
-        <article class="card">
-          <span class="card-num">05</span>
+        <article class="card" data-aos="fade-up" data-aos-delay="60">
+          <span class="icon-chip"><i data-lucide="lock" aria-hidden="true"></i></span>
           <h3>Defensive Security</h3>
           <p>An offline local secret scanner that reports only path, line and rule — never secret values.</p>
-          <a class="card-link" href="wiki.html#defensive">Read more →</a>
+          <a class="card-link" href="wiki.html#defensive">Read more <i data-lucide="arrow-right" aria-hidden="true"></i></a>
         </article>
-        <article class="card">
-          <span class="card-num">06</span>
+        <article class="card" data-aos="fade-up" data-aos-delay="120">
+          <span class="icon-chip"><i data-lucide="wrench" aria-hidden="true"></i></span>
           <h3>Tool Manager</h3>
           <p>A unified launcher for external tools with guided, fixed-profile Nmap integration.</p>
-          <a class="card-link" href="wiki.html#tools">Read more →</a>
+          <a class="card-link" href="wiki.html#tools">Read more <i data-lucide="arrow-right" aria-hidden="true"></i></a>
         </article>
       </div>
     </div>
@@ -126,12 +136,38 @@
 
   <section class="section" style="padding-top:0">
     <div class="container">
-      <div class="cta-band">
+      <div class="section-head" data-aos="fade-up">
+        <span class="section-kicker">Workflow</span>
+        <h2>From clone to first result in minutes.</h2>
+      </div>
+      <div class="steps">
+        <div class="step" data-aos="fade-up">
+          <span class="n">STEP 01</span>
+          <h3>Install</h3>
+          <p>Clone the repo and install the runtime dependencies for Termux or Linux.</p>
+        </div>
+        <div class="step" data-aos="fade-up" data-aos-delay="80">
+          <span class="n">STEP 02</span>
+          <h3>Launch</h3>
+          <p>Start the menu-driven interface and pick a category or run a module directly.</p>
+        </div>
+        <div class="step" data-aos="fade-up" data-aos-delay="160">
+          <span class="n">STEP 03</span>
+          <h3>Assess</h3>
+          <p>Run bounded, low-impact checks and review the audit-friendly output.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <div class="cta-band" data-aos="fade-up">
         <div>
           <h2>Start with the documentation.</h2>
           <p>The wiki covers installation, every module, architecture and responsible use.</p>
         </div>
-        <a class="btn btn-primary" href="wiki.html">Open the wiki</a>
+        <a class="btn btn-primary" href="wiki.html">Open the wiki <i data-lucide="arrow-right" aria-hidden="true"></i></a>
       </div>
     </div>
   </section>
@@ -156,14 +192,14 @@
         <div class="footer-col">
           <h4>Project</h4>
           <a href="contributors.html">Contributors</a>
-          <a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
-          <a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/issues" target="_blank" rel="noopener noreferrer">Issues ↗</a>
+          <a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework" target="_blank" rel="noopener noreferrer">GitHub <i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
+          <a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/issues" target="_blank" rel="noopener noreferrer">Issues <i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
         </div>
         <div class="footer-col">
           <h4>Legal</h4>
-          <a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">MIT License ↗</a>
-          <a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/blob/main/SECURITY.md" target="_blank" rel="noopener noreferrer">Security ↗</a>
-          <a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/tree/main/DSGVO" target="_blank" rel="noopener noreferrer">Privacy (DSGVO) ↗</a>
+          <a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">MIT License <i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
+          <a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/blob/main/SECURITY.md" target="_blank" rel="noopener noreferrer">Security <i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
+          <a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/tree/main/DSGVO" target="_blank" rel="noopener noreferrer">Privacy (DSGVO) <i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
         </div>
       </div>
     </div>
@@ -173,6 +209,6 @@
     </div>
   </div>
 </footer>
-<button class="back-to-top" type="button" aria-label="Back to top" title="Back to top">↑</button>
+<button class="back-to-top" type="button" aria-label="Back to top" title="Back to top"><i data-lucide="arrow-up" aria-hidden="true"></i></button>
 </body>
 </html>
