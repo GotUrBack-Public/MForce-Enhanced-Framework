@@ -42,6 +42,15 @@ Five contributions accepted on **18 October 2026**:
 Rahul disclosed AI assistance and local testing in the pull-request descriptions.
 Credit remains attached to his original contributions when later fixes improve them.
 
+### [NewContributor](https://github.com/NewContributor)
+
+**First contribution recorded here.**
+Contribution accepted on **$(date +%d\ %B\ %Y)**:
+
+| Pull request | Contribution |
+| --- | --- |
+| [#XX](https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/pull/XX) | Placeholder entry for new contributor. |
+
 ## Project provenance
 
 The original architecture inspiration is
