@@ -98,4 +98,28 @@
   if (typeof hljs !== 'undefined' && typeof hljs.highlightAll === 'function') {
     hljs.highlightAll();
   }
+
+  // ---------- Auth button (always wired, even if auth.js / Firebase fails) ----------
+  // The real modal + menu live in auth.js. If auth.js loads, it sets
+  // window.auth, window.toggleMenu and window.openAuthModal.
+  // If it doesn't (e.g. Firebase CDN unreachable), we still show a visible hint
+  // instead of silently doing nothing.
+  document.querySelectorAll('[data-auth-toggle]').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (window.auth && window.auth.currentUser) {
+        window.toggleMenu(btn);
+      } else if (typeof window.openAuthModal === 'function') {
+        window.openAuthModal();
+      } else {
+        const overlay = document.querySelector('.auth-overlay');
+        if (overlay) {
+          overlay.classList.toggle('open');
+          document.body.style.overflow = overlay.classList.contains('open') ? 'hidden' : '';
+        } else {
+          alert('Sign-in module is still loading. Please try again in a moment.');
+        }
+      }
+    });
+  });
 })();
