@@ -10,8 +10,9 @@ committee, SLA or compliance certification.
 - Features: confirm scope, compatibility, dependencies and acceptance tests.
 - Security: move to private disclosure as described in [SECURITY.md](../SECURITY.md).
 - Privacy: review [DSGVO/DATENFLUESSE.md](../DSGVO/DATENFLUESSE.md)
-  and the [checklist](../DSGVO/CHECKLISTE.md). MariaDB currently
-  stores raw module output when available; use `MF_DB_DISABLE=1`
+  and the [checklist](../DSGVO/CHECKLISTE.md). MariaDB audit logging is
+  disabled by default and, when enabled, stores only module ID, exit
+  code and timestamp — never raw module output. Use `MF_DB_DISABLE=1`
   when persistence is not required, and review the manual
   [retention tool](../scripts/mariadb-retention.sh).
 - Conduct: avoid exposing personal information in public discussions.

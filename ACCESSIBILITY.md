@@ -1,96 +1,98 @@
 # Accessibility
 
+MForce Enhanced Framework is a terminal (Termux/Linux) security toolkit with a
+companion static website and a standalone Academy page. Accessibility matters
+because security and learning tools should be usable by people who rely on
+keyboards, screen readers, high-contrast modes or reduced-motion settings,
+regardless of experience or ability.
 
-<!--
-Include a brief statement describing why accessibility matters to your
-project, who should be able to use and contribute to it, and what this
-document covers, such as your accessibility commitments, contributor
-expectations, and issue-reporting process.
-
-Write for people who may read this after encountering a barrier. Use plain
-language and describe user experiences rather than relying on legal
-language, technical jargon, or standards codes.
--->
+This document describes our accessibility commitments, what contributors should
+verify, and how to report a barrier.
 
 ## Priorities
 
-<!--
-Describe the outcomes the project prioritizes and how it works toward them.
-If you name a WCAG level as an accessibility target, make clear that it is
-an aspirational goal rather than a verified conformance claim. Only claim
-conformance after an evaluation, and identify the evaluated scope, date,
-method, and evaluator. Also describe the areas you prioritize, such as
-keyboard, screen reader, content, or language support.
--->
+- **Keyboard first.** The terminal UI is fully operable with the keyboard
+  (arrow keys, J/K, Home/End, Enter, Q) without a mouse.
+- **Readable output.** The interface remains usable on narrow terminals and
+  when color is disabled; status is never conveyed by color alone.
+- **Reduced motion.** The website and Academy respect `prefers-reduced-motion`.
+- **Semantic, labeled content.** The website and Academy use semantic HTML,
+  accessible labels, visible focus and sufficient color contrast.
+- **Plain language.** Documentation aims to describe real user experience
+  rather than relying on jargon.
+
+Any accessibility target (for example a WCAG level) is an **aspirational
+goal**, not a verified conformance claim. Conformance is only claimed after a
+formal evaluation with a defined scope, date, method and evaluator.
 
 ## Contributor expectations
 
-<!--
-Describe the accessibility guardrails that apply to contributions,
-including relevant testing, documentation, and continuous integration
-checks. Name specific tools only when the project uses them, and explain
-what evidence contributors should include with user-facing changes.
--->
+- Keep all interactive flows keyboard-accessible and verify a logical focus
+  order for user-facing changes.
+- Preserve and test `prefers-reduced-motion` behavior and responsive layouts.
+- Maintain sufficient contrast and never rely on color alone for meaning.
+- Use semantic HTML, accessible names/labels and status announcements
+  (`aria-live`) where the UI already does.
+- The website must stay static and must not silently execute security scans.
+- Include a short note in the pull request describing the accessibility checks
+  you ran (keyboard, mobile, reduced motion).
 
 ## Reporting accessibility issues
 
-<!--
-Provide a direct, accessible way to report a barrier or request help.
-Invite useful context such as the affected task, URL, observed behavior,
-browser, operating system, and assistive technology. Make screenshots or
-recordings optional and do not require disability disclosure.
--->
+Open a **non-sensitive** GitHub issue describing the barrier. Helpful context:
+
+- The affected task, page or terminal flow.
+- What you expected and what happened instead.
+- Browser, operating system and assistive technology used.
+- Terminal type and width, if the issue is in the CLI.
+
+Screenshots or recordings are optional. Do **not** include credentials,
+personal data or private target information, and do not require disability
+disclosure to report a barrier.
 
 ### Severity
 
-<!--
-If your project uses severity levels, define them and give practical
-examples based on how strongly a barrier affects a user's ability to
-complete a task. Keep labels consistent with your issue template and
-resolution targets if those processes exist. Maintainers can assign or
-confirm severity during triage; reporters do not need to.
--->
+Maintainers may triage issues by how strongly a barrier blocks a task:
+
+- **Blocking** — a task cannot be completed at all with assistive means.
+- **Major** — a task is possible only with significant difficulty or a
+  workaround.
+- **Minor** — a task is completed but with avoidable friction.
+
+Reporters do not need to assign severity; maintainers confirm it during triage.
 
 ### How we respond
 
-<!--
-Explain what reporters can expect after submitting an accessibility issue,
-including acknowledgement, status updates, workarounds, expected timelines,
-and opportunities to verify a fix. Use commitments your project can
-consistently uphold.
--->
+Maintainers will acknowledge the report, ask for clarification if needed,
+provide a workaround when one exists, and track the fix in Git history. No
+fixed response deadline is promised for this early-stage, best-effort project.
 
 ## Ownership and maintenance
 
-<!--
-Identify the team, role, or maintainer responsible for accessibility and
-describe their responsibilities to the project. Include the review cadence
-and how ownership transfers when responsibilities change.
--->
+Accessibility is maintained by the project maintainers as part of the regular
+review process (see [docs/MAINTAINERS.md](docs/MAINTAINERS.md)). Review happens
+on a best-effort basis alongside other contributions; ownership transfers with
+project maintainership.
 
 ## Supported environments
 
-<!--
-List the platforms, devices, browsers, input methods, and assistive
-technologies the project supports or has tested. Include versions where
-useful, note partial support, and avoid implying support for combinations
-that have not been evaluated.
--->
+- **Termux** on Android (ARM) and **Linux** distributions (x86_64), including
+  Debian, Ubuntu and Kali Linux, via the terminal UI.
+- Modern desktop and mobile browsers for the static website and Academy.
+
+Specific versions and assistive-technology combinations are not exhaustively
+evaluated; partial support is possible.
 
 ## Known limitations
 
-<!--
-Describe known barriers in terms of the affected user experience, such as
-"videos do not have captions," rather than standards codes. Include
-available workarounds or equivalent access and link to tracked issues. If
-no limitations are currently documented, describe what has been tested
-instead of claiming that no barriers exist.
--->
+- The interactive CLI has not been evaluated with every screen reader; terminal
+  output is text-based but not formally audited.
+- No automated accessibility test suite or third-party audit has been run.
+- The Academy is a preview with no published courses yet.
 
 ## Feedback and improvements
 
-<!--
-Explain how users and contributors can suggest improvements to this
-statement or the project's accessibility practices. Direct active
-accessibility barriers to the reporting process above.
--->
+Suggest improvements through a non-sensitive GitHub issue using the
+documentation/feedback template. Direct active accessibility barriers to the
+reporting process above. See [CONTRIBUTING.md](CONTRIBUTING.md) and
+[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) for participation guidelines.

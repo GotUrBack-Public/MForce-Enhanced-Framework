@@ -19,7 +19,7 @@ Automation and AI assistance are credited separately from human contributors.
 | --- | --- | --- |
 | **Dependabot** (`dependabot[bot]`) | Automated dependency and GitHub Actions update proposals. | [Merged PR #61](https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/pull/61) |
 | **MForce AI Security Bot** (`mforce-ai-security-bot[bot]`) | Automated framework scan report. The report covers scoped checks and is not a security certification. | [Merged PR #19](https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/pull/19) |
-| **Astra — OpenAI ChatGPT / Codex assistance** | AI-assisted code implementation under the founder's direction; contribution review, merge-conflict resolution, testing, fixes and documentation. “Astra” is the founder's name for the assistant. | [Fix PR #69 — proposed work, not yet merged](https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/pull/69) |
+| **Astra — OpenAI ChatGPT / Codex assistance** | AI-assisted code implementation under the founder's direction; contribution review, merge-conflict resolution, testing, fixes and documentation. “Astra” is the founder's name for the assistant. | [Fix PR #69](https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/pull/69) |
 
 AI assistance does not imply independent maintainer authority or a guarantee of
 correctness or security. See the [AI usage policy](../social/ai_usage.txt).
@@ -41,15 +41,6 @@ Five contributions accepted on **18 October 2026**:
 
 Rahul disclosed AI assistance and local testing in the pull-request descriptions.
 Credit remains attached to his original contributions when later fixes improve them.
-
-### [NewContributor](https://github.com/NewContributor)
-
-**First contribution recorded here.**
-Contribution accepted on **$(date +%d\ %B\ %Y)**:
-
-| Pull request | Contribution |
-| --- | --- |
-| [#XX](https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/pull/XX) | Placeholder entry for new contributor. |
 
 ## Project provenance
 

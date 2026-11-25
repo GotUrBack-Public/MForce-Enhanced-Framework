@@ -81,7 +81,7 @@
 
 ## ✨ Key Features
 
-- **Modular architecture** – 23 registered functional modules across 9 categories, plus a 23-entry plugin manifest catalog with a JSON-driven registry.
+- **Modular architecture** – 23 registered modules (21 enabled) across 9 categories, plus a 23-entry plugin manifest catalog with a JSON-driven registry.
 - **Automated reconnaissance** – DNS records, IP intelligence, TLS certificates, HTTP headers, RDAP/registration data and network information in one pass.
 - **Vulnerability assessment & auditing** – CORS policy auditing, HTTP method auditing, cookie flag auditing, exposure-path review and HTTP reflection inspection.
 - **Offensive security labs** – TCP port scanner and a 100-example XSS payload lab (local only, no automatic injection).
@@ -106,7 +106,7 @@
 
 ## 🧩 Modules & Integrated Tools
 
-MForce organizes capabilities into **9 categories** (see `src/data/cats.json`) and **23 functional modules** (see `src/data/funcs.json`). Each module ships with its own `.conf`, `.help`, `.json` metadata and `.sh` entry under `src/lib/`.
+MForce organizes capabilities into **9 categories** (see `src/data/cats.json`) and **23 registered modules** (21 enabled, 2 reserved as disabled placeholders) in `src/data/funcs.json`. Each enabled module ships with its own `.conf`, `.help`, `.json` metadata and `.sh` entry under `src/lib/`.
 
 ### Network Reconnaissance
 

@@ -89,7 +89,7 @@ node --check web/js/main.js
    dangerous defaults. No unauthorized scans, evasion, exfiltration,
    credential theft or destructive actions.
 7. Add automated tests, document limitations and provide real commands in
-   the README's **Manuell / Manual Commands** section.
+   the README's **Usage Examples** section.
 
 Avoid making up success results or vulnerability findings. Reflection,
 header presence and suspicious JavaScript patterns are not confirmed exploits.
