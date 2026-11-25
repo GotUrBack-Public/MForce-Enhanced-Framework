@@ -10,7 +10,7 @@ response time or paid support agreement.
 - [Termux/Linux contribution and setup guide](social/how_to_contribute.md)
 - [OSINT documentation](docs/OSINT.md)
 - [Offensive Security modules](docs/OFFENSIVE_XSS.md)
-- [Update Center](README.md#update-mforce--update-center)
+- [Update Center](README.md#system-updates--utilities)
 - [Privacy / DSGVO](DSGVO/README.md)
 - [GitHub issues](https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/issues)
 
