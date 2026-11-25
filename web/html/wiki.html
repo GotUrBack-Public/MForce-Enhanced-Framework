@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0a0b0d">
+  <meta name="theme-color" content="#08090b">
   <meta name="color-scheme" content="dark">
   <meta name="description" content="MForce Enhanced Framework Wiki — installation, modules, architecture, OSINT, offensive and defensive tooling, and responsible use.">
   <meta property="og:type" content="article">
@@ -11,13 +11,22 @@
   <meta property="og:description" content="Full documentation for the MForce security and OSINT toolkit.">
   <link rel="canonical" href="https://goturback-public.github.io/MForce-Enhanced-Framework/web/html/wiki.html">
   <link rel="icon" type="image/png" href="../../assets/banners/logo.png">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/styles/github-dark.min.css">
+
   <title>Wiki — MForce Enhanced Framework</title>
-  <link rel="stylesheet" href="../css/site.css?v=2">
-  <script defer src="../js/site.js?v=2"></script>
-  <script type="module" src="../js/auth.js?v=2"></script>
+  <link rel="stylesheet" href="../css/site.css?v=3">
+  <script defer src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script defer src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/highlight.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/languages/bash.min.js"></script>
+  <script defer src="../js/site.js?v=3"></script>
+  <script type="module" src="../js/auth.js?v=3"></script>
+
   <!-- Google AdSense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7992830461968868" crossorigin="anonymous"></script>
 </head>
@@ -34,7 +43,7 @@
       <a href="wiki.html" aria-current="page">Wiki</a>
       <a href="tutorial.html">Tutorials</a>
       <a href="contributors.html">Contributors</a>
-      <a class="nav-cta" href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+      <a class="nav-cta" href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework" target="_blank" rel="noopener noreferrer">GitHub <i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
     </nav>
     <button class="account-btn" type="button" data-auth-toggle aria-label="Sign in">Sign in</button>
     <button class="menu-button" type="button" aria-expanded="false" aria-controls="navigation" aria-label="Open navigation"><span></span><span></span><span></span></button>
@@ -46,50 +55,50 @@
     <aside class="wiki-sidebar" aria-label="Wiki contents">
       <h2>Contents</h2>
       <ul class="wiki-toc">
-        <li><a href="#intro">Introduction</a></li>
-        <li><a href="#install">Installation</a></li>
-        <li><a href="#usage">Usage</a></li>
-        <li><a href="#recon">Reconnaissance</a></li>
-        <li><a href="#osint">OSINT</a></li>
-        <li><a href="#assessment">Assessment</a></li>
-        <li><a href="#offensive">Offensive</a></li>
-        <li><a href="#defensive">Defensive</a></li>
-        <li><a href="#tools">Tool Manager</a></li>
-        <li><a href="#architecture">Architecture</a></li>
-        <li><a href="#responsible">Responsible use</a></li>
+        <li><a href="#intro"><i data-lucide="book-open" aria-hidden="true"></i> Introduction</a></li>
+        <li><a href="#install"><i data-lucide="download" aria-hidden="true"></i> Installation</a></li>
+        <li><a href="#usage"><i data-lucide="terminal" aria-hidden="true"></i> Usage</a></li>
+        <li><a href="#recon"><i data-lucide="radar" aria-hidden="true"></i> Reconnaissance</a></li>
+        <li><a href="#osint"><i data-lucide="scan-search" aria-hidden="true"></i> OSINT</a></li>
+        <li><a href="#assessment"><i data-lucide="shield-alert" aria-hidden="true"></i> Assessment</a></li>
+        <li><a href="#offensive"><i data-lucide="crosshair" aria-hidden="true"></i> Offensive</a></li>
+        <li><a href="#defensive"><i data-lucide="lock" aria-hidden="true"></i> Defensive</a></li>
+        <li><a href="#tools"><i data-lucide="wrench" aria-hidden="true"></i> Tool Manager</a></li>
+        <li><a href="#architecture"><i data-lucide="layers" aria-hidden="true"></i> Architecture</a></li>
+        <li><a href="#responsible"><i data-lucide="scale" aria-hidden="true"></i> Responsible use</a></li>
       </ul>
     </aside>
 
     <article class="wiki-content">
-      <section id="intro">
+      <section id="intro" data-aos="fade-up">
         <h1>MForce Wiki</h1>
         <p class="lead">MForce Enhanced Framework is a modular, open-source penetration testing and OSINT toolkit for <strong>Termux and Linux</strong>. It bundles automated reconnaissance, vulnerability assessment, OSINT and defensive tooling behind a single menu-driven interface.</p>
         <div class="note warn"><strong>Authorized use only.</strong> Use MForce exclusively against systems you own or are explicitly authorized to test. Every module is bounded, never bypasses rate limits and is designed for data-minimizing workflows.</div>
       </section>
 
       <section id="install">
-        <h2>Installation</h2>
+        <h2><i data-lucide="download" aria-hidden="true"></i> Installation</h2>
         <p>Clone the repository and launch the framework. Runtime dependencies are <code>bash</code>, <code>jq</code>, <code>python3</code>, <code>coreutils</code>, <code>ncurses</code> and <code>iproute2</code>.</p>
-<pre class="code" id="install-code"><span class="c"># Quick start</span>
+<pre class="code"><code class="language-bash"># Quick start
 git clone https://github.com/GotUrBack-Public/MForce-Enhanced-Framework.git
 cd MForce-Enhanced-Framework
-bash xrm742.sh</pre>
+bash xrm742.sh</code></pre>
         <p>On Termux install prerequisites with <code>pkg install git bash jq python coreutils ncurses-utils iproute2</code>. On Debian/Ubuntu use <code>sudo apt install git bash jq python3 coreutils ncurses-bin iproute2</code>.</p>
       </section>
 
       <section id="usage">
-        <h2>Usage</h2>
+        <h2><i data-lucide="terminal" aria-hidden="true"></i> Usage</h2>
         <p>Launch the interactive menu and pick a category, or run any module directly. Each module exposes <code>--help</code>.</p>
-<pre class="code"><span class="c"># Interactive menu</span>
+<pre class="code"><code class="language-bash"># Interactive menu
 bash xrm742.sh
 
-<span class="c"># Run a module directly</span>
+# Run a module directly
 bash src/functions/dns211.sh example.org
-bash src/functions/tls213.sh example.org</pre>
+bash src/functions/tls213.sh example.org</code></pre>
       </section>
 
       <section id="recon">
-        <h2>Reconnaissance</h2>
+        <h2><i data-lucide="radar" aria-hidden="true"></i> Reconnaissance</h2>
         <p>Network reconnaissance modules provide low-impact inspection of public information.</p>
         <table class="data">
           <thead><tr><th>Module</th><th>ID</th><th>Purpose</th></tr></thead>
@@ -104,7 +113,7 @@ bash src/functions/tls213.sh example.org</pre>
       </section>
 
       <section id="osint">
-        <h2>OSINT</h2>
+        <h2><i data-lucide="scan-search" aria-hidden="true"></i> OSINT</h2>
         <p>Ten passive OSINT modules for open-source intelligence gathering.</p>
         <ul>
           <li><strong>Website Inspector</strong> (<code>web311</code>) — passive HTML/HTTP audit.</li>
@@ -117,7 +126,7 @@ bash src/functions/tls213.sh example.org</pre>
       </section>
 
       <section id="assessment">
-        <h2>Vulnerability Assessment</h2>
+        <h2><i data-lucide="shield-alert" aria-hidden="true"></i> Vulnerability Assessment</h2>
         <p>Authorized configuration auditors. A finding is a review signal, not proof of a vulnerability.</p>
         <table class="data">
           <thead><tr><th>Module</th><th>ID</th><th>Behavior</th></tr></thead>
@@ -132,7 +141,7 @@ bash src/functions/tls213.sh example.org</pre>
       </section>
 
       <section id="offensive">
-        <h2>Offensive Security</h2>
+        <h2><i data-lucide="crosshair" aria-hidden="true"></i> Offensive Security</h2>
         <p>Active tooling for authorized lab environments.</p>
         <ul>
           <li><strong>TCP Port Scanner</strong> (<code>tcp401</code>) — bounded connect scan, default 19 ports, max 128.</li>
@@ -141,21 +150,21 @@ bash src/functions/tls213.sh example.org</pre>
       </section>
 
       <section id="defensive">
-        <h2>Defensive Security</h2>
+        <h2><i data-lucide="lock" aria-hidden="true"></i> Defensive Security</h2>
         <p><strong>Local Secret Scanner</strong> (<code>sec601</code>) scans up to 250 files (1 MiB each) offline and reports only path, line number and rule name — never secret values.</p>
-<pre class="code">bash src/functions/sec601.sh ./project --json</pre>
+<pre class="code"><code class="language-bash">bash src/functions/sec601.sh ./project --json</code></pre>
       </section>
 
       <section id="tools">
-        <h2>Tool Manager</h2>
+        <h2><i data-lucide="wrench" aria-hidden="true"></i> Tool Manager</h2>
         <p>The Tool Manager launches separately installed command-line programs. <strong>Nmap</strong> is the first integrated tool, with fixed, non-privileged scan profiles and single-target validation.</p>
         <div class="note">External tools must be installed separately. MForce never silently installs packages or requests root privileges.</div>
       </section>
 
       <section id="architecture">
-        <h2>Architecture</h2>
+        <h2><i data-lucide="layers" aria-hidden="true"></i> Architecture</h2>
         <p>MForce is organized into nine categories and a JSON-driven module registry.</p>
-<pre class="code">src/
+<pre class="code"><code class="language-bash">src/
 ├── auth/        # session handling
 ├── core/        # runtime, MariaDB lifecycle
 ├── data/        # cats.json, funcs.json registries
@@ -166,11 +175,11 @@ bash src/functions/tls213.sh example.org</pre>
 ├── osint/       # OSINT helpers
 ├── plugins/     # 23 plugin manifests
 ├── tools/       # external tool catalog (Nmap)
-└── ui/          # terminal UI</pre>
+└── ui/          # terminal UI</code></pre>
       </section>
 
       <section id="responsible">
-        <h2>Responsible use</h2>
+        <h2><i data-lucide="scale" aria-hidden="true"></i> Responsible use</h2>
         <p>Public data is not necessarily free of personal information. Establish a lawful basis, minimize collection and respect scope before using the toolkit. See the project's <a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/tree/main/DSGVO" target="_blank" rel="noopener noreferrer">DSGVO documentation ↗</a>.</p>
       </section>
     </article>
@@ -189,13 +198,13 @@ bash src/functions/tls213.sh example.org</pre>
       </div>
       <div class="footer-cols">
         <div class="footer-col"><h4>Docs</h4><a href="wiki.html">Wiki</a><a href="tutorial.html">Tutorials</a></div>
-        <div class="footer-col"><h4>Project</h4><a href="contributors.html">Contributors</a><a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/issues" target="_blank" rel="noopener noreferrer">Issues ↗</a></div>
-        <div class="footer-col"><h4>Legal</h4><a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">MIT License ↗</a><a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/blob/main/SECURITY.md" target="_blank" rel="noopener noreferrer">Security ↗</a></div>
+        <div class="footer-col"><h4>Project</h4><a href="contributors.html">Contributors</a><a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework" target="_blank" rel="noopener noreferrer">GitHub <i data-lucide="arrow-up-right" aria-hidden="true"></i></a><a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/issues" target="_blank" rel="noopener noreferrer">Issues <i data-lucide="arrow-up-right" aria-hidden="true"></i></a></div>
+        <div class="footer-col"><h4>Legal</h4><a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">MIT License <i data-lucide="arrow-up-right" aria-hidden="true"></i></a><a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/blob/main/SECURITY.md" target="_blank" rel="noopener noreferrer">Security <i data-lucide="arrow-up-right" aria-hidden="true"></i></a></div>
       </div>
     </div>
     <div class="footer-bottom"><span>© <span id="year">2026</span> MForce Enhanced Framework</span><span>TERMUX + LINUX · MIT</span></div>
   </div>
 </footer>
-<button class="back-to-top" type="button" aria-label="Back to top" title="Back to top">↑</button>
+<button class="back-to-top" type="button" aria-label="Back to top" title="Back to top"><i data-lucide="arrow-up" aria-hidden="true"></i></button>
 </body>
 </html>

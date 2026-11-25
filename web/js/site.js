@@ -80,4 +80,22 @@
       } catch (_) { /* clipboard unavailable; ignore */ }
     });
   });
+
+  // External enhancement libraries (all optional; guarded so the page and the
+  // headless smoke tests keep working when a CDN is unavailable).
+  if (typeof lucide !== 'undefined' && typeof lucide.createIcons === 'function') {
+    lucide.createIcons();
+  }
+  if (typeof AOS !== 'undefined' && typeof AOS.init === 'function') {
+    AOS.init({
+      duration: 620,
+      easing: 'ease-out-cubic',
+      once: true,
+      offset: 40,
+      disable: matchMedia('(prefers-reduced-motion: reduce)').matches,
+    });
+  }
+  if (typeof hljs !== 'undefined' && typeof hljs.highlightAll === 'function') {
+    hljs.highlightAll();
+  }
 })();

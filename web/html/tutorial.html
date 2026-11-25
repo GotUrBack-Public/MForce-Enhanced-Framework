@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0a0b0d">
+  <meta name="theme-color" content="#08090b">
   <meta name="color-scheme" content="dark">
   <meta name="description" content="MForce Enhanced Framework tutorials — guided, step-by-step workflows for installation, reconnaissance, scanning and updates.">
   <meta property="og:type" content="website">
@@ -11,13 +11,22 @@
   <meta property="og:description" content="Guided workflows for the MForce security and OSINT toolkit.">
   <link rel="canonical" href="https://goturback-public.github.io/MForce-Enhanced-Framework/web/html/tutorial.html">
   <link rel="icon" type="image/png" href="../../assets/banners/logo.png">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/styles/github-dark.min.css">
+
   <title>Tutorials — MForce Enhanced Framework</title>
-  <link rel="stylesheet" href="../css/site.css?v=2">
-  <script defer src="../js/site.js?v=2"></script>
-  <script type="module" src="../js/auth.js?v=2"></script>
+  <link rel="stylesheet" href="../css/site.css?v=3">
+  <script defer src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script defer src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/highlight.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/languages/bash.min.js"></script>
+  <script defer src="../js/site.js?v=3"></script>
+  <script type="module" src="../js/auth.js?v=3"></script>
+
   <!-- Google AdSense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7992830461968868" crossorigin="anonymous"></script>
 </head>
@@ -34,7 +43,7 @@
       <a href="wiki.html">Wiki</a>
       <a href="tutorial.html" aria-current="page">Tutorials</a>
       <a href="contributors.html">Contributors</a>
-      <a class="nav-cta" href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+      <a class="nav-cta" href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework" target="_blank" rel="noopener noreferrer">GitHub <i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
     </nav>
     <button class="account-btn" type="button" data-auth-toggle aria-label="Sign in">Sign in</button>
     <button class="menu-button" type="button" aria-expanded="false" aria-controls="navigation" aria-label="Open navigation"><span></span><span></span><span></span></button>
@@ -46,92 +55,92 @@
     <aside class="wiki-sidebar" aria-label="Tutorial contents">
       <h2>Tutorials</h2>
       <ul class="wiki-toc">
-        <li><a href="#setup">First launch</a></li>
-        <li><a href="#recon">Network basics</a></li>
-        <li><a href="#web">Website intelligence</a></li>
-        <li><a href="#ports">Authorized port checks</a></li>
-        <li><a href="#secrets">Local secret scan</a></li>
-        <li><a href="#update">Keep MForce current</a></li>
+        <li><a href="#setup"><i data-lucide="rocket" aria-hidden="true"></i> First launch</a></li>
+        <li><a href="#recon"><i data-lucide="radar" aria-hidden="true"></i> Network basics</a></li>
+        <li><a href="#web"><i data-lucide="globe" aria-hidden="true"></i> Website intelligence</a></li>
+        <li><a href="#ports"><i data-lucide="network" aria-hidden="true"></i> Authorized port checks</a></li>
+        <li><a href="#secrets"><i data-lucide="key-round" aria-hidden="true"></i> Local secret scan</a></li>
+        <li><a href="#update"><i data-lucide="refresh-cw" aria-hidden="true"></i> Keep MForce current</a></li>
       </ul>
     </aside>
 
     <article class="wiki-content">
-      <section id="intro">
+      <section id="intro" data-aos="fade-up">
         <h1>Tutorials</h1>
         <p class="lead">Guided workflows built around real MForce commands. Follow the steps and copy what you need. Nothing is executed by this website — run every command only against systems you own or are explicitly authorized to assess.</p>
       </section>
 
       <section id="setup">
-        <h2>01 · First launch</h2>
+        <h2><i data-lucide="rocket" aria-hidden="true"></i> 01 · First launch</h2>
         <p>Install prerequisites and start the framework.</p>
-<pre class="code" id="setup-code"><span class="c"># Termux</span>
+<pre class="code"><code class="language-bash"># Termux
 pkg update
 pkg install git bash jq python coreutils ncurses-utils iproute2
 
-<span class="c"># Debian / Ubuntu</span>
+# Debian / Ubuntu
 sudo apt update
 sudo apt install git bash jq python3 coreutils ncurses-bin iproute2
 
-<span class="c"># Clone and launch</span>
+# Clone and launch
 git clone https://github.com/GotUrBack-Public/MForce-Enhanced-Framework.git
 cd MForce-Enhanced-Framework
-bash xrm742.sh</pre>
+bash xrm742.sh</code></pre>
         <div class="note">No root access is required. Use the official Termux environment or a supported Linux distribution.</div>
       </section>
 
       <section id="recon">
-        <h2>02 · Network basics</h2>
+        <h2><i data-lucide="radar" aria-hidden="true"></i> 02 · Network basics</h2>
         <p>Inspect DNS, TLS and IP context for an authorized target.</p>
-<pre class="code"><span class="c"># DNS records</span>
+<pre class="code"><code class="language-bash"># DNS records
 bash src/functions/dns211.sh example.org
 
-<span class="c"># TLS certificate</span>
+# TLS certificate
 bash src/functions/tls213.sh example.org
 
-<span class="c"># IP intelligence</span>
-bash src/functions/ipa212.sh 1.1.1.1</pre>
+# IP intelligence
+bash src/functions/ipa212.sh 1.1.1.1</code></pre>
       </section>
 
       <section id="web">
-        <h2>03 · Website intelligence</h2>
+        <h2><i data-lucide="globe" aria-hidden="true"></i> 03 · Website intelligence</h2>
         <p>Passive HTTP audit and DOM pattern review. No payloads are sent.</p>
-<pre class="code"><span class="c"># Passive website audit</span>
+<pre class="code"><code class="language-bash"># Passive website audit
 bash src/functions/web311.sh https://example.org
 
-<span class="c"># Rate-limit signals</span>
+# Rate-limit signals
 bash src/functions/rat313.sh https://example.org
 
-<span class="c"># JavaScript DOM review</span>
-bash src/functions/jsn314.sh https://example.org</pre>
+# JavaScript DOM review
+bash src/functions/jsn314.sh https://example.org</code></pre>
         <div class="note">A DOM match or missing header is an observation, not proof of a vulnerability.</div>
       </section>
 
       <section id="ports">
-        <h2>04 · Authorized port checks</h2>
+        <h2><i data-lucide="network" aria-hidden="true"></i> 04 · Authorized port checks</h2>
         <p>Bounded TCP connect scan. Use only on systems you are authorized to test.</p>
-<pre class="code"><span class="c"># Scan localhost</span>
+<pre class="code"><code class="language-bash"># Scan localhost
 bash src/functions/tcp401.sh 127.0.0.1 --authorized
 
-<span class="c"># Specific ports on an authorized host</span>
-bash src/functions/tcp401.sh 192.168.1.10 --authorized --ports 22,80,443</pre>
+# Specific ports on an authorized host
+bash src/functions/tcp401.sh 192.168.1.10 --authorized --ports 22,80,443</code></pre>
         <div class="note warn">Default is 19 common ports, max 128, 8 workers, 3-second timeout. No stealth or firewall evasion.</div>
       </section>
 
       <section id="secrets">
-        <h2>05 · Local secret scan</h2>
+        <h2><i data-lucide="key-round" aria-hidden="true"></i> 05 · Local secret scan</h2>
         <p>Offline scan for secret patterns. Reports only path, line and rule — never values.</p>
-<pre class="code">bash src/functions/sec601.sh ./project --json</pre>
+<pre class="code"><code class="language-bash">bash src/functions/sec601.sh ./project --json</code></pre>
         <div class="note">Exit code 1 means possible matches; verify manually. No network traffic is generated.</div>
       </section>
 
       <section id="update">
-        <h2>06 · Keep MForce current</h2>
+        <h2><i data-lucide="refresh-cw" aria-hidden="true"></i> 06 · Keep MForce current</h2>
         <p>The Update Center performs a safe Git fast-forward from the official remote.</p>
-<pre class="code"><span class="c"># Check for updates</span>
+<pre class="code"><code class="language-bash"># Check for updates
 bash src/functions/upd501.sh --check
 
-<span class="c"># Apply updates</span>
-bash src/functions/upd501.sh --yes</pre>
+# Apply updates
+bash src/functions/upd501.sh --yes</code></pre>
         <div class="note">Requires a clean worktree on the official <code>main</code> remote. Never force-resets.</div>
       </section>
     </article>
@@ -150,13 +159,13 @@ bash src/functions/upd501.sh --yes</pre>
       </div>
       <div class="footer-cols">
         <div class="footer-col"><h4>Docs</h4><a href="wiki.html">Wiki</a><a href="tutorial.html">Tutorials</a></div>
-        <div class="footer-col"><h4>Project</h4><a href="contributors.html">Contributors</a><a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/issues" target="_blank" rel="noopener noreferrer">Issues ↗</a></div>
-        <div class="footer-col"><h4>Legal</h4><a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">MIT License ↗</a><a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/blob/main/SECURITY.md" target="_blank" rel="noopener noreferrer">Security ↗</a></div>
+        <div class="footer-col"><h4>Project</h4><a href="contributors.html">Contributors</a><a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework" target="_blank" rel="noopener noreferrer">GitHub <i data-lucide="arrow-up-right" aria-hidden="true"></i></a><a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/issues" target="_blank" rel="noopener noreferrer">Issues <i data-lucide="arrow-up-right" aria-hidden="true"></i></a></div>
+        <div class="footer-col"><h4>Legal</h4><a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">MIT License <i data-lucide="arrow-up-right" aria-hidden="true"></i></a><a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/blob/main/SECURITY.md" target="_blank" rel="noopener noreferrer">Security <i data-lucide="arrow-up-right" aria-hidden="true"></i></a></div>
       </div>
     </div>
     <div class="footer-bottom"><span>© <span id="year">2026</span> MForce Enhanced Framework</span><span>TERMUX + LINUX · MIT</span></div>
   </div>
 </footer>
-<button class="back-to-top" type="button" aria-label="Back to top" title="Back to top">↑</button>
+<button class="back-to-top" type="button" aria-label="Back to top" title="Back to top"><i data-lucide="arrow-up" aria-hidden="true"></i></button>
 </body>
 </html>
