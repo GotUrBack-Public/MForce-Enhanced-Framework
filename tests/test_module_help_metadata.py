@@ -55,7 +55,7 @@ class ModuleHelpMetadataTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
             (root / "src/data").mkdir(parents=True)
-            (root / "src/lib/sample").mkdir(parents=True)
+            (root / "src/lib/abc123").mkdir(parents=True)
             (root / "src/data/funcs.json").write_text(
                 json.dumps({"functions": [
                     {"id": "abc123", "category": "net", "enabled": True}
@@ -63,16 +63,11 @@ class ModuleHelpMetadataTests(unittest.TestCase):
                 encoding="utf-8",
             )
 
-            issues = find_help_metadata_issues(root)
-
+            help_path = root / "src/lib/abc123/abc123.help"
             self.assertEqual(
-                issues,
-                [f"Missing help metadata: {root / 'src/lib/sample/abc123.help'}"]
-                if False else issues,
+                find_help_metadata_issues(root),
+                [f"Missing help metadata: {help_path}"],
             )
-            self.assertEqual(len(issues), 1)
-            self.assertIn("Missing help metadata:", issues[0])
-            self.assertIn("abc123.help", issues[0])
 
     def test_empty_help_file_reports_its_path(self):
         with tempfile.TemporaryDirectory() as temp:
@@ -98,8 +93,7 @@ class ModuleHelpMetadataTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
             (root / "src/data").mkdir(parents=True)
-            module_dir = root / "src/lib/abc123"
-            module_dir.mkdir(parents=True)
+            (root / "src/lib/abc123").mkdir(parents=True)
             readme = root / "src/plugins/net/abc123/README.md"
             readme.parent.mkdir(parents=True)
             readme.write_text(
