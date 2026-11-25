@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#08090b">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="MForce Enhanced Framework — Ihr persönliches Konto: Profil, Tutorial-Fortschritt und gespeicherte Scan-Profile.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Mein Konto — MForce Enhanced Framework">
+  <meta property="og:description" content="Verwalten Sie Ihr MForce-Konto, Tutorial-Fortschritt und Scan-Profile.">
+  <link rel="canonical" href="https://goturback-public.github.io/MForce-Enhanced-Framework/web/html/konto.html">
+  <link rel="icon" type="image/png" href="../../assets/banners/logo.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/styles/github-dark.min.css">
+
+  <title>Mein Konto — MForce Enhanced Framework</title>
+  <link rel="stylesheet" href="../css/site.css?v=3">
+  <script defer src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script defer src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/highlight.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/languages/bash.min.js"></script>
+  <script defer src="../js/site.js?v=3"></script>
+  <script type="module" src="../js/auth.js?v=3"></script>
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7992830461968868" crossorigin="anonymous"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="../../" aria-label="MForce home">
+      <span class="brand-mark" aria-hidden="true">MF</span>
+      <span class="brand-text"><strong>MFORCE</strong><small>ENHANCED FRAMEWORK</small></span>
+    </a>
+    <nav class="nav" id="navigation" aria-label="Main navigation">
+      <a href="../../">Home</a>
+      <a href="wiki.html">Wiki</a>
+      <a href="tutorial.html">Tutorials</a>
+      <a href="contributors.html">Contributors</a>
+      <a class="nav-cta" href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework" target="_blank" rel="noopener noreferrer">GitHub <i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
+    </nav>
+    <button class="account-btn" type="button" data-auth-toggle aria-label="Sign in">Sign in</button>
+    <button class="menu-button" type="button" aria-expanded="false" aria-controls="navigation" aria-label="Open navigation"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<main id="main">
+  <div class="container">
+    <section class="section">
+      <div class="section-head" data-aos="fade-up">
+        <span class="section-kicker">Mein Konto</span>
+        <h1>Ihr persönlicher Bereich.</h1>
+        <p>Hier verwalten Sie Ihr Profil, Ihren Tutorial-Fortschritt und gespeicherte Scan-Profile. Alles bleibt in Ihrem Browser (LocalStorage) — nichts wird ohne Ihr Zutun hochgeladen.</p>
+      </div>
+    </section>
+
+    <!-- Auth required notice (shown until Firebase + user state resolve) -->
+    <section class="section" id="auth-required" style="display:none">
+      <div class="card">
+        <div class="icon-chip" style="background:#1c0f0f;border-color:#4a1f1f;color:#f87171"><i data-lucide="alert-circle" aria-hidden="true"></i></div>
+        <h3>Bitte anmelden</h3>
+        <p>Um Ihr Konto zu nutzen, melden Sie sich bitte an. Klicken Sie oben rechts auf „Sign in“.</p>
+        <a class="btn btn-primary" href="javascript:void(0)" data-auth-toggle>Jetzt anmelden <i data-lucide="log-in" aria-hidden="true"></i></a>
+      </div>
+    </section>
+
+    <!-- Actual account content (shown when signed in) -->
+    <section class="section" id="konto-content" style="display:none">
+
+      <!-- Profile card -->
+      <section data-aos="fade-up">
+        <h2><i data-lucide="user" aria-hidden="true"></i> Profil</h2>
+        <div class="card">
+          <div class="avatar" id="konto-avatar" aria-hidden="true">?</div>
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <h3 id="konto-name">—</h3>
+            <span id="konto-email" style="color:var(--ink-2);font-size:13px">—</span>
+            <span id="konto-since" style="color:var(--ink-3);font:11px var(--mono)">Mitglied seit: —</span>
+          </div>
+          <a class="btn btn-ghost" id="konto-signout" style="margin-top:12px">Abmelden <i data-lucide="log-out" aria-hidden="true"></i></a>
+        </div>
+      </section>
+
+      <!-- Tutorial progress -->
+      <section data-aos="fade-up" data-aos-delay="80">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <h2><i data-lucide="book-open" aria-hidden="true"></i> Tutorial-Fortschritt</h2>
+          <span id="konto-progress-pct" class="tag tag-live">0 %</span>
+        </div>
+        <div class="card" id="konto-tutorials">
+          <!-- rendered by JS -->
+        </div>
+      </section>
+
+      <!-- Scan profiles -->
+      <section data-aos="fade-up" data-aos-delay="160">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:12px">
+          <h2><i data-lucide="save" aria-hidden="true"></i> Meine Scan-Profile</h2>
+          <a class="btn btn-primary btn-sm" id="konto-add-profile" style="padding:8px 14px">+ Profil hinzufügen</a>
+        </div>
+        <div class="card">
+          <div id="konto-profiles-empty" style="padding:26px;color:var(--ink-2);text-align:center">Noch keine Scan-Profile gespeichert.</div>
+          <table class="data" id="konto-profiles-table" style="display:none">
+            <thead><tr><th>Name</th><th>Befehl</th><th>Ziel</th><th>Erstellt</th><th>Aktion</th></tr></thead>
+            <tbody id="konto-profiles-tbody"></tbody>
+          </table>
+        </div>
+
+        <!-- Add profile form (collapsed) -->
+        <div class="card" id="konto-add-profile-card" style="margin-top:16px;display:none">
+          <h3 style="margin:0 0 12px">Neues Scan-Profil</h3>
+          <form id="konto-add-profile-form">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+              <div class="auth-field">
+                <label>Profilname</label>
+                <input id="konto-profile-name" type="text" placeholder="z. B. Mein Firmen-Scan" required>
+              </div>
+              <div class="auth-field">
+                <label>Ziel</label>
+                <input id="konto-profile-target" type="text" placeholder="z. B. example.org" required>
+              </div>
+            </div>
+            <div class="auth-field" style="margin-top:10px">
+              <label>Befehl</label>
+              <input id="konto-profile-cmd" type="text" placeholder="z. B. bash src/functions/dns211.sh example.org" required>
+            </div>
+            <div style="display:flex;gap:10px;margin-top:14px">
+              <button class="btn btn-primary" type="submit">Speichern</button>
+              <button class="btn btn-ghost" type="button" id="konto-cancel-profile">Abbrechen</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- Settings -->
+      <section data-aos="fade-up" data-aos-delay="240">
+        <h2><i data-lucide="settings" aria-hidden="true"></i> Einstellungen</h2>
+        <div class="card">
+          <div class="auth-field">
+            <label>Standard-Ziel</label>
+            <input id="konto-default-target" type="text" placeholder="z. B. example.org" value="">
+            <span style="color:var(--ink-3);font:11px var(--mono)">Wird in neuen Scan-Profilen vorbefüllt.</span>
+          </div>
+          <div style="display:flex;gap:16px;margin-top:16px">
+            <button class="btn btn-primary" id="konto-export">Daten exportieren (JSON)</button>
+            <button class="btn btn-ghost" id="konto-import-btn">Daten importieren</button>
+            <input type="file" id="konto-import-file" accept=".json" style="display:none">
+          </div>
+          <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--line-soft)">
+            <p style="color:var(--ink-3);font:11px var(--mono);margin:0">Alle Daten (Fortschritt, Profile, Einstellungen) werden lokal in Ihrem Browser gespeichert (LocalStorage) und verlassen Ihren Rechner nicht.</p>
+          </div>
+        </div>
+      </section>
+
+    </section>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a class="brand" href="../../" aria-label="MForce home">
+          <span class="brand-mark" aria-hidden="true">MF</span>
+          <span class="brand-text"><strong>MFORCE</strong><small>ENHANCED FRAMEWORK</small></span>
+        </a>
+        <p>A modular, open-source security and OSINT toolkit for Termux and Linux.</p>
+      </div>
+      <div class="footer-cols">
+        <div class="footer-col"><h4>Docs</h4><a href="wiki.html">Wiki</a><a href="tutorial.html">Tutorials</a><a href="konto.html">Konto</a></div>
+        <div class="footer-col"><h4>Project</h4><a href="contributors.html">Contributors</a><a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework" target="_blank" rel="noopener noreferrer">GitHub <i data-lucide="arrow-up-right" aria-hidden="true"></i></a><a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/issues" target="_blank" rel="noopener noreferrer">Issues <i data-lucide="arrow-up-right" aria-hidden="true"></i></a></div>
+        <div class="footer-col"><h4>Legal</h4><a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">MIT License <i data-lucide="arrow-up-right" aria-hidden="true"></i></a><a href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework/blob/main/SECURITY.md" target="_blank" rel="noopener noreferrer">Security <i data-lucide="arrow-up-right" aria-hidden="true"></i></a></div>
+      </div>
+    </div>
+    <div class="footer-bottom"><span>© <span id="year">2026</span> MForce Enhanced Framework</span><span>TERMUX + LINUX · MIT</span></div>
+  </div>
+</footer>
+<button class="back-to-top" type="button" aria-label="Back to top" title="Back to top"><i data-lucide="arrow-up" aria-hidden="true"></i></button>
+
+<script>
+/* Konto-Seite: LocalStorage-basierte Verwaltung von Fortschritt, Profilen und Einstellungen */
+(function(){
+  'use strict';
+
+  const STORAGE = {
+    progress: 'mforce_tutorial_progress',
+    profiles: 'mforce_scan_profiles',
+    settings: 'mforce_settings',
+  };
+
+  const TUTORIALS = [
+    { id: 'setup', title: '01 · First launch' },
+    { id: 'recon',  title: '02 · Network basics' },
+    { id: 'web',    title: '03 · Website intelligence' },
+    { id: 'ports',  title: '04 · Authorized port checks' },
+    { id: 'secrets',title: '05 · Local secret scan' },
+    { id: 'update', title: '06 · Keep MForce current' },
+  ];
+
+  function lsGet(key, def){
+    try { const raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : def; }
+    catch(e){ return def; }
+  }
+  function lsSet(key, val){
+    try { localStorage.setItem(key, JSON.stringify(val)); } catch(e){ /* ignore */ }
+  }
+
+  const el = (id) => document.getElementById(id);
+
+  /* --- Auth state integration --- */
+  function updateAuthUI(user){
+    const content = el('konto-content');
+    const required = el('auth-required');
+    const avatar = el('konto-avatar');
+    const name = el('konto-name');
+    const email = el('konto-email');
+    const since = el('konto-since');
+    const signout = el('konto-signout');
+
+    if (!user){
+      if (content) content.style.display = 'none';
+      if (required) required.style.display = 'block';
+      return;
+    }
+    if (required) required.style.display = 'none';
+    if (content) content.style.display = 'block';
+
+    const initials = ((user.displayName || user.email || 'U')[0] || 'U').toUpperCase();
+    if (avatar) avatar.textContent = initials;
+    if (name) name.textContent = user.displayName || 'Ihr Konto';
+    if (email) email.textContent = user.email || user.phoneNumber || '—';
+
+    const sinceKey = 'mforce_member_since';
+    let sinceVal = lsGet(sinceKey, null);
+    if (!sinceVal){
+      sinceVal = new Date().toISOString().slice(0, 10);
+      lsSet(sinceKey, sinceVal);
+    }
+    if (since) since.textContent = 'Mitglied seit: ' + sinceVal;
+
+    if (signout){
+      signout.onclick = (e) => {
+        e.preventDefault();
+        if (typeof window.auth !== 'undefined' && window.auth.signOut){
+          window.auth.signOut().catch(()=>{});
+        }
+        localStorage.removeItem('mforce_member_since');
+        window.location.reload();
+      };
+    }
+  }
+
+  /* Firebase may arrive late; poll briefly, then fall back to local-only state. */
+  let checked = 0;
+  function pollAuth(){
+    const user = (typeof window.auth !== 'undefined' && window.auth.currentUser) ? window.auth.currentUser : null;
+    if (user || checked++ > 50){
+      updateAuthUI(user);
+      if (user) initAccount();
+    } else {
+      setTimeout(pollAuth, 200);
+    }
+  }
+  pollAuth();
+
+  /* --- Tutorial progress --- */
+  function initAccount(){
+    renderTutorials();
+    renderProfiles();
+    renderSettings();
+    setupFormHandlers();
+    lucide.createIcons();
+  }
+
+  function renderTutorials(){
+    const progress = lsGet(STORAGE.progress, {});
+    const container = el('konto-tutorials');
+    if (!container) return;
+    let done = 0;
+    const rows = TUTORIALS.map((t) => {
+      const isDone = !!progress[t.id];
+      if (isDone) done++;
+      return `<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line-soft);${isDone?'opacity:.65':''}">
+        <input type="checkbox" id="tp-${t.id}" ${isDone?'checked':''} style="accent-color:var(--accent);width:18px;height:18px">
+        <label for="tp-${t.id}" style="flex:1;cursor:pointer">${t.title}</label>
+        <span style="font:11px var(--mono);color:var(--ink-3)">${isDone ? 'Erledigt' : 'offen'}</span>
+      </div>`;
+    });
+    container.innerHTML = rows.join('');
+    const tag = el('konto-progress-pct');
+    if (tag) tag.textContent = pct + ' %';
+    container.innerHTML += `
+      <div style="margin-top:14px">
+        <div style="height:6px;background:var(--line);border-radius:3px;overflow:hidden">
+          <div id="konto-progress-bar" style="width:${pct}%;background:var(--accent);height:100%"></div>
+        </div>
+        <p style="color:var(--ink-3);font:11px var(--mono);margin-top:6px">${done} von ${TUTORIALS.length} Tutorials abgeschlossen</p>
+      </div>`;
+
+    TUTORIALS.forEach((t) => {
+      const cb = el('tp-' + t.id);
+      if (cb) cb.onchange = () => {
+        progress[t.id] = cb.checked;
+        lsSet(STORAGE.progress, progress);
+        renderTutorials();
+      };
+    });
+  }
+
+  /* --- Scan profiles --- */
+  function renderProfiles(){
+    const profiles = lsGet(STORAGE.profiles, []);
+    const empty = el('konto-profiles-empty');
+    const table = el('konto-profiles-table');
+    const tbody = el('konto-profiles-tbody');
+    if (!empty || !table || !tbody) return;
+
+    if (profiles.length === 0){
+      empty.style.display = 'block';
+      table.style.display = 'none';
+      return;
+    }
+    empty.style.display = 'none';
+    table.style.display = 'table';
+    tbody.innerHTML = profiles.map((p, i) => `
+      <tr>
+        <td><strong>${escapeHtml(p.name)}</strong></td>
+        <td><code style="font-size:12px">${escapeHtml(p.cmd)}</code></td>
+        <td><code style="font-size:12px">${escapeHtml(p.target)}</code></td>
+        <td style="font:11px var(--mono);color:var(--ink-3)">${p.created}</td>
+        <td>
+          <button class="btn btn-ghost btn-sm" onclick="kontoLoadProfile(${i})" style="padding:6px 10px;font-size:12px">Laden</button>
+          <button class="btn btn-ghost btn-sm" onclick="kontoDeleteProfile(${i})" style="padding:6px 10px;font-size:12px;color:var(--bad)">Löschen</button>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  window.kontoLoadProfile = (i) => {
+    const profiles = lsGet(STORAGE.profiles, []);
+    const p = profiles[i];
+    if (!p) return;
+    navigator.clipboard.writeText(p.cmd).then(() => {
+      alert('Befehl in die Zwischenablage kopiert:\n' + p.cmd);
+    }).catch(() => {
+      alert('Befehl: ' + p.cmd);
+    });
+  };
+
+  window.kontoDeleteProfile = (i) => {
+    if (!confirm('Dieses Scan-Profil wirklich löschen?')) return;
+    const profiles = lsGet(STORAGE.profiles, []);
+    profiles.splice(i, 1);
+    lsSet(STORAGE.profiles, profiles);
+    renderProfiles();
+  };
+
+  function setupFormHandlers(){
+    const addBtn = el('konto-add-profile');
+    const card = el('konto-add-profile-card');
+    const cancel = el('konto-cancel-profile');
+    const form = el('konto-add-profile-form');
+    const defaultTarget = el('konto-default-target');
+
+    if (addBtn && card) addBtn.onclick = () => { card.style.display = card.style.display === 'none' ? 'block' : 'none'; };
+    if (cancel && card) cancel.onclick = () => { card.style.display = 'none'; };
+
+    if (defaultTarget){
+      const settings = lsGet(STORAGE.settings, {});
+      defaultTarget.value = settings.defaultTarget || '';
+      defaultTarget.onchange = () => {
+        const s = lsGet(STORAGE.settings, {});
+        s.defaultTarget = defaultTarget.value;
+        lsSet(STORAGE.settings, s);
+      };
+    }
+
+    if (form){
+      form.onsubmit = (e) => {
+        e.preventDefault();
+        const name = el('konto-profile-name').value.trim();
+        const target = el('konto-profile-target').value.trim();
+        const cmd = el('konto-profile-cmd').value.trim();
+        if (!name || !target || !cmd) return;
+        const profiles = lsGet(STORAGE.profiles, []);
+        profiles.push({ id: Date.now(), name, target, cmd, created: new Date().toISOString().slice(0, 10) });
+        lsSet(STORAGE.profiles, profiles);
+        el('konto-profile-name').value = '';
+        el('konto-profile-target').value = '';
+        el('konto-profile-cmd').value = '';
+        card.style.display = 'none';
+        renderProfiles();
+      };
+    }
+
+    /* Export / Import */
+    const exp = el('konto-export');
+    const impBtn = el('konto-import-btn');
+    const impFile = el('konto-import-file');
+    if (exp) exp.onclick = () => {
+      const data = {
+        progress: lsGet(STORAGE.progress, {}),
+        profiles: lsGet(STORAGE.profiles, []),
+        settings: lsGet(STORAGE.settings, {}),
+        exported: new Date().toISOString(),
+      };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'mforce-konto-backup.json'; a.click();
+      URL.revokeObjectURL(url);
+    };
+    if (impBtn && impFile) impBtn.onclick = () => impFile.click();
+    if (impFile) impFile.onchange = (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        try {
+          const data = JSON.parse(ev.target.result);
+          if (data.progress) lsSet(STORAGE.progress, data.progress);
+          if (data.profiles) lsSet(STORAGE.profiles, data.profiles);
+          if (data.settings) lsSet(STORAGE.settings, data.settings);
+          renderTutorials(); renderProfiles(); renderSettings();
+          alert('Daten importiert.');
+        } catch(err){ alert('Import fehlgeschlagen: ungültige Datei.'); }
+      };
+      reader.readAsText(file);
+    };
+  }
+
+  function renderSettings(){
+    const settings = lsGet(STORAGE.settings, {});
+    const dt = el('konto-default-target');
+    if (dt && dt.value === '') dt.value = settings.defaultTarget || '';
+  }
+
+  function escapeHtml(s){ return String(s).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c])); }
+
+})();
+</script>
+</body>
+</html>

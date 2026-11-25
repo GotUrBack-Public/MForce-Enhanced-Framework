@@ -120,8 +120,8 @@ class WebsiteTests(unittest.TestCase):
                 self.assertTrue((MAIN.parent / path).resolve().is_file())
 
     def test_multipage_navigation_present(self):
-        # The redesign is a multi-page site: Home, Wiki, Tutorials, Contributors.
-        for page in ("wiki.html", "tutorial.html", "contributors.html"):
+        # The redesign is a multi-page site: Home, Wiki, Tutorials, Contributors, Konto.
+        for page in ("wiki.html", "tutorial.html", "contributors.html", "konto.html"):
             with self.subTest(page=page):
                 self.assertTrue((WEB / "html" / page).is_file())
                 self.assertIn(page, self.markup)

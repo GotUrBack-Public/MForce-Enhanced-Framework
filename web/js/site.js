@@ -108,7 +108,8 @@
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
       if (window.auth && window.auth.currentUser) {
-        window.toggleMenu(btn);
+        // Signed in → go straight to the account dashboard.
+        window.location.href = 'konto.html';
       } else if (typeof window.openAuthModal === 'function') {
         window.openAuthModal();
       } else {
