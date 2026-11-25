@@ -1,22 +1,11 @@
 /* MForce Enhanced Framework — Firebase Authentication.
    Handles account creation and sign-in with Google, email/password and phone.
    Firebase web config is public by design; access is enforced by Firebase
-   Authentication and the project's security rules, not by hiding this file. */
-import { initializeApp } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
-import {
-  getAuth,
-  GoogleAuthProvider,
-  signInWithPopup,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  sendPasswordReset,
-  sendEmailVerification,
-  updateProfile,
-  signOut,
-  onAuthStateChanged,
-  RecaptchaVerifier,
-  signInWithPhoneNumber,
-} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
+   Authentication and the project's security rules, not by hiding this file.
+
+   Firebase is loaded lazily via dynamic import so the auth module (modal UI
+   + openAuthModal) always works, even if the Firebase CDN is unreachable.
+   */
 
 const firebaseConfig = {
   apiKey: "AIzaSyBXduyoX9jmwl7Whkyh2R2El-sU9SYh8Og",
@@ -27,9 +16,6 @@ const firebaseConfig = {
   appId: "1:318714486332:web:134d3b6763f0c619bead39",
   measurementId: "G-7J0X46Z40T",
 };
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
 
 /* ---- friendly error messages ---- */
 const MESSAGES = {
@@ -50,7 +36,26 @@ const MESSAGES = {
 };
 const messageFor = (error) => MESSAGES[error?.code] || error?.message || "Something went wrong. Please try again.";
 
-/* ---- build the modal + account menu once ---- */
+/* ---- lazy firebase module (set when successfully imported) ---- */
+let firebase = null;
+let firebaseAuth = null;
+let authModule = null;
+
+async function loadFirebase() {
+  if (firebase) return firebase;
+  const [appMod, authMod] = await Promise.all([
+    import("https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js"),
+    import("https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js"),
+  ]);
+  authModule = authMod;
+  const app = appMod.initializeApp(firebaseConfig);
+  const auth = authMod.getAuth(app);
+  firebase = { app, auth };
+  firebaseAuth = auth;
+  return firebase;
+}
+
+/* ---- build the modal + account menu once (always runs) ---- */
 const overlay = document.createElement("div");
 overlay.className = "auth-overlay";
 overlay.setAttribute("role", "dialog");
@@ -134,7 +139,6 @@ const phonePanel = $("[data-phone-panel]");
 const phoneCode = $("[data-phone-code]");
 const phoneInput = $("#auth-phone");
 const codeInput = $("#auth-code");
-const accountButtons = document.querySelectorAll("[data-auth-toggle]");
 
 let mode = "signin"; // signin | signup | reset
 let recaptchaVerifier = null;
@@ -178,10 +182,9 @@ function openModal() {
   document.body.style.overflow = "hidden";
   setTimeout(() => emailInput.focus(), 60);
 }
-// Expose auth + menu for site.js (which owns the button click handler)
-window.auth = auth;
-window.toggleMenu = toggleMenu;
+// Expose for site.js (which owns the button click handler)
 window.openAuthModal = openModal;
+window.toggleMenu = toggleMenu;
 function closeModal() {
   overlay.classList.remove("open");
   document.body.style.overflow = "";
@@ -214,7 +217,8 @@ $("[data-google]").addEventListener("click", async () => {
   clearError();
   submitBtn.disabled = true;
   try {
-    await signInWithPopup(auth, new GoogleAuthProvider());
+    const f = await loadFirebase();
+    await authModule.signInWithPopup(f.auth, new authModule.GoogleAuthProvider());
     closeModal();
   } catch (error) {
     showError(error);
@@ -231,18 +235,20 @@ form.addEventListener("submit", async (e) => {
   const password = passwordInput.value;
   submitBtn.disabled = true;
   try {
+    await loadFirebase();
+    const authMod = await import("https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js");
     if (mode === "reset") {
-      await sendPasswordReset(auth, email);
+      await authMod.sendPasswordReset(firebaseAuth, email);
       closeModal();
       return;
     }
     if (mode === "signup") {
       const name = nameInput.value.trim();
-      const cred = await createUserWithEmailAndPassword(auth, email, password);
-      if (name) await updateProfile(cred.user, { displayName: name });
-      await sendEmailVerification(cred.user).catch(() => {});
+      const cred = await authMod.createUserWithEmailAndPassword(firebaseAuth, email, password);
+      if (name) await authMod.updateProfile(cred.user, { displayName: name });
+      await authMod.sendEmailVerification(cred.user).catch(() => {});
     } else {
-      await signInWithEmailAndPassword(auth, email, password);
+      await authMod.signInWithEmailAndPassword(firebaseAuth, email, password);
     }
     closeModal();
   } catch (error) {
@@ -257,13 +263,15 @@ $("[data-phone-send]").addEventListener("click", async () => {
   clearError();
   const phone = phoneInput.value.trim();
   if (!phone) return showError({ message: "Enter your phone number with country code." });
-  if (!recaptchaVerifier) {
-    recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha-container", { size: "normal" });
-  }
   const sendBtn = $("[data-phone-send]");
   sendBtn.disabled = true;
   try {
-    confirmationResult = await signInWithPhoneNumber(auth, phone, recaptchaVerifier);
+    await loadFirebase();
+    const authMod = await import("https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js");
+    if (!recaptchaVerifier) {
+      recaptchaVerifier = new authMod.RecaptchaVerifier(firebaseAuth, "recaptcha-container", { size: "normal" });
+    }
+    confirmationResult = await authMod.signInWithPhoneNumber(firebaseAuth, phone, recaptchaVerifier);
     phoneCode.hidden = false;
     codeInput.focus();
   } catch (error) {
@@ -301,7 +309,11 @@ document.addEventListener("click", (e) => {
   }
 });
 $("[data-signout]").addEventListener("click", async () => {
-  await signOut(auth).catch(() => {});
+  try {
+    await loadFirebase();
+    const authMod = await import("https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js");
+    await authMod.signOut(firebaseAuth).catch(() => {});
+  } catch (_) { /* ignore */ }
   menu.classList.remove("open");
 });
 
@@ -312,21 +324,35 @@ function initials(name) {
   return (parts[0][0] + (parts[1] ? parts[1][0] : "")).toUpperCase();
 }
 
-onAuthStateChanged(auth, (user) => {
-  accountButtons.forEach((btn) => {
-    if (user) {
-      const name = user.displayName || user.email || user.phoneNumber || "Account";
-      btn.innerHTML = `<span class="acct-avatar" aria-hidden="true"></span><span class="acct-name"></span><span class="acct-caret" aria-hidden="true">&#9662;</span>`;
-      btn.querySelector(".acct-avatar").textContent = initials(user.displayName || user.email);
-      btn.querySelector(".acct-name").textContent = String(name).split(" ")[0];
-      btn.setAttribute("aria-label", "Account menu");
-    } else {
-      btn.textContent = "Sign in";
-      btn.setAttribute("aria-label", "Sign in");
-    }
+// Expose a lightweight auth shim so site.js can read currentUser without Firebase
+window.auth = {
+  get currentUser() { return null; },
+};
+// If Firebase loads successfully, wire up the real observer.
+loadFirebase().then((f) => {
+  const authMod = import("https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js");
+  authMod.then((m) => {
+    m.onAuthStateChanged(f.auth, (user) => {
+      document.querySelectorAll("[data-auth-toggle]").forEach((btn) => {
+        if (user) {
+          const name = user.displayName || user.email || user.phoneNumber || "Account";
+          btn.innerHTML = `<span class="acct-avatar" aria-hidden="true"></span><span class="acct-name"></span><span class="acct-caret" aria-hidden="true">&#9662;</span>`;
+          btn.querySelector(".acct-avatar").textContent = initials(user.displayName || user.email);
+          btn.querySelector(".acct-name").textContent = String(name).split(" ")[0];
+          btn.setAttribute("aria-label", "Account menu");
+        } else {
+          btn.textContent = "Sign in";
+          btn.setAttribute("aria-label", "Sign in");
+        }
+      });
+      if (user) {
+        const nameEl = $("[data-menu-name]");
+        const emailEl = $("[data-menu-email]");
+        if (nameEl) nameEl.textContent = user.displayName || "Your account";
+        if (emailEl) emailEl.textContent = user.email || user.phoneNumber || "";
+      }
+    });
   });
-  if (user) {
-    $("[data-menu-name]").textContent = user.displayName || "Your account";
-    $("[data-menu-email]").textContent = user.email || user.phoneNumber || "";
-  }
+}).catch(() => {
+  /* Firebase unavailable; UI still works via window.openAuthModal fallback */
 });
