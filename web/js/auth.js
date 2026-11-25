@@ -178,17 +178,15 @@ function openModal() {
   document.body.style.overflow = "hidden";
   setTimeout(() => emailInput.focus(), 60);
 }
+// Expose auth + menu for site.js (which owns the button click handler)
+window.auth = auth;
+window.toggleMenu = toggleMenu;
+window.openAuthModal = openModal;
 function closeModal() {
   overlay.classList.remove("open");
   document.body.style.overflow = "";
   clearError();
 }
-
-accountButtons.forEach((btn) => btn.addEventListener("click", (e) => {
-  e.stopPropagation();
-  if (auth.currentUser) toggleMenu(btn);
-  else openModal();
-}));
 
 overlay.addEventListener("click", (e) => {
   if (e.target === overlay) closeModal();
