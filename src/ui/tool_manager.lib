@@ -119,7 +119,7 @@ run_nmap_profile() {
 }
 
 show_nmap_profiles() {
-    local selected=0
+    local selected=0 status
     if ! mf_tool_available nmap; then
         show_nmap_missing
         return 0
@@ -160,6 +160,14 @@ show_tool_details() {
 }
 
 main() {
+    refresh_tools || exit 1
+    mf_restore_terminal
+    printf '\nChecking dependencies for all registered tools...\n'
+    if ! mf_tools_sync_dependencies; then
+        printf '\nSome dependency checks could not be completed. See messages above.\n'
+        printf 'Press Enter to open the tool manager anyway...'
+        IFS= read -r _
+    fi
     refresh_tools || exit 1
     mf_tool_ui_raw
     while :; do

@@ -7,6 +7,7 @@ MF_TOOL_COMMANDS=()
 MF_TOOL_CATEGORIES=()
 MF_TOOL_DESCRIPTIONS=()
 MF_TOOL_ENABLED=()
+MF_TOOL_PACKAGES=()
 
 mf_tools_validate() {
     local file="${1:-$MF_TOOL_CATALOG}"
@@ -20,7 +21,8 @@ mf_tools_validate() {
         (.command | type == "string" and test("^[A-Za-z0-9_.+-]+$")) and
         (.category | type == "string" and length > 0 and length <= 40) and
         (.description | type == "string" and length <= 240) and
-        (.enabled | type == "boolean")
+        (.enabled | type == "boolean") and
+        ((.packages // {}) | type == "object" and all(.[]; type == "array" and all(.[]; type == "string" and test("^[A-Za-z0-9][A-Za-z0-9+_.-]*$"))))
       )] | length) == (.tools | length) and
       ([.tools[].id] | length == (unique | length))
     ' "$file" >/dev/null 2>&1 || {
@@ -33,7 +35,7 @@ mf_tools_load() {
     local file="${1:-$MF_TOOL_CATALOG}" id name binary category description enabled
     mf_tools_validate "$file" || return 1
     MF_TOOL_IDS=() MF_TOOL_NAMES=() MF_TOOL_COMMANDS=()
-    MF_TOOL_CATEGORIES=() MF_TOOL_DESCRIPTIONS=() MF_TOOL_ENABLED=()
+    MF_TOOL_CATEGORIES=() MF_TOOL_DESCRIPTIONS=() MF_TOOL_ENABLED=() MF_TOOL_PACKAGES=()
     while IFS=$'\t' read -r id name binary category description enabled; do
         [[ -n "$id" ]] || continue
         MF_TOOL_IDS+=("$id")
@@ -42,6 +44,7 @@ mf_tools_load() {
         MF_TOOL_CATEGORIES+=("$category")
         MF_TOOL_DESCRIPTIONS+=("$description")
         MF_TOOL_ENABLED+=("$enabled")
+        MF_TOOL_PACKAGES+=("$(jq -c --arg id "$id" '.tools[] | select(.id == $id) | .packages // {}' "$file")")
     done < <(jq -r '.tools[] | [.id,.name,.command,.category,.description,.enabled] | @tsv' "$file")
 }
 
@@ -77,4 +80,52 @@ mf_tool_run() {
     done
     printf 'ERROR: Tool is not registered: %s\n' "$tool_id" >&2
     return 1
+}
+
+mf_tool_package_manager() {
+    if [[ -n "${PREFIX:-}" && -x "${PREFIX}/bin/pkg" ]]; then printf 'termux'
+    elif command -v apt-get >/dev/null 2>&1; then printf 'apt'
+    elif command -v dnf >/dev/null 2>&1; then printf 'dnf'
+    elif command -v zypper >/dev/null 2>&1; then printf 'zypper'
+    elif command -v pacman >/dev/null 2>&1; then printf 'pacman'
+    elif command -v apk >/dev/null 2>&1; then printf 'apk'
+    else return 1; fi
+}
+mf_package_is_installed() {
+    local manager="$1" package="$2"
+    case "$manager" in
+        termux|apt) dpkg-query -W -f='${Status}' "$package" 2>/dev/null | grep -q 'install ok installed' ;;
+        dnf|zypper) rpm -q "$package" >/dev/null 2>&1 ;;
+        pacman) pacman -Q "$package" >/dev/null 2>&1 ;;
+        apk) apk info -e "$package" >/dev/null 2>&1 ;;
+        *) return 1 ;;
+    esac
+}
+mf_tools_sync_dependencies() {
+    local manager privilege='' i package package_json
+    local -a packages=() missing=()
+    manager="$(mf_tool_package_manager)" || { printf 'No supported package manager detected.\n' >&2; return 1; }
+    for i in "${!MF_TOOL_IDS[@]}"; do
+        [[ "${MF_TOOL_ENABLED[$i]}" == true ]] || continue
+        package_json="${MF_TOOL_PACKAGES[$i]:-{}}"
+        while IFS= read -r package; do
+            [[ -n "$package" ]] || continue
+            packages+=("$package")
+            mf_package_is_installed "$manager" "$package" || missing+=("$package")
+        done < <(jq -r --arg manager "$manager" '.[$manager] // [] | .[]' <<< "$package_json")
+    done
+    ((${#packages[@]})) || { printf 'No package mappings configured for %s.\n' "$manager"; return 0; }
+    if [[ "$manager" != termux && "$EUID" -ne 0 ]]; then
+        command -v sudo >/dev/null 2>&1 || { printf 'ERROR: sudo is required for package management.\n' >&2; return 1; }
+        privilege='sudo'
+    fi
+    printf 'Checking/updating dependencies for all enabled tools using %s...\n' "$manager"
+    case "$manager" in
+        termux) pkg update -y && pkg upgrade -y && pkg install -y "${packages[@]}" ;;
+        apt) $privilege apt-get update || return 1; if ((${#missing[@]})); then $privilege apt-get install -y "${packages[@]}"; else $privilege apt-get install -y --only-upgrade "${packages[@]}"; fi ;;
+        dnf) if ((${#missing[@]})); then $privilege dnf install -y "${packages[@]}"; else $privilege dnf upgrade -y "${packages[@]}"; fi ;;
+        zypper) $privilege zypper --non-interactive refresh || return 1; if ((${#missing[@]})); then $privilege zypper --non-interactive install "${packages[@]}"; else $privilege zypper --non-interactive update "${packages[@]}"; fi ;;
+        pacman) $privilege pacman -Syu --noconfirm --needed "${packages[@]}" ;;
+        apk) $privilege apk update || return 1; if ((${#missing[@]})); then $privilege apk add "${packages[@]}"; else $privilege apk upgrade "${packages[@]}"; fi ;;
+    esac
 }

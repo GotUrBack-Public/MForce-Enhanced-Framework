@@ -7,7 +7,27 @@
       "command": "nmap",
       "category": "network",
       "description": "Guided host discovery and bounded TCP port/service checks for systems you are authorized to assess.",
-      "enabled": true
+      "enabled": true,
+      "packages": {
+        "termux": [
+          "nmap"
+        ],
+        "apt": [
+          "nmap"
+        ],
+        "dnf": [
+          "nmap"
+        ],
+        "zypper": [
+          "nmap"
+        ],
+        "pacman": [
+          "nmap"
+        ],
+        "apk": [
+          "nmap"
+        ]
+      }
     }
   ]
 }
