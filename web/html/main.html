@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0b1220">
+  <meta name="theme-color" content="#0a0b0d">
   <meta name="color-scheme" content="dark">
-  <meta name="description" content="MForce Enhanced Framework — a modular, open-source penetration testing and OSINT toolkit for Termux and Linux. Wiki, news and contributors.">
+  <meta name="description" content="MForce Enhanced Framework — a modular, open-source penetration testing and OSINT toolkit for Termux and Linux. Wiki, tutorials and contributors.">
   <meta property="og:type" content="website">
   <meta property="og:title" content="MForce Enhanced Framework">
   <meta property="og:description" content="A modular, open-source security and OSINT toolkit for Termux and Linux.">
@@ -13,9 +13,13 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="canonical" href="https://goturback-public.github.io/MForce-Enhanced-Framework/">
   <link rel="icon" type="image/png" href="../../assets/banners/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <title>MForce Enhanced Framework — Security &amp; OSINT Toolkit</title>
-  <link rel="stylesheet" href="../css/site.css?v=1">
-  <script defer src="../js/site.js?v=1"></script>
+  <link rel="stylesheet" href="../css/site.css?v=2">
+  <script defer src="../js/site.js?v=2"></script>
+  <script type="module" src="../js/auth.js?v=2"></script>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to main content</a>
@@ -26,12 +30,13 @@
       <span class="brand-text"><strong>MFORCE</strong><small>ENHANCED FRAMEWORK</small></span>
     </a>
     <nav class="nav" id="navigation" aria-label="Main navigation">
-      <a href="../../">Home</a>
+      <a href="../../" aria-current="page">Home</a>
       <a href="wiki.html">Wiki</a>
       <a href="tutorial.html">Tutorials</a>
       <a href="contributors.html">Contributors</a>
       <a class="nav-cta" href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
     </nav>
+    <button class="account-btn" type="button" data-auth-toggle aria-label="Sign in">Sign in</button>
     <button class="menu-button" type="button" aria-expanded="false" aria-controls="navigation" aria-label="Open navigation"><span></span><span></span><span></span></button>
   </div>
 </header>
@@ -40,11 +45,11 @@
   <section class="hero">
     <div class="container hero-grid">
       <div class="hero-content">
-        <span class="hero-badge"><span class="dot" aria-hidden="true"></span> OPEN SOURCE · v0.01.2 · MIT</span>
-        <h1>Security &amp; OSINT.<br><span class="grad">One modular framework.</span></h1>
-        <p class="hero-lead">MForce is an extensive open-source penetration testing and reconnaissance toolkit for <strong>Termux and Linux</strong> — automated reconnaissance, vulnerability assessment, OSINT and red-teaming workflows in a single, menu-driven interface.</p>
+        <span class="eyebrow"><span class="tick" aria-hidden="true"></span> Open source <span aria-hidden="true">·</span> v0.01.2 <span aria-hidden="true">·</span> MIT</span>
+        <h1>Security &amp; OSINT.<br><span class="accent">One modular framework.</span></h1>
+        <p class="hero-lead">MForce is an open-source penetration testing and reconnaissance toolkit for <strong>Termux and Linux</strong> — automated reconnaissance, vulnerability assessment, OSINT and red-team workflows behind a single, menu-driven interface.</p>
         <div class="hero-actions">
-          <a class="btn btn-primary" href="wiki.html">Read the Wiki →</a>
+          <a class="btn btn-primary" href="wiki.html">Read the wiki</a>
           <a class="btn btn-ghost" href="https://github.com/GotUrBack-Public/MForce-Enhanced-Framework" target="_blank" rel="noopener noreferrer">View source ↗</a>
         </div>
         <div class="hero-meta">
@@ -54,7 +59,7 @@
         </div>
       </div>
       <div class="hero-panel" aria-label="MForce terminal preview">
-        <div class="hero-panel-bar"><span><span class="lights"><i></i><i></i><i></i></span> &nbsp;mforce — session</span><span>TERMUX + LINUX</span></div>
+        <div class="hero-panel-bar"><span><span class="lights"><i></i><i></i><i></i></span> mforce — session</span><span>TERMUX + LINUX</span></div>
 <pre><span class="c"># Install and launch</span>
 <span class="p">$</span> git clone https://github.com/GotUrBack-Public/MForce-Enhanced-Framework.git
 <span class="p">$</span> cd MForce-Enhanced-Framework
@@ -73,42 +78,42 @@
     <div class="container">
       <div class="section-head">
         <span class="section-kicker">Capabilities</span>
-        <h2>Everything you need for authorized assessments.</h2>
+        <h2>Everything for authorized assessments.</h2>
         <p>Nine categories of tooling, from passive reconnaissance to defensive auditing — every check bounded, low-impact and audit-friendly.</p>
       </div>
       <div class="grid grid-3">
         <article class="card">
-          <div class="card-icon" aria-hidden="true">◎</div>
+          <span class="card-num">01</span>
           <h3>Automated Reconnaissance</h3>
           <p>DNS records, IP intelligence, TLS certificates, HTTP headers and RDAP registration data in one pass.</p>
           <a class="card-link" href="wiki.html#recon">Read more →</a>
         </article>
         <article class="card">
-          <div class="card-icon" aria-hidden="true">◇</div>
+          <span class="card-num">02</span>
           <h3>Vulnerability Assessment</h3>
           <p>CORS, HTTP method, cookie flag and exposure-path auditors plus a bounded reflection inspector.</p>
           <a class="card-link" href="wiki.html#assessment">Read more →</a>
         </article>
         <article class="card">
-          <div class="card-icon" aria-hidden="true">⌘</div>
+          <span class="card-num">03</span>
           <h3>OSINT &amp; Web Intelligence</h3>
           <p>Website inspector, API metadata, JavaScript DOM review, robots/sitemap parsing and rate-limit signals.</p>
           <a class="card-link" href="wiki.html#osint">Read more →</a>
         </article>
         <article class="card">
-          <div class="card-icon" aria-hidden="true">⛨</div>
+          <span class="card-num">04</span>
           <h3>Offensive Security Labs</h3>
           <p>A bounded TCP port scanner and a 100-example XSS payload lab that never auto-injects.</p>
           <a class="card-link" href="wiki.html#offensive">Read more →</a>
         </article>
         <article class="card">
-          <div class="card-icon" aria-hidden="true">🔒</div>
+          <span class="card-num">05</span>
           <h3>Defensive Security</h3>
           <p>An offline local secret scanner that reports only path, line and rule — never secret values.</p>
           <a class="card-link" href="wiki.html#defensive">Read more →</a>
         </article>
         <article class="card">
-          <div class="card-icon" aria-hidden="true">⚙</div>
+          <span class="card-num">06</span>
           <h3>Tool Manager</h3>
           <p>A unified launcher for external tools with guided, fixed-profile Nmap integration.</p>
           <a class="card-link" href="wiki.html#tools">Read more →</a>
@@ -122,9 +127,9 @@
       <div class="cta-band">
         <div>
           <h2>Start with the documentation.</h2>
-          <p>The Wiki covers installation, every module, architecture and responsible use.</p>
+          <p>The wiki covers installation, every module, architecture and responsible use.</p>
         </div>
-        <a class="btn btn-primary" href="wiki.html">Open the Wiki →</a>
+        <a class="btn btn-primary" href="wiki.html">Open the wiki</a>
       </div>
     </div>
   </section>
@@ -138,7 +143,7 @@
           <span class="brand-mark" aria-hidden="true">MF</span>
           <span class="brand-text"><strong>MFORCE</strong><small>ENHANCED FRAMEWORK</small></span>
         </a>
-        <p>A modular, open-source security and OSINT toolkit for Termux and Linux. Educational purpose and authorized professional use only.</p>
+        <p>A modular, open-source security and OSINT toolkit for Termux and Linux. Educational purpose and authorized professional use only. <a href="wiki.html#responsible" style="color:var(--accent)">Responsible use</a>.</p>
       </div>
       <div class="footer-cols">
         <div class="footer-col">

@@ -111,8 +111,12 @@ class WebsiteTests(unittest.TestCase):
 
     def test_local_css_js_references_exist(self):
         for asset in self.parser.assets:
+            parts = urlsplit(asset)
+            if parts.scheme in ("http", "https"):
+                # External assets (e.g. Google Fonts) are not local files.
+                continue
             with self.subTest(asset=asset):
-                path = urlsplit(asset).path
+                path = parts.path
                 self.assertTrue((MAIN.parent / path).resolve().is_file())
 
     def test_multipage_navigation_present(self):
@@ -121,7 +125,19 @@ class WebsiteTests(unittest.TestCase):
             with self.subTest(page=page):
                 self.assertTrue((WEB / "html" / page).is_file())
                 self.assertIn(page, self.markup)
-        self.assertIn("site.css?v=1", self.markup)
+        self.assertRegex(self.markup, r"site\.css\?v=\d+")
+
+    def test_auth_module_present(self):
+        # Firebase authentication is wired into every page via a shared module.
+        auth_js = WEB / "js/auth.js"
+        self.assertTrue(auth_js.is_file())
+        source = auth_js.read_text(encoding="utf-8")
+        self.assertIn("firebase-auth.js", source)
+        self.assertIn("GoogleAuthProvider", source)
+        self.assertIn("createUserWithEmailAndPassword", source)
+        self.assertIn("signInWithPhoneNumber", source)
+        self.assertIn('data-auth-toggle', self.markup)
+        self.assertRegex(self.markup, r'auth\.js\?v=\d+')
 
     def test_site_never_performs_network_scans(self):
         script = (WEB / "js/site.js").read_text(encoding="utf-8")
