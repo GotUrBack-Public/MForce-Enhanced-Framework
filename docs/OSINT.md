@@ -13,9 +13,10 @@ Ten passive OSINT modules for **Termux and Linux**, available under Network and 
 
 ```bash
 # Termux
-pkg install python jq
+pkg install python
 # Debian/Ubuntu
-sudo apt install python3 jq
+sudo apt install python3
+# Optional: dig adds MX, NS, TXT, CAA, CNAME and SOA records to DNS checks
 
 bash xrm742.sh
 # Select Network or OSINT
@@ -25,6 +26,9 @@ bash src/functions/web311.sh https://example.org
 bash src/functions/rat313.sh https://example.org
 bash src/functions/jsn314.sh https://example.org
 bash src/functions/api312.sh https://api.example.org/status
+# api.example.org is a documentation placeholder and will not resolve;
+# any JSON endpoint works, e.g.:
+bash src/functions/api312.sh https://api.github.com/repos/octocat/Hello-World
 bash src/functions/dns211.sh example.org
 bash src/functions/ipa212.sh 1.1.1.1
 bash src/functions/tls213.sh example.org
@@ -32,9 +36,25 @@ bash src/functions/rob315.sh https://example.org
 bash src/functions/rdp316.sh example.org
 ```
 
+## Example output
+
+Record sets are truncated for brevity; run the command to see the full table.
+
+```text
+$ bash src/functions/dns211.sh example.org
+  DNS / PUBLIC RESOLVER
+  ────────────────────────────────────────────────────────────────────────
+  Hostname                 example.org
+  A                        104.20.26.136, 172.66.157.237
+  AAAA                     2606:4700:10::6814:1a88, 2606:4700:10::ac42:9ded
+  NS                       2 records
+  • katelyn.ns.cloudflare.com.
+  • mitch.ns.cloudflare.com.
+```
+
 ## How to interpret findings
 
-**Rate limits:** An HTTP 429 response means throttling was observed. RateLimit/Retry-After headers indicate advertised limits. No headers means **UNKNOWN**, never “unlimited”. The toolkit never sends bursts, bypasses rate limits, brute-forces or performs load tests.
+**Rate limits:** An HTTP 429 response is reported as throttling observed. The tool reads RateLimit, RateLimit-Policy, RateLimit-Limit, RateLimit-Remaining, RateLimit-Reset, Retry-After and X-RateLimit-style headers when the target advertises them. If none are present the assessment is **UNKNOWN**, never “unlimited”. When a module fetches several resources (JavaScript review), it stops at the first 429 instead of retrying. The toolkit never sends bursts, bypasses rate limits, brute-forces or performs load tests.
 
 **JavaScript:** innerHTML, outerHTML, insertAdjacentHTML, document.write, eval, new Function and srcdoc are flagged for manual code review. A match is **not proof of XSS**. The tool does not execute JavaScript or inject payloads. Only inline code and at most three same-origin external scripts are reviewed.
 
